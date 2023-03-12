@@ -178,6 +178,10 @@
 		#define PASS_TEXTURE_2D(textureName, samplerName) textureName
 	#endif
 
+	#define UNIFORM_SAMPLER_2D(sampler2DName) uniform sampler2D sampler2DName;
+	#define PASS_SAMPLER_2D(sampler2DName) sampler2DName
+	#define DECLARE_SAMPLER_2D_ARGS(sampler2DName) sampler2D sampler2DName
+
 	#ifdef MK_POINT_FILTERING
 		UNIFORM_SAMPLER(_point_repeat_Main)
 	#else
@@ -239,6 +243,11 @@
 		#else
 			return tex2D(tex, uv);
 		#endif
+	}
+
+	inline half4 SampleSampler2D(DECLARE_SAMPLER_2D_ARGS(samp2D), float2 uv)
+	{
+		return tex2D(samp2D, uv);
 	}
 
 	//Clamped ramp samplings
@@ -304,8 +313,10 @@
 	
 	#ifdef MK_FLIPBOOK
 		#define SAMPLE_TEX2D_FLIPBOOK(tex, samplerTex, uv, blendUV) SampleTex2DFlipbook(PASS_TEXTURE_2D(tex, samplerTex), uv, blendUV)
+		#define SAMPLE_SAMPLER2D_FLIPBOOK(samp2D, uv, blendUV) SampleSampler2DFlipbook(PASS_SAMPLER_2D(samp2D), uv, blendUV)
 	#else
 		#define SAMPLE_TEX2D_FLIPBOOK(tex, samplerTex, uv, blendUV) SampleTex2D(PASS_TEXTURE_2D(tex, SAMPLER_REPEAT_MAIN), uv)
+		#define SAMPLE_SAMPLER2D_FLIPBOOK(samp2D, uv, blendUV) SampleSampler2D(samp2D, uv)
 	#endif
 	
 	/*
@@ -332,6 +343,17 @@
 			return lerp(color0, color1, blendUV.z);
 		#else
 			return SampleTex2D(PASS_TEXTURE_2D(tex, samplerTex), uv);
+		#endif
+	}
+
+	inline half4 SampleSampler2DFlipbook(DECLARE_SAMPLER_2D_ARGS(samp2D), float2 uv, float3 blendUV)
+	{
+		#ifdef MK_FLIPBOOK
+			half4 color0 = SampleSampler2D(samp2D, uv);
+			half4 color1 = SampleSampler2D(samp2D, blendUV.xy);
+			return lerp(color0, color1, blendUV.z);
+		#else
+			return SampleSampler2D(samp2D, uv);
 		#endif
 	}
 
@@ -369,6 +391,7 @@
 	// Transformations
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	#define CAMERA_POSITION_WORLD _WorldSpaceCameraPos
+	#define MATRIX_V UNITY_MATRIX_V
 	#define MATRIX_VP UNITY_MATRIX_VP
 	#define MATRIX_MVP UNITY_MATRIX_MVP
 	#if defined(MK_URP) || defined(MK_LWRP)
@@ -455,17 +478,23 @@
 	{
 		float4 ndc;
 
+		#if UNITY_UV_STARTS_AT_TOP
+			float scale = -1.0;
+		#else
+			float scale = 1.0;
+		#endif
+
 		ndc = positionClip * 0.5;
-		ndc.xy = float2(ndc.x, ndc.y * _ProjectionParams.x) + ndc.w;
+		ndc.xy = float2(ndc.x, ndc.y * scale) + ndc.w;
     	ndc.zw = positionClip.zw;
+
+		ndc.xyz = SafeDivide(ndc.xyz, ndc.w);
 
 		/*
 		#if defined(UNITY_SINGLE_PASS_STEREO)
 			ndc.xy = TransformStereoScreenSpaceTex(ndc.xy, ndc.w);
 		#endif
 		*/
-
-		ndc.xyz = SafeDivide(ndc.xyz, ndc.w);
 
 		return ndc;
 	}
@@ -490,6 +519,23 @@
 
 		return ndc.xy;
 	};
+
+	//based on URP - "Octahedron Environment Maps" paper
+	half2 PackDepthNormals(half3 n)
+	{
+		#if defined(MK_URP) || defined(MK_LWRP)
+			half3 p = n * rcp(dot(abs(n), 1.0));
+			half  x = p.x, y = p.y, z = p.z;
+
+			half r = saturate(0.5 - 0.5 * x + 0.5 * y);
+			half g = x + y;
+
+			return half2(CopySign(r, z), g);
+		#else
+			//not needed on builtin just return input as a workaround
+			return n;
+		#endif
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// Fog

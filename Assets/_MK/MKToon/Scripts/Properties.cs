@@ -27,7 +27,7 @@ namespace MK.Toon
         public static readonly EnumProperty<BlendFactor> blendSrc  = new EnumProperty<BlendFactor>(Uniforms.blendSrc);
         public static readonly EnumProperty<BlendFactor> blendDst  = new EnumProperty<BlendFactor>(Uniforms.blendDst);
         public static readonly BlendProperty blend                 = new BlendProperty(Uniforms.blend, Keywords.blend);
-        public static readonly BoolProperty alphaClipping          = new BoolProperty(Uniforms.alphaClipping, Keywords.alphaClipping);
+        public static readonly AlphaClippingProperty alphaClipping = new AlphaClippingProperty(Uniforms.alphaClipping, Keywords.alphaClipping);
 
         /////////////////
         // Input       //
@@ -193,5 +193,19 @@ namespace MK.Toon
         public static readonly FloatProperty cameraFadeNearDistance = new FloatProperty(Uniforms.cameraFadeNearDistance);
         public static readonly FloatProperty cameraFadeFarDistance  = new FloatProperty(Uniforms.cameraFadeFarDistance);
         public static readonly EnumProperty<ColorBlend> colorBlend  = new EnumProperty<ColorBlend>(Uniforms.colorBlend, Keywords.colorBlend);
+
+        /////////////////
+        // System      //
+        /////////////////
+        /// <summary>
+        /// This function should be called after changing the Albedo Map or AlphaCutoff Properties.
+        /// It makes sure that baked system shadows work correctly with alpha clipping.
+        /// </summary>
+        /// <param name="material"></param>
+        public static void UpdateSystemProperties(UnityEngine.Material material)
+        {
+            material.SetTexture(Uniforms.mainTex.id, Properties.albedoMap.GetValue(material));
+            material.SetFloat(Uniforms.cutoff.id, Properties.alphaCutoff.GetValue(material));
+        }
     }
 }

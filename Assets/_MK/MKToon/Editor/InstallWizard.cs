@@ -16,6 +16,10 @@ namespace MK.Toon.Editor.InstallWizard
 {
     public sealed class InstallWizard : EditorWindow
     {
+        #pragma warning disable CS0414
+        private static readonly string _version = "3.0.12.3";
+        #pragma warning restore CS0414
+        
         private static readonly Vector2Int _referenceResolution = new Vector2Int(2560, 1440);
         private static float _sizeScale;
         private static int _scaledWidth;
@@ -32,6 +36,7 @@ namespace MK.Toon.Editor.InstallWizard
 
         private static InstallWizard _window;
         private static RenderPipeline _targetRenderPipeline = RenderPipeline.Built_in;
+        private static bool _showInstallerOnReload = true;
 
         [MenuItem("Window/MK/Toon/Install Wizard")]
         private static void ShowWindow()
@@ -102,7 +107,7 @@ namespace MK.Toon.Editor.InstallWizard
                 Divider();
                 VerticalSpace();
                 EditorGUILayout.LabelField("2. Import Package", UnityEditor.EditorStyles.boldLabel);
-                if(GUILayout.Button("Import Package"))
+                if(GUILayout.Button("Import / Update Package"))
                 {
                     EditorUtility.DisplayProgressBar("MK Toon Install Wizard", "Importing Package", 0.5f);
                     Configuration.ImportShaders(_targetRenderPipeline);
@@ -112,6 +117,7 @@ namespace MK.Toon.Editor.InstallWizard
                 Divider();
                 VerticalSpace();
                 int readMeNumber = 4;
+                /*
                 if(_targetRenderPipeline == RenderPipeline.Lightweight)
                 {
                     readMeNumber = 3;
@@ -120,6 +126,7 @@ namespace MK.Toon.Editor.InstallWizard
                     Divider();
                 }
                 else
+                */
                 {
                     EditorGUILayout.LabelField("3. Import Examples (optional)", UnityEditor.EditorStyles.boldLabel);
                     switch(_targetRenderPipeline)
@@ -127,9 +134,9 @@ namespace MK.Toon.Editor.InstallWizard
                         case RenderPipeline.Built_in:
                         EditorGUILayout.LabelField("Make sure Postprocessing Stack v2 and Text Mesh Pro is installed first!", _flowTextStyle);
                         break;
-                        case RenderPipeline.Lightweight:
-                        EditorGUILayout.LabelField("Make sure Text Mesh Pro is installed first!", _flowTextStyle);
-                        break;
+                        //case RenderPipeline.Lightweight:
+                        //EditorGUILayout.LabelField("Make sure Text Mesh Pro is installed first!", _flowTextStyle);
+                        //break;
                         case RenderPipeline.Universal:
                         EditorGUILayout.LabelField("Make sure Text Mesh Pro is installed first!", _flowTextStyle);
                         break;
@@ -164,6 +171,17 @@ namespace MK.Toon.Editor.InstallWizard
                 {
                     Configuration.OpenReadMe();
                 }
+
+                VerticalSpace();
+                Divider();
+                VerticalSpace();
+
+                _showInstallerOnReload = Configuration.TryGetShowInstallerOnReload();
+                EditorGUI.BeginChangeCheck();
+                _showInstallerOnReload = EditorGUILayout.Toggle("Show Installer On Reload", _showInstallerOnReload);
+                if(EditorGUI.EndChangeCheck())
+                    Configuration.TrySetShowInstallerOnReload(_showInstallerOnReload);
+
                 EditorGUILayout.EndScrollView();
                 GUI.FocusControl(null);
             }

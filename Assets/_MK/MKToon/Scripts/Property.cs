@@ -36,11 +36,19 @@ namespace MK.Toon
         {
             if(b && _keywords != null && _keywords.Length > keywordIndex && _keywords.Length > 0)
             {
-                for(int i = 0; i < _keywords.Length; i++)
-                    material.DisableKeyword(_keywords[i]);
-
+                CleanKeywords(material);
                 material.EnableKeyword(_keywords[keywordIndex]);
             }
+            else
+            {
+                CleanKeywords(material);
+            }
+        }
+
+        private void CleanKeywords(Material material)
+        {
+            for(int i = 0; i < _keywords.Length; i++)
+                material.DisableKeyword(_keywords[i]);
         }
     }
 
@@ -252,6 +260,23 @@ namespace MK.Toon
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Explicit Properties                                                                     //
     /////////////////////////////////////////////////////////////////////////////////////////////
+    public class AlphaClippingProperty : Property<bool>
+    {
+        public AlphaClippingProperty(Uniform uniform, string keyword) : base(uniform, keyword) {}
+
+        public override bool GetValue(Material material)
+        {
+            return material.GetInt(_uniform.id) > 0 ? true : false;
+        }
+        public override void SetValue(Material material, bool value)
+        {
+            material.SetInt(_uniform.id, value ? 1 : 0);
+            SetKeyword(material, value, 0);
+            Properties.surface.SetValue(material, Properties.surface.GetValue(material), value);
+            Properties.renderPriority.SetValue(material, Properties.renderPriority.GetValue(material), value);
+        }
+    }
+    
     public class TilingProperty : Property<Vector2>
     {
         public TilingProperty(Uniform uniform) : base(uniform) {}
@@ -372,7 +397,7 @@ namespace MK.Toon
 
         public override Surface GetValue(Material material)
         {
-            return (Surface)material.GetInt(uniform.id);
+            return (Surface) material.GetInt(uniform.id);
         }
 
         public override void SetValue(Material material, Surface surface) => SetValue(material, surface, false);
@@ -417,7 +442,7 @@ namespace MK.Toon
                 break;
             }
             Properties.blend.SetValue(material, Properties.blend.GetValue(material));
-            Properties.renderPriority.SetValue(material, Properties.renderPriority.GetValue(material));
+            Properties.renderPriority.SetValue(material, Properties.renderPriority.GetValue(material), Properties.alphaClipping.GetValue(material));
             material.SetInt(uniform.id, (int)surface);
             SetKeyword(material,(int) surface != 0, (int) surface);
         }

@@ -90,7 +90,7 @@
 		#endif
 
 		#if defined(MK_PARALLAX)
-			vertexOutput.viewTangent = ComputeViewTangent(ComputeViewObject(vertexInput.vertex.xyz), vertexInput.normal, vertexInput.tangent, cross(vertexInput.normal, vertexInput.tangent.xyz) * vertexInput.tangent.w * unity_WorldTransformParams.w);
+			vertexOutput.viewTangent = ComputeViewTangent(ComputeViewObject(vertexInput.vertex.xyz), vertexInput.normal, vertexInput.tangent.xyz, cross(vertexInput.normal, vertexInput.tangent.xyz) * vertexInput.tangent.w * unity_WorldTransformParams.w);
 		#endif
 
 		#ifdef MK_FOG
@@ -135,7 +135,7 @@
 			PASS_NULL_CLIP_ARG(vertexOutput.nullClip)
 			PASS_FLIPBOOK_UV_ARG(vertexOutput.flipbookUV)
 		);
-		Surface surface = InitSurface(surfaceData, PASS_TEXTURE_2D(_AlbedoMap, SAMPLER_REPEAT_MAIN), autoLP4(_OutlineColor.rgb, _AlbedoColor.a));
+		Surface surface = InitSurface(surfaceData, PASS_SAMPLER_2D(_AlbedoMap), autoLP4(_OutlineColor.rgb, _AlbedoColor.a), vertexOutput.svPositionClip);
 		MKPBSData pbsData = ComputePBSData(surface, surfaceData);
 		Composite(surface, surfaceData, pbsData);
 

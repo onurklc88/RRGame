@@ -116,10 +116,10 @@
 		uniform float4 _DetailMap_ST;
 	CBUFFER_END
 
-	UNIFORM_TEXTURE_2D(_AlbedoMap);					//1
-	UNIFORM_TEXTURE_2D(_AlbedoMap1);					
-	UNIFORM_TEXTURE_2D(_AlbedoMap2);					
-	UNIFORM_TEXTURE_2D(_AlbedoMap3);					
+	UNIFORM_SAMPLER_2D(_AlbedoMap);					//1
+	UNIFORM_SAMPLER_2D(_AlbedoMap1);					
+	UNIFORM_SAMPLER_2D(_AlbedoMap2);					
+	UNIFORM_SAMPLER_2D(_AlbedoMap3);					
 	UNIFORM_TEXTURE_2D(_RefractionDistortionMap);	//2
 	UNIFORM_TEXTURE_2D(_SpecularMap);				//3
 	UNIFORM_TEXTURE_2D(_RoughnessMap);				//3

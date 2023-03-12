@@ -66,7 +66,7 @@
 			PASS_NULL_CLIP_ARG(0)
 			PASS_FLIPBOOK_UV_ARG(0)
 		);
-		Surface surface = InitSurface(surfaceData, PASS_TEXTURE_2D(_AlbedoMap, SAMPLER_REPEAT_MAIN), _AlbedoColor);
+		Surface surface = InitSurface(surfaceData, PASS_SAMPLER_2D(_AlbedoMap), _AlbedoColor, vertexOutput.svPositionClip);
 		MKPBSData pbsData = ComputePBSData(surface, surfaceData);
 		Composite(surface, surfaceData, pbsData);
 

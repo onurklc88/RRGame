@@ -24,6 +24,7 @@
 
 	//This should be excluded from the CBuffer
 	uniform float3 _LightDirection;
+	uniform float3 _LightPosition;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// VERTEX SHADER
@@ -56,12 +57,18 @@
 			half3 normalWorld = ComputeNormalWorld(VERTEX_INPUT.normal);
 		#endif
 		#ifdef MK_PARALLAX
-			half3 viewTangent = ComputeViewTangent(ComputeViewObject(VERTEX_INPUT.vertex.xyz), VERTEX_INPUT.normal, VERTEX_INPUT.tangent, cross(VERTEX_INPUT.normal, VERTEX_INPUT.tangent.xyz) * VERTEX_INPUT.tangent.w * unity_WorldTransformParams.w);
+			vertexOutput.viewTangent = ComputeViewTangent(ComputeViewObject(VERTEX_INPUT.vertex.xyz), VERTEX_INPUT.normal, VERTEX_INPUT.tangent, cross(VERTEX_INPUT.normal, VERTEX_INPUT.tangent.xyz) * VERTEX_INPUT.tangent.w * unity_WorldTransformParams.w);
 		#endif
 
 		#if defined(MK_URP)
 			float3 positionWorld = mul(MATRIX_M, float4(VERTEX_INPUT.vertex.xyz, 1.0)).xyz;
-			svPositionClip = mul(MATRIX_VP, float4(ApplyShadowBias(positionWorld, normalWorld, _LightDirection), 1.0));
+			half3 lightDirection;
+			#if defined(_CASTING_PUNCTUAL_LIGHT_SHADOW) && defined(MK_URP_2020_2_Or_Newer)
+				lightDirection = SafeNormalize(_LightPosition - positionWorld);
+			#else
+				lightDirection = _LightDirection;
+			#endif
+			svPositionClip = mul(MATRIX_VP, float4(ApplyShadowBias(positionWorld, normalWorld, lightDirection), 1.0));
 			#if UNITY_REVERSED_Z
 				svPositionClip.z = min(svPositionClip.z, svPositionClip.w * UNITY_NEAR_CLIP_VALUE);
 			#else
@@ -76,9 +83,9 @@
 			positionWorld = normalWorld * scale.xxx + positionWorld;
 			svPositionClip = mul(MATRIX_VP, float4(positionWorld, 1));
 			#if UNITY_REVERSED_Z
-				svPositionClip.z = min(svPositionClip.z, svPositionClip.w * UNITY_NEAR_CLIP_VALUE);
+				svPositionClip.z = min(svPositionClip.z, UNITY_NEAR_CLIP_VALUE);
 			#else
-				svPositionClip.z = max(svPositionClip.z, svPositionClip.w * UNITY_NEAR_CLIP_VALUE);
+				svPositionClip.z = max(svPositionClip.z, UNITY_NEAR_CLIP_VALUE);
 			#endif
 		#else
 			TRANSFER_SHADOW_CASTER_NOPOS(vertexOutput, svPositionClip)
@@ -119,7 +126,7 @@
 			PASS_NULL_CLIP_ARG(0)
 			PASS_FLIPBOOK_UV_ARG(0)
 		);
-		Surface surface = InitSurface(surfaceData, PASS_TEXTURE_2D(_AlbedoMap, SAMPLER_REPEAT_MAIN), _AlbedoColor);
+		Surface surface = InitSurface(surfaceData, PASS_SAMPLER_2D(_AlbedoMap), _AlbedoColor, float4(0,0,0,1));
 		
 		#if defined(MK_URP) || defined(MK_LWRP)
 			return 0;

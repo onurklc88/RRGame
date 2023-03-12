@@ -21,7 +21,7 @@
 			half3 vertexNormalWorld;
 		#endif
 		#ifdef MK_LIT
-			#ifdef MK_ENVIRONMENT_REFLECTIONS
+			#ifdef MK_LIGHTMAP_UV
 				float4 lightmapUV;
 			#endif
 			#ifdef MK_VERTEX_LIGHTING
@@ -35,6 +35,14 @@
 			#ifdef MK_PARALLAX
 				half height;
 			#endif
+		#endif
+
+		#if defined(MK_URP_2020_2_Or_Newer) && defined(MK_LIT)
+			half4 shadowMask;
+		#endif
+
+		#if defined(MK_SCREEN_SPACE_OCCLUSION) && defined(MK_URP_2020_2_Or_Newer)
+			AmbientOcclusionFactor ambientOcclusion;
 		#endif
 
 		#ifdef MK_VD
@@ -55,8 +63,14 @@
 			autoLP4 vertexColor;
 		#endif
 
-		#if defined(MK_TCM) || defined(MK_TCD)
-			float4 baseUV;
+		#if defined(MK_TCM)
+			float2 baseUV;
+		#endif
+		#if defined(MK_TCD)
+			float2 detailUV;
+		#endif
+		#ifdef MK_OCCLUSION_UV_SECOND
+			float2 secondUV;
 		#endif
 		#ifdef MK_THRESHOLD_MAP
 			float2 thresholdUV;
@@ -216,7 +230,7 @@
 		#define PASS_BITANGENT_WORLD_ARG(bitangentWorld)
 	#endif
 
-	#ifdef MK_ENVIRONMENT_REFLECTIONS
+	#ifdef MK_LIGHTMAP_UV
 		#define PASS_LIGHTMAP_UV_ARG(lightmapUV) ,lightmapUV
 	#else
 		#define PASS_LIGHTMAP_UV_ARG(lightmapUV)
@@ -247,13 +261,13 @@
 	#endif
 
 	//Texture color
-	inline void SurfaceColor(out half3 albedo, out half alpha, DECLARE_TEXTURE_2D_ARGS(albedoMap, samplerTex), float2 uv, float3 blendUV, autoLP4 color)
+	inline void SurfaceColor(out half3 albedo, out half alpha, DECLARE_SAMPLER_2D_ARGS(albedoMap), float2 uv, float3 blendUV, autoLP4 color)
 	{
 		half4 c;
 		#ifdef MK_OUTLINE_PASS
-			c = half4(color.rgb, SAMPLE_TEX2D_FLIPBOOK(albedoMap, SAMPLER_REPEAT_MAIN, uv, blendUV).a * color.a);
+			c = half4(color.rgb, SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap, uv, blendUV).a * color.a);
 		#else
-			c = SAMPLE_TEX2D_FLIPBOOK(albedoMap, SAMPLER_REPEAT_MAIN, uv, blendUV) * color;
+			c = SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap, uv, blendUV) * color;
 		#endif
 		albedo = c.rgb;
 		#if defined(MK_ALPHA_LOOKUP)
@@ -263,19 +277,19 @@
 		#endif
 	}
 
-	inline void SurfaceColor(out half3 albedo, out half alpha, DECLARE_TEXTURE_2D_ARGS(albedoMap, samplerTex), DECLARE_TEXTURE_2D_ARGS(albedoMap1, samplerTex1), DECLARE_TEXTURE_2D_ARGS(albedoMap2, samplerTex2), DECLARE_TEXTURE_2D_ARGS(albedoMap3, samplerTex3), float2 uv, autoLP4 blendColor, float3 blendUV, autoLP4 color)
+	inline void SurfaceColor(out half3 albedo, out half alpha, DECLARE_SAMPLER_2D_ARGS(albedoMap), DECLARE_SAMPLER_2D_ARGS(albedoMap1), DECLARE_SAMPLER_2D_ARGS(albedoMap2), DECLARE_SAMPLER_2D_ARGS(albedoMap3), float2 uv, autoLP4 blendColor, float3 blendUV, autoLP4 color)
 	{
 		half4 c0, c1, c2, c3;
 		#ifdef MK_OUTLINE_PASS
-			c0 = half4(color.rgb, SAMPLE_TEX2D_FLIPBOOK(albedoMap, SAMPLER_REPEAT_MAIN, uv, blendUV).a * color.a);
-			c1 = half4(color.rgb, SAMPLE_TEX2D_FLIPBOOK(albedoMap1, SAMPLER_REPEAT_MAIN, uv, blendUV).a) * blendColor.g;
-			c2 = half4(color.rgb, SAMPLE_TEX2D_FLIPBOOK(albedoMap2, SAMPLER_REPEAT_MAIN, uv, blendUV).a) * blendColor.b;
-			c3 = half4(color.rgb, SAMPLE_TEX2D_FLIPBOOK(albedoMap3, SAMPLER_REPEAT_MAIN, uv, blendUV).a) * blendColor.a;
+			c0 = half4(color.rgb, SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap, uv, blendUV).a * color.a);
+			c1 = half4(color.rgb, SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap1, uv, blendUV).a) * blendColor.g;
+			c2 = half4(color.rgb, SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap2, uv, blendUV).a) * blendColor.b;
+			c3 = half4(color.rgb, SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap3, uv, blendUV).a) * blendColor.a;
 		#else
-			c0 = SAMPLE_TEX2D_FLIPBOOK(albedoMap, SAMPLER_REPEAT_MAIN, uv, blendUV) * color;
-			c1 = SAMPLE_TEX2D_FLIPBOOK(albedoMap1, SAMPLER_REPEAT_MAIN, uv, blendUV) * blendColor.y;
-			c2 = SAMPLE_TEX2D_FLIPBOOK(albedoMap2, SAMPLER_REPEAT_MAIN, uv, blendUV) * blendColor.z;
-			c3 = SAMPLE_TEX2D_FLIPBOOK(albedoMap3, SAMPLER_REPEAT_MAIN, uv, blendUV) * blendColor.w;
+			c0 = SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap, uv, blendUV) * color;
+			c1 = SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap1, uv, blendUV) * blendColor.y;
+			c2 = SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap2, uv, blendUV) * blendColor.z;
+			c3 = SAMPLE_SAMPLER2D_FLIPBOOK(albedoMap3, uv, blendUV) * blendColor.w;
 		#endif
 
 		half4 mixedColor = lerp(lerp(lerp(c0, c1, blendColor.g), c2, blendColor.b), c3, blendColor.a);
@@ -314,7 +328,7 @@
 		#if defined(MK_TCM) || defined(MK_TCD)
 			, in float4 baseUV
 		#endif
-		#ifdef MK_ENVIRONMENT_REFLECTIONS
+		#ifdef MK_LIGHTMAP_UV
 			, in float4 lightmapUV
 		#endif
 		#if defined(MK_VERTCLR) || defined(MK_PARTICLES) || defined(MK_POLYBRUSH)
@@ -356,18 +370,38 @@
 			surfaceData.fogFactor = fogFactor;
 		#endif
 
+		#if defined(MK_URP_2020_2_Or_Newer) && defined(MK_LIT)
+			#if defined(SHADOWS_SHADOWMASK) && defined(LIGHTMAP_ON)
+				surfaceData.shadowMask = SAMPLE_SHADOWMASK(lightmapUV);
+			#elif !defined (LIGHTMAP_ON)
+				surfaceData.shadowMask = unity_ProbesOcclusion;
+			#else
+				surfaceData.shadowMask = half4(1, 1, 1, 1);
+			#endif
+		#endif
+
 		#if defined(MK_VERTCLR) || defined(MK_PARTICLES) || defined(MK_POLYBRUSH)
 			surfaceData.vertexColor = vertexColor;
 		#endif
 
-		#if defined(MK_TCM) || defined(MK_TCD)
+		#if defined(MK_TCM)
 			surfaceData.baseUV = 0;
 		#endif
+		#if defined(MK_TCD)
+			surfaceData.detailUV = 0;
+		#endif
+		#if defined(MK_OCCLUSION_UV_SECOND)
+			surfaceData.secondUV = 0;
+		#endif
+
 		#if defined(MK_TCM)
 			surfaceData.baseUV.xy = baseUV.xy * _AlbedoMap_ST.xy + _AlbedoMap_ST.zw;
 		#endif
+		#if defined(MK_TCM) && defined(MK_OCCLUSION_UV_SECOND)
+			surfaceData.secondUV = baseUV.zw * _AlbedoMap_ST.xy + _AlbedoMap_ST.zw;
+		#endif
 		#if defined(MK_TCD)
-			surfaceData.baseUV.zw = baseUV.zw;
+			surfaceData.detailUV = baseUV.xy * _DetailMap_ST.xy + _DetailMap_ST.zw;
 		#endif
 
 		#ifdef MK_FLIPBOOK
@@ -378,7 +412,7 @@
 			surfaceData.viewWorld = SafeNormalize(CAMERA_POSITION_WORLD - surfaceData.positionWorld);
 		#endif
 
-		#ifdef MK_VD_O
+		#ifdef MK_PARALLAX
 			surfaceData.viewTangent = SafeNormalize(viewTangent);
 		#endif
 
@@ -390,7 +424,7 @@
 				surfaceData.baseUV.xy += parallaxUVOffset;
 			#endif
 			#if defined(MK_TCD)
-				surfaceData.baseUV.zw += parallaxUVOffset;
+				surfaceData.detailUV += parallaxUVOffset;
 			#endif
 		#endif
 
@@ -400,6 +434,10 @@
 
 		#if defined(MK_SCREEN_UV)
 			surfaceData.screenUV = ComputeNDC(positionClip);
+		#endif
+
+		#if defined(MK_SCREEN_SPACE_OCCLUSION) && defined(MK_URP_2020_2_Or_Newer)
+			surfaceData.ambientOcclusion = GetScreenSpaceAmbientOcclusion(surfaceData.screenUV.xy);
 		#endif
 
 		#if defined(MK_ARTISTIC)
@@ -434,7 +472,7 @@
 			#ifdef MK_DISSOLVE_PROJECTION_SCREEN_SPACE
 				dissolveUV = ComputeNormalizedScreenUV(surfaceData.screenUV, ComputeNDC(nullClip), _DissolveMapScale);
 			#else
-				dissolveUV = surfaceData.baseUV.xy;
+				dissolveUV = surfaceData.baseUV.xy * _DissolveMapScale;
 			#endif
 			surfaceData.dissolveClip = SAMPLE_TEX2D_FLIPBOOK(_DissolveMap, SAMPLER_REPEAT_MAIN, dissolveUV, SURFACE_FLIPBOOK_UV).r - _DissolveAmount;
 			Clip0(surfaceData.dissolveClip);
@@ -454,7 +492,7 @@
 				#if defined(MK_NORMAL_MAP) && !defined(MK_DETAIL_NORMAL_MAP)
 					surfaceData.normalWorld = NormalMappingWorld(PASS_TEXTURE_2D(_NormalMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, _NormalMapIntensity, half3x3(surfaceData.tangentWorld, surfaceData.bitangentWorld, surfaceData.vertexNormalWorld));
 				#elif defined(MK_NORMAL_MAP) && defined(MK_DETAIL_NORMAL_MAP)
-					surfaceData.normalWorld = NormalMappingWorld(PASS_TEXTURE_2D(_NormalMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, _NormalMapIntensity, PASS_TEXTURE_2D(_DetailNormalMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.zw, _DetailNormalMapIntensity, half3x3(surfaceData.tangentWorld, surfaceData.bitangentWorld, surfaceData.vertexNormalWorld));
+					surfaceData.normalWorld = NormalMappingWorld(PASS_TEXTURE_2D(_NormalMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, _NormalMapIntensity, PASS_TEXTURE_2D(_DetailNormalMap, SAMPLER_REPEAT_MAIN), surfaceData.detailUV, _DetailNormalMapIntensity, half3x3(surfaceData.tangentWorld, surfaceData.bitangentWorld, surfaceData.vertexNormalWorld));
 				#elif !defined(MK_NORMAL_MAP) && defined(MK_DETAIL_NORMAL_MAP)
 					surfaceData.normalWorld = NormalMappingWorld(PASS_TEXTURE_2D(_DetailNormalMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, _DetailNormalMapIntensity, half3x3(surfaceData.tangentWorld, surfaceData.bitangentWorld, surfaceData.vertexNormalWorld));
 				#else
@@ -473,7 +511,7 @@
 			#ifdef MK_VERTEX_LIGHTING
 				surfaceData.vertexLighting = vertexLighting;
 			#endif
-			#ifdef MK_ENVIRONMENT_REFLECTIONS
+			#ifdef MK_LIGHTMAP_UV
 				surfaceData.lightmapUV = lightmapUV;
 			#endif
 		#endif
@@ -526,7 +564,7 @@
 				#ifdef MK_FRESNEL_HIGHLIGHTS
 					premulGISpec = dot(pbsData.fresnel, REL_LUMA);
 				#else
-					premulGISpec = pbsData.specularRadiance;
+					premulGISpec = dot(pbsData.specularRadiance, REL_LUMA);
 				#endif
 				surface.alpha = surface.alpha * pbsData.oneMinusReflectivity + premulGISpec;
 			#else
@@ -646,7 +684,7 @@
 		return pbsData;
 	}
 
-	inline Surface InitSurface(in MKSurfaceData surfaceData, DECLARE_TEXTURE_2D_ARGS(albedoMap, samplerTex), inout half4 albedoTint)
+	inline Surface InitSurface(in MKSurfaceData surfaceData, DECLARE_SAMPLER_2D_ARGS(samp2D), inout half4 albedoTint, in float4 pC)
 	{
 		//Init Surface
 		Surface surface;
@@ -668,16 +706,20 @@
 			#if defined(MK_PARTICLES) || defined(MK_COMBINE_VERTEX_COLOR_WITH_ALBEDO_MAP)
 				albedoTint *= surfaceData.vertexColor;
 			#endif
-			SurfaceColor(surface.albedo, surface.alpha, PASS_TEXTURE_2D(albedoMap, samplerTex), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, albedoTint);
+			SurfaceColor(surface.albedo, surface.alpha, PASS_SAMPLER_2D(_AlbedoMap), surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV, albedoTint);
 		#elif defined(MK_POLYBRUSH)
-			SurfaceColor(surface.albedo, surface.alpha, PASS_TEXTURE_2D(albedoMap, samplerTex), PASS_TEXTURE_2D(_AlbedoMap1, samplerTex), PASS_TEXTURE_2D(_AlbedoMap2, samplerTex), PASS_TEXTURE_2D(_AlbedoMap3, samplerTex), surfaceData.baseUV.xy, surfaceData.vertexColor, SURFACE_FLIPBOOK_UV, albedoTint);
+			SurfaceColor(surface.albedo, surface.alpha, PASS_SAMPLER_2D(_AlbedoMap), PASS_SAMPLER_2D(_AlbedoMap1), PASS_SAMPLER_2D(_AlbedoMap2), PASS_SAMPLER_2D(_AlbedoMap3), surfaceData.baseUV.xy, surfaceData.vertexColor, SURFACE_FLIPBOOK_UV, albedoTint);
 		#else
 			SurfaceColor(surface.albedo, surface.alpha, surfaceData.vertexColor, albedoTint);
 		#endif
 
 		//add detail
 		#ifdef MK_DETAIL_MAP
-			MixAlbedoDetail(surface.albedo, PASS_TEXTURE_2D(_DetailMap, SAMPLER_REPEAT_MAIN), surfaceData.baseUV.zw, SURFACE_FLIPBOOK_UV);
+			MixAlbedoDetail(surface.albedo, PASS_TEXTURE_2D(_DetailMap, SAMPLER_REPEAT_MAIN), surfaceData.detailUV, SURFACE_FLIPBOOK_UV);
+		#endif
+
+		#ifdef _DBUFFER
+			ApplyDecalToBaseColor(pC, surface.albedo);
 		#endif
 
 		#if defined(MK_ALPHA_CLIPPING)
@@ -747,7 +789,13 @@
 			#endif
 
 			#ifdef MK_OCCLUSION_MAP
-				surface.occlusion = (1.0 - _OcclusionMapIntensity) + SAMPLE_TEX2D_FLIPBOOK(_OcclusionMap, SAMPLER_REPEAT_MAIN, surfaceData.baseUV.xy, SURFACE_FLIPBOOK_UV).rg * _OcclusionMapIntensity;
+				float2 occlusionUV;
+				#if defined(MK_TCM) && defined(MK_OCCLUSION_UV_SECOND)
+					occlusionUV = surfaceData.secondUV;
+				#else
+					occlusionUV = surfaceData.baseUV;
+				#endif
+				surface.occlusion = (1.0 - _OcclusionMapIntensity) + SAMPLE_TEX2D_FLIPBOOK(_OcclusionMap, SAMPLER_REPEAT_MAIN, occlusionUV, SURFACE_FLIPBOOK_UV).rg * _OcclusionMapIntensity;
 			#else
 				surface.occlusion = 1.0;
 			#endif
@@ -763,7 +811,7 @@
 
 		#ifdef MK_COLOR
 			#if defined(MK_COLOR_BLEND_ADDITIVE)
-				surface.albedo = surface.albedo + surfaceData.vertexColor;
+				surface.albedo = surface.albedo + surfaceData.vertexColor.rgb;
 				surface.alpha *= surfaceData.vertexColor.a;
 			#elif defined(MK_COLOR_BLEND_SUBTRACTIVE)
 				surface.albedo = surface.albedo + surfaceData.vertexColor * (-1.0h);

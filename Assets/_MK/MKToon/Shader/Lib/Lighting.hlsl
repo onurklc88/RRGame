@@ -44,8 +44,9 @@
 		half3 dirWorld;
 		half attenuation;
 		half distanceAttenuation;
-		#if defined(MK_URP) || defined(MK_LWRP)
-			half shadowAttenuation;
+		half shadowAttenuation;
+		#if defined(MK_URP) && UNITY_VERSION >= 202120
+			uint layerMask;
 		#endif
 	};
 
@@ -113,7 +114,7 @@
 	#define DECLARE_STATIC_LIGHTMAP_INPUT(i) float2 staticLightmapUV : TEXCOORD##i
 
 	#if defined(MK_URP) || defined(MK_LWRP)
-		#define DECLARE_DYNAMIC_LIGHTMAP_INPUT(i)
+		#define DECLARE_DYNAMIC_LIGHTMAP_INPUT(i) float2 dynamicLightmapUV : TEXCOORD##i;
 		/*
 		#if !defined(_MAIN_LIGHT_SHADOWS_CASCADE)
 			#define DECLARE_LIGHTING_COORDS(i, j) float4 _ShadowCoord : TEXCOORD##i;
@@ -123,10 +124,10 @@
 		*/
 		//lighting coords are currently also used for later PS usage when cascade is enabled, so always set shadow coord
 		#define DECLARE_LIGHTING_COORDS(i, j) float4 _ShadowCoord : TEXCOORD##i;
-		#if !defined(_MAIN_LIGHT_SHADOWS_CASCADE)
+		#if defined(MK_SHADOW_COORD_INTERPOLATOR)
 			#define TRANSFORM_WORLD_TO_SHADOW_COORDS(o, i, l) l._ShadowCoord = TransformWorldToShadowCoord(o.positionWorld.xyz);
 		#else
-			#define TRANSFORM_WORLD_TO_SHADOW_COORDS(o, i, l) l._ShadowCoord = 1;
+			#define TRANSFORM_WORLD_TO_SHADOW_COORDS(o, i, l) l._ShadowCoord = float4(0, 0, 0, 0);
 		#endif
 	#else
 		#define DECLARE_DYNAMIC_LIGHTMAP_INPUT(i) float2 dynamicLightmapUV : TEXCOORD##i;
@@ -150,7 +151,7 @@
 				//should be automatically clamped (0 - 1) at a 8bit precision, still enough for a simple vertex lighting
 				autoLP3 vertexLighting : COLOR1;
 			#endif
-			#ifdef MK_ENVIRONMENT_REFLECTIONS
+			#ifdef MK_LIGHTMAP_UV
 				DECLARE_LIGHTMAP_UV(5);
 			#endif
 			DECLARE_LIGHTING_COORDS(6, 7)
@@ -190,7 +191,7 @@
 	#elif defined(MK_LIGHT_CEL)
 		#define LIGHT_STYLE_RAW_2D(value, atten, threshold, smoothnessMin, smoothnessMax, ramp, samplerRamp) value = Cel(threshold, smoothnessMin, smoothnessMax, value)
 	#elif defined(MK_LIGHT_RAMP)
-		#define LIGHT_STYLE_RAW_2D(value, atten, threshold, smoothnessMin, smoothnessMax, ramp, samplerRamp) value = SampleRamp2D(PASS_TEXTURE_2D(ramp, samplerRamp), half2(value, atten)).rgb
+		#define LIGHT_STYLE_RAW_2D(value, atten, threshold, smoothnessMin, smoothnessMax, ramp, samplerRamp) value = SampleRamp2D(PASS_TEXTURE_2D(ramp, samplerRamp), half2(value, atten)).r
 	#else //MK_LIGHT_BUILTIN
 		#define LIGHT_STYLE_RAW_2D(value, atten, threshold, smoothnessMin, smoothnessMax, ramp, samplerRamp) value = max(0.0, value)
 	#endif
@@ -246,13 +247,28 @@
 	}
 
 	//GI functions should match input
-	inline MKGI GlobalIllumination(MKGlossyEnvironmentData glossyED, half occlusion, MKLight mkLight, float3 positionWorld, half3 viewWorld, half3 normalWorld, float4 lightmapUVAndSH)
+	inline MKGI MKGlobalIllumination(MKGlossyEnvironmentData glossyED, half occlusion, MKLight mkLight, float3 positionWorld, half3 viewWorld, half3 normalWorld, float4 lightmapUVAndSH)
 	{
 		MKGI gi;
 		INITIALIZE_STRUCT(MKGI, gi);
 
 		#if defined(MK_URP) || defined(MK_LWRP)
-			gi.diffuse = SAMPLE_GI(lightmapUVAndSH.xy, lightmapUVAndSH.rgb, normalWorld);
+			#if defined(LIGHTMAP_ON) && defined(DYNAMICLIGHTMAP_ON)
+				gi.diffuse = SampleLightmap(lightmapUVAndSH.xy, lightmapUVAndSH.zw, normalWorld);
+			#elif defined(DYNAMICLIGHTMAP_ON)
+				gi.diffuse = SampleLightmap(0, lightmapUVAndSH.zw, normalWorld);
+			#elif defined(LIGHTMAP_ON)
+				#if UNITY_VERSION >= 202120
+					gi.diffuse = SampleLightmap(lightmapUVAndSH.xy, 0, normalWorld);
+				#else
+					gi.diffuse = SampleLightmap(lightmapUVAndSH.xy, normalWorld);
+				#endif
+			#else
+				gi.diffuse = SampleSH(normalWorld);
+			#endif
+
+			gi.diffuse *= occlusion;
+
 			#ifdef MK_ENVIRONMENT_REFLECTIONS_ADVANCED
 				gi.specular = GlossyEnvironmentReflection(glossyED.reflectDirection, glossyED.roughness, occlusion);
 			#else
@@ -272,7 +288,8 @@
 			#if defined(LIGHTMAP_ON) || defined(DYNAMICLIGHTMAP_ON)
 				giInput.ambient = 0;
 				giInput.lightmapUV = lightmapUVAndSH;
-			#else
+			#endif
+			#if UNITY_SHOULD_SAMPLE_SH && !UNITY_SAMPLE_FULL_SH_PER_PIXEL
 				giInput.ambient = lightmapUVAndSH.rgb;
 				giInput.lightmapUV = 0;
 			#endif
@@ -387,11 +404,14 @@
 
 				mkLight.color = light.color;
 				mkLight.radiometricColor = mkLight.color * PI;
-				mkLight.attenuation = light.distanceAttenuation;
+				mkLight.attenuation = light.shadowAttenuation * light.distanceAttenuation;
 				mkLight.dirWorld = light.direction;
 
 				mkLight.distanceAttenuation = light.distanceAttenuation;
 				mkLight.shadowAttenuation = light.shadowAttenuation;
+				#if UNITY_VERSION >= 202120
+					mkLight.layerMask = light.layerMask;
+				#endif
 
 				return mkLight;
 			}
@@ -402,11 +422,14 @@
 				INITIALIZE_STRUCT(Light, light);
 
 				light.color = mkLight.color;
-				light.distanceAttenuation = mkLight.attenuation;
+				light.distanceAttenuation = mkLight.distanceAttenuation;
 				light.direction = mkLight.dirWorld;
 				
 				light.distanceAttenuation = mkLight.distanceAttenuation;
 				light.shadowAttenuation = mkLight.shadowAttenuation;
+				#if UNITY_VERSION >= 202120
+					light.layerMask = mkLight.layerMask;
+				#endif
 
 				return light;
 			}
@@ -418,12 +441,12 @@
 			INITIALIZE_STRUCT(MKLight, mkLight);
 
 			#if defined(MK_URP) || defined(MK_LWRP)
-				#if !defined(_MAIN_LIGHT_SHADOWS_CASCADE)
-					//
-				#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+				#if defined(MK_SHADOW_COORD_INTERPOLATOR)
+					//skip interpolator...
+				#elif defined(MK_MAIN_LIGHT_CALCULATE_SHADOWS)
 					vertexOutputLight._ShadowCoord = TransformWorldToShadowCoord(surfaceData.positionWorld);
 				#else
-					//vertexOutputLight.shadowCoords = 0;
+					vertexOutputLight._ShadowCoord = float4(0, 0, 0, 0);
 				#endif
 			#endif
 			
@@ -431,10 +454,10 @@
 				Light light;
 				INITIALIZE_STRUCT(Light, light);
 
-				#ifdef _MAIN_LIGHT_SHADOWS
-					light = GetMainLight(vertexOutputLight._ShadowCoord);
+				#if defined(MK_URP_2020_2_Or_Newer)
+					light = GetMainLight(vertexOutputLight._ShadowCoord, surfaceData.positionWorld, surfaceData.shadowMask);
 				#else
-					light = GetMainLight();
+					light = GetMainLight(vertexOutputLight._ShadowCoord);
 				#endif
 
 				mkLight.color = light.color;
@@ -444,6 +467,9 @@
 
 				mkLight.distanceAttenuation = light.distanceAttenuation;
 				mkLight.shadowAttenuation = light.shadowAttenuation;
+				#if UNITY_VERSION >= 202120
+					mkLight.layerMask = light.layerMask;
+				#endif
 			#else
 				//lightdirection and attenuation
 				#ifdef USING_DIRECTIONAL_LIGHT
@@ -456,6 +482,7 @@
 
 				UNITY_LIGHT_ATTENUATION(atten, vertexOutputLight, surfaceData.positionWorld);
 				mkLight.attenuation = atten;
+				mkLight.shadowAttenuation = SHADOW_ATTENUATION(vertexOutputLight);
 				mkLight.color = _LightColor0.rgb;
 				mkLight.radiometricColor = mkLight.color * PI;
 			#endif
@@ -470,7 +497,11 @@
 				INITIALIZE_STRUCT(MKLight, light);
 				Light light;
 				INITIALIZE_STRUCT(Light, light);
-				light = GetAdditionalLight(index, surfaceData.positionWorld);
+				#if defined(MK_URP_2020_2_Or_Newer)
+					light = GetAdditionalLight(index, surfaceData.positionWorld, surfaceData.shadowMask);
+				#else
+					light = GetAdditionalLight(index, surfaceData.positionWorld);
+				#endif
 
 				mkLight.color = light.color;
 				mkLight.radiometricColor = mkLight.color * PI;
@@ -479,6 +510,9 @@
 
 				mkLight.distanceAttenuation = light.distanceAttenuation;
 				mkLight.shadowAttenuation = light.shadowAttenuation;
+				#if UNITY_VERSION >= 202120
+					mkLight.layerMask = light.layerMask;
+				#endif
 
 				return mkLight;
 			#else
@@ -669,10 +703,14 @@
 
 			#if defined(MK_ENVIRONMENT_REFLECTIONS)
 				MKGI gi;
+				#if defined(MK_SCREEN_SPACE_OCCLUSION) && defined(MK_URP_2020_2_Or_Newer)
+					surface.occlusion.r *= surfaceData.ambientOcclusion.indirectAmbientOcclusion;
+				#endif
+
 				#if defined(MK_ENVIRONMENT_REFLECTIONS_ADVANCED)
-					gi = GlobalIllumination(ged, surface.occlusion.r, light, surfaceData.positionWorld, surfaceData.viewWorld, surfaceData.normalWorld, surfaceData.lightmapUV);
+					gi = MKGlobalIllumination(ged, surface.occlusion.r, light, surfaceData.positionWorld, surfaceData.viewWorld, surfaceData.normalWorld, surfaceData.lightmapUV);
 				#elif defined(MK_ENVIRONMENT_REFLECTIONS_AMBIENT)
-					gi = GlobalIllumination(ged, surface.occlusion.r, light, surfaceData.positionWorld, 0, surfaceData.normalWorld, surfaceData.lightmapUV);
+					gi = MKGlobalIllumination(ged, surface.occlusion.r, light, surfaceData.positionWorld, 0, surfaceData.normalWorld, surfaceData.lightmapUV);
 				#endif
 				#if defined(MK_URP) || defined(MK_LWRP)
 					Light urpLight;
@@ -720,17 +758,17 @@
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// Lighting Direct
 	/////////////////////////////////////////////////////////////////////////////////////////////
-	inline void LightingDirect(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData, out half4 finalLightColor)
+	inline half MKLightingDiffuse(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData)
 	{
 		#ifdef MK_LIT
-			half4 diffuse;
+			half diffuse;
 			#if defined(MK_DIFFUSE_MINNAERT)
-				diffuse.a = Minnaert(lightData.NoL, surfaceData.VoN, pbsData.roughnessPow2);
+				diffuse = Minnaert(lightData.NoL, surfaceData.VoN, pbsData.roughnessPow2);
 			#elif defined(MK_DIFFUSE_OREN_NAYAR)
-				diffuse.a = OrenNayar(lightData.NoL, surfaceData.VoN, lightData.VoL, pbsData.roughnessPow2);
+				diffuse = OrenNayar(lightData.NoL, surfaceData.VoN, lightData.VoL, pbsData.roughnessPow2);
 			#else
 				//MK_SIMPLE
-				diffuse.a = lightData.NoL;
+				diffuse = lightData.NoL;
 			#endif
 
 			//Customize light atten
@@ -740,20 +778,26 @@
 			//diffuse.a = lerp(diffuse.a, diffuse.a * light.attenuation, step(0, diffuse.a));
 
 			#if defined(MK_WRAPPED_DIFFUSE)
-				diffuse.a = HalfWrap(diffuse.a, 0.5);
+				diffuse = HalfWrap(diffuse, 0.5);
 			#endif
 
 			#ifdef MK_THRESHOLD_MAP
-				diffuse.a -= _DiffuseThresholdOffset * surface.thresholdOffset;
-				diffuse.a += _DiffuseThresholdOffset * THRESHOLD_OFFSET_NORMALIZER;
+				diffuse -= _DiffuseThresholdOffset * surface.thresholdOffset;
+				diffuse += _DiffuseThresholdOffset * THRESHOLD_OFFSET_NORMALIZER;
 			#endif
 
 			//Lighting could be optimized by combining every component (diffuse, specular, lightTransmission, indirect/direct), may break gooch
-			LIGHT_STYLE_RAW_2D(diffuse.a, light.distanceAttenuation, _LightThreshold, _DiffuseSmoothness * 0.5, _DiffuseSmoothness * 0.5, _DiffuseRamp, SAMPLER_CLAMPED_MAIN);
-			diffuse.a *= light.attenuation;
-			ARTISTIC_RAW(diffuse.a);
-			TRANSFER_SCALAR_TO_VECTOR(diffuse);
-			
+			LIGHT_STYLE_RAW_2D(diffuse, light.distanceAttenuation, _LightThreshold, _DiffuseSmoothness * 0.5, _DiffuseSmoothness * 0.5, _DiffuseRamp, SAMPLER_CLAMPED_MAIN);
+			diffuse *= light.attenuation;
+			return diffuse;
+		#else
+			return 1;
+		#endif
+	}
+
+	inline void MKLightingSFX(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData, in half4 diffuse, inout half4 finalLightColor)
+	{
+		#ifdef MK_LIT
 			half3 goochRamp;
 			#ifdef MK_GOOCH_RAMP
 				goochRamp = lerp(1.0, SampleRamp2D(PASS_TEXTURE_2D(_GoochRamp, SAMPLER_CLAMPED_MAIN), half2(diffuse.a, light.distanceAttenuation)).rgb, _GoochRampIntensity);
@@ -767,7 +811,7 @@
 			//#ifdef MK_GOOCH_RAMP
 			//	gooch.rgb = lerp(gooch.rgb, SampleRamp2D(PASS_TEXTURE_2D(_GoochRamp, SAMPLER_CLAMPED_MAIN), half2(diffuse.a, light.distanceAttenuation)).rgb, _GoochRampIntensity);
 			//#endif
-			
+
 			//Surface Direct + Gooch
 			#ifdef MK_SPECULAR
 				half4 specular;
@@ -845,6 +889,43 @@
 					finalLightColor.rgb += lightTransmission.rgb * _LightTransmissionColor.rgb * light.color * _LightTransmissionIntensity;
 				#endif
 			#endif
+
+			#ifdef MK_LIGHTING_ALPHA
+				#if defined(MK_ALPHA_LOOKUP)
+					finalLightColor.a = dot(finalLightColor.rgb, REL_LUMA);
+					//finalLightColor.a = (finalLightColor.r + finalLightColor.g + finalLightColor.b) * 0.33;
+				#endif
+				#if defined(MK_SURFACE_TYPE_OPAQUE)
+					finalLightColor.a = 1;
+				#endif
+			#else
+				finalLightColor.a = 1;
+			#endif
+		#endif
+	}
+
+	inline void LightingDirectAdditional(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData, out half4 finalLightColor)
+	{
+		#ifdef MK_LIT
+			half diffuseRaw = MKLightingDiffuse(surface, surfaceData, pbsData, light, lightData);
+			half4 diffuse = half4(0, 0, 0, diffuseRaw);
+			ARTISTIC_RAW(diffuse.a);
+			diffuse.a *= diffuseRaw;
+			TRANSFER_SCALAR_TO_VECTOR(diffuse);
+			
+			MKLightingSFX(surface, surfaceData, pbsData, light, lightData, diffuse, finalLightColor);
+		#endif
+	}
+
+	inline void LightingDirect(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData, out half4 finalLightColor)
+	{
+		#ifdef MK_LIT
+			half diffuseRaw = MKLightingDiffuse(surface, surfaceData, pbsData, light, lightData);
+			half4 diffuse = half4(0, 0, 0, diffuseRaw);
+			ARTISTIC_RAW(diffuse.a);
+			TRANSFER_SCALAR_TO_VECTOR(diffuse);
+			
+			MKLightingSFX(surface, surfaceData, pbsData, light, lightData, diffuse, finalLightColor);
 
 			#if defined(MK_RIM_SPLIT)
 				#ifndef MK_ADDITIONAL_LIGHTS
@@ -852,156 +933,6 @@
 				#endif
 				//surface.rimDark = RimRawDark(1.0 - saturate(diffuse.a), _RimSize, surfaceData.OneMinusVoN, _RimSmoothness * 0.5, surface, light);
 			#endif
-
-			/*
-			#if defined(MK_ALPHA_LOOKUP)
-				finalLightColor.a = dot(finalLightColor.rgb, REL_LUMA);
-				//finalLightColor.a = (finalLightColor.r + finalLightColor.g + finalLightColor.b) * 0.33;
-			#endif
-			#if defined(MK_SURFACE_TYPE_OPAQUE)
-				finalLightColor.a = 1;
-			#endif
-			*/
-			finalLightColor.a = 1;
-		#endif
-	}
-
-	inline void LightingDirectAdditional(inout Surface surface, in MKSurfaceData surfaceData, in MKPBSData pbsData, in MKLight light, in MKLightData lightData, out half4 finalLightColor)
-	{
-		#ifdef MK_LIT
-			half4 diffuse;
-			#if defined(MK_DIFFUSE_MINNAERT)
-				diffuse.a = Minnaert(lightData.NoL, surfaceData.VoN, pbsData.roughnessPow2);
-			#elif defined(MK_DIFFUSE_OREN_NAYAR)
-				diffuse.a = OrenNayar(lightData.NoL, surfaceData.VoN, lightData.VoL, pbsData.roughnessPow2);
-			#else
-				//MK_SIMPLE
-				diffuse.a = lightData.NoL;
-			#endif
-
-			//Customize light atten
-			//LIGHT_STYLE_RAW_1D(light.attenuation, _LightThreshold, _DiffuseSmoothness * 0.5, _DiffuseSmoothness * 0.5, _DiffuseRamp);
-			//ARTISTIC_RAW(light.attenuation);
-
-			//diffuse.a = lerp(diffuse.a, diffuse.a * light.attenuation, step(0, diffuse.a));
-
-			#if defined(MK_WRAPPED_DIFFUSE)
-				diffuse.a = HalfWrap(diffuse.a, 0.5);
-			#endif
-
-			#ifdef MK_THRESHOLD_MAP
-				diffuse.a -= _DiffuseThresholdOffset * surface.thresholdOffset;
-				diffuse.a += _DiffuseThresholdOffset * THRESHOLD_OFFSET_NORMALIZER;
-			#endif
-
-			//Lighting could be optimized by combining every component (diffuse, specular, lightTransmission, indirect/direct), may break gooch
-			LIGHT_STYLE_RAW_2D(diffuse.a, light.distanceAttenuation, _LightThreshold, _DiffuseSmoothness * 0.5, _DiffuseSmoothness * 0.5, _DiffuseRamp, SAMPLER_CLAMPED_MAIN);
-			diffuse.a *= light.attenuation;
-			ARTISTIC_RAW(diffuse.a);
-			TRANSFER_SCALAR_TO_VECTOR(diffuse);
-			
-			half3 goochRamp;
-			#ifdef MK_GOOCH_RAMP
-				goochRamp = lerp(1.0, SampleRamp2D(PASS_TEXTURE_2D(_GoochRamp, SAMPLER_CLAMPED_MAIN), half2(diffuse.a, light.distanceAttenuation)).rgb, _GoochRampIntensity);
-			#else
-				goochRamp = 1.0;
-			#endif
-			half3 gooch;
-			//Gooch needs to be applied on diffuse only to not distract other light styles such as indirect, spec, lightTransmission
-			gooch = goochRamp * lerp(surface.goochDark.rgb, surface.goochBright.rgb, max(diffuse.r, max(diffuse.g, diffuse.b)));
-
-			//#ifdef MK_GOOCH_RAMP
-			//	gooch.rgb = lerp(gooch.rgb, SampleRamp2D(PASS_TEXTURE_2D(_GoochRamp, SAMPLER_CLAMPED_MAIN), half2(diffuse.a, light.distanceAttenuation)).rgb, _GoochRampIntensity);
-			//#endif
-			
-			//Surface Direct + Gooch
-			#ifdef MK_SPECULAR
-				half4 specular;
-				#if defined(MK_PBS)
-					//Distribution - Geometric - Fresnel
-					half distribution, geometric;
-					half3 sFresnel;
-					#ifdef MK_SPECULAR_ANISOTROPIC
-						//BRDF Aniso Specular
-						distribution = DistributionGGX(lightData.NoHV, lightData.ToHV, lightData.BoHV, pbsData.roughnessPow2, _Anisotropy);
-						//Isotropic Geo term is producing more pleasant results so its used for now
-						geometric = GeometricSmithGGX(surfaceData.VoN, diffuse.a, pbsData.roughness);
-						//geometric = GeometricSmithkGGX(_Anisotropy, lightData.ToHV, lightData.BoHV, dot(surfaceData.tangentWorld, light.dirWorld), dot(surfaceData.bitangentWorld, light.dirWorld), surfaceData.VoN, diffuse.a, pbsData.roughnessPow2);
-						//sFresnel = FresnelSchlickGGX(lightData.oneMinusVoHV, pbsData.specularRadiance, pbsData.smoothness);
-						sFresnel = FresnelCSch(lightData.LoHV, pbsData.specularRadiance, pbsData.roughness);
-					#else
-						distribution = DistributionGGX(lightData.NoHV, pbsData.roughnessPow4);
-						geometric = GeometricSmithGGX(surfaceData.VoN, diffuse.a, pbsData.roughness);
-						//sFresnel = FresnelSchlickGGX(lightData.oneMinusVoHV, pbsData.specularRadiance, pbsData.smoothness);
-						sFresnel = FresnelCSch(lightData.LoHV, pbsData.specularRadiance, pbsData.roughness);
-					#endif
-					specular.a = distribution * geometric;
-					specular.a = SafeDivide(specular.a, 4 * surfaceData.VoN * diffuse.a);
-				#else //MK_SIMPLE Iso Only
-					specular.a = BlinnSpecular(lightData.NoHV, pbsData.smoothness);
-				#endif
-
-				#ifdef MK_THRESHOLD_MAP
-					specular.a -= _SpecularThresholdOffset * surface.thresholdOffset;
-					specular.a += _SpecularThresholdOffset * THRESHOLD_OFFSET_NORMALIZER;
-				#endif
-
-				// specular could be thresholded using: lerp(T_Q, 1, _LightThreshold) but confuses the user because specular is influenced by smoothness and threshold then
-				LIGHT_STYLE_RAW_2D(specular.a, light.distanceAttenuation, T_V, _SpecularSmoothness * 0.5, _SpecularSmoothness * 0.5, _SpecularRamp, SAMPLER_CLAMPED_MAIN);
-				ARTISTIC_RAW_ADDITIVE(specular.a);
-				TRANSFER_SCALAR_TO_VECTOR(specular);
-
-				#ifdef MK_PBS
-					finalLightColor.rgb = ((sFresnel * _SpecularIntensity) * specular.rgb + (pbsData.diffuseRadiance * INV_PI)) * light.radiometricColor * gooch;
-				#else
-					finalLightColor.rgb = (pbsData.specularRadiance * _SpecularIntensity * specular.rgb + (pbsData.diffuseRadiance * INV_PI)) * light.radiometricColor * gooch;
-				#endif
-			#else
-				finalLightColor.rgb = (pbsData.diffuseRadiance * INV_PI) * light.radiometricColor * gooch;
-			#endif
-
-			#ifdef MK_LightTransmission
-				half4 lightTransmission;
-				//A scaling could be implemented here: dot(vohld, scale) then saturate
-				lightTransmission.a = FastPow4(lightData.VoLND);
-				//Based on Colin Barre-Brisebois - GDC 2011 - Approximating Translucency for a Fast, Cheap and Convincing Subsurface-Scattering
-				#ifdef MK_THICKNESS_MAP
-					lightTransmission.a *= surface.thickness;
-				#endif
-				half sssAtten = light.distanceAttenuation;
-
-				//Custom atten stylize not required, because shadows dont affect it
-				#ifdef MK_LIGHT_TRANSMISSION_TRANSLUCENT
-					sssAtten = lerp(0, sssAtten, pbsData.oneMinusReflectivity);
-				#endif
-				lightTransmission.a *= sssAtten;
-
-				#ifdef MK_THRESHOLD_MAP
-					lightTransmission.a -= _LightTransmissionThresholdOffset * surface.thresholdOffset;
-					lightTransmission.a += _LightTransmissionThresholdOffset * THRESHOLD_OFFSET_NORMALIZER;
-				#endif
-
-				LIGHT_STYLE_RAW_2D(lightTransmission.a, light.distanceAttenuation, T_V, _LightTransmissionSmoothness * 0.5, _LightTransmissionSmoothness * 0.5, _LightTransmissionRamp, SAMPLER_CLAMPED_MAIN);
-				ARTISTIC_RAW_ADDITIVE(lightTransmission.a);
-				TRANSFER_SCALAR_TO_VECTOR(lightTransmission);
-
-				#ifdef MK_LIGHT_TRANSMISSION_SUB_SURFACE_SCATTERING
-					finalLightColor.rgb += lightTransmission.rgb * _LightTransmissionColor.rgb * light.color * pbsData.diffuseRadiance * _LightTransmissionIntensity;
-				#else //Translucent
-					finalLightColor.rgb += lightTransmission.rgb * _LightTransmissionColor.rgb * light.color * _LightTransmissionIntensity;
-				#endif
-			#endif
-
-			/*
-			#if defined(MK_ALPHA_LOOKUP)
-				finalLightColor.a = dot(finalLightColor.rgb, REL_LUMA);
-				//finalLightColor.a = (finalLightColor.r + finalLightColor.g + finalLightColor.b) * 0.33;
-			#endif
-			#if defined(MK_SURFACE_TYPE_OPAQUE)
-				finalLightColor.a = 1;
-			#endif
-			*/
-			finalLightColor.a = 1;
 		#endif
 	}
 #endif

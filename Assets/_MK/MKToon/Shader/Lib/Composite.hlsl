@@ -23,9 +23,11 @@
 				surface.direct.rgb += surfaceData.vertexLighting * pbsData.diffuseRadiance;
 			#endif
 
-			#ifdef MK_OCCLUSION_MAP
-				surface.direct.rgb *= surface.occlusion.g;
+			#if defined(MK_SCREEN_SPACE_OCCLUSION) && defined(MK_URP_2020_2_Or_Newer)
+				surface.occlusion.g *= surfaceData.ambientOcclusion.directAmbientOcclusion;
 			#endif
+
+			surface.direct.rgb *= surface.occlusion.g;
 
 			#if defined(MK_FORWARD_BASE_PASS) && defined(MK_INDIRECT)
 				surface.final.rgb = surface.indirect + surface.direct.rgb;
@@ -59,18 +61,19 @@
 				//surface.final.rgb = lerp(surface.final.rgb, _RimDarkColor.rgb, surface.rimDark.rgb * _RimDarkColor.a);
 			#endif
 
-			/*
-			#if defined(MK_ALPHA_LOOKUP)
-				surface.direct.a = saturate(surface.direct.a);
-			#endif
+			#ifdef MK_LIGHTING_ALPHA
+				#if defined(MK_ALPHA_LOOKUP)
+					surface.direct.a = saturate(surface.direct.a);
+				#endif
 
-			surface.final.a = lerp(surface.goochDark.a, surface.goochBright.a, surface.direct.a);
+				surface.final.a = lerp(surface.goochDark.a, surface.goochBright.a, surface.direct.a);
 
-			#if defined(MK_ALPHA_CLIPPING)
-				Clip0(surface.final.a - _AlphaCutoff);
+				#if defined(MK_ALPHA_CLIPPING)
+					Clip0(surface.final.a - _AlphaCutoff);
+				#endif
+			#else
+				surface.final.a = surface.alpha;
 			#endif
-			*/
-			surface.final.a = surface.alpha;
 		#else
 			//non lit color output
 			surface.final.rgb = surface.albedo;

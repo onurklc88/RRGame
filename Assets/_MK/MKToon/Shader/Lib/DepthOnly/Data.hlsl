@@ -50,6 +50,13 @@
 			half3 viewTangent : TEXCOORD1;
 		#endif
 
+		#ifdef MK_POS_CLIP
+			float4 positionClip : TEXCOORD2;
+		#endif
+		#ifdef MK_POS_NULL_CLIP
+			float4 nullClip : TEXCOORD3;
+		#endif
+
 		UNITY_VERTEX_INPUT_INSTANCE_ID
 		UNITY_VERTEX_OUTPUT_STEREO
 	};

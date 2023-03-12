@@ -12,6 +12,13 @@
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// Custom User Config
 	/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/*
+	//Enable alpha blending for lighting
+	#ifndef MK_LIGHTING_ALPHA
+		#define MK_LIGHTING_ALPHA
+	#endif
+	*/
 
 	/*
 	//Enable vertex colors be combined with the albedo map
@@ -41,6 +48,27 @@
 	/*
 	#ifndef MK_DISSOLVE_PROJECTION_SCREEN_SPACE
 		#define MK_DISSOLVE_PROJECTION_SCREEN_SPACE
+	#endif
+	*/
+
+	//Force (baked & mixed) lightmaps
+	/*
+	#ifndef MK_FORCE_LIGHTMAPS
+		#define MK_FORCE_LIGHTMAPS
+	#endif
+	*/
+
+	//Enable a secondary UV set for occlusion (Z and W channels of the main UV are used)
+	/*
+	#ifndef MK_OCCLUSION_UV_SECOND
+		#define MK_OCCLUSION_UV_SECOND
+	#endif
+	*/
+
+	//Disable Local Antialiasing
+	/*
+	#ifndef MK_LOCAL_ANTIALIASING_OFF
+		#define MK_LOCAL_ANTIALIASING_OFF
 	#endif
 	*/
 
@@ -93,6 +121,22 @@
 		#endif
 		#ifndef autoLP4
 			#define autoLP4 fixed4
+		#endif
+	#endif
+
+	#if SHADER_TARGET >= 35 && !defined(SHADER_API_GLES) && !defined(SHADER_API_GLES3) && !defined(MK_LOCAL_ANTIALIASING_OFF)
+		#ifndef MK_LOCAL_ANTIALIASING
+			#define MK_LOCAL_ANTIALIASING
+		#endif
+	#endif
+
+	#if defined(MK_URP) && UNITY_VERSION >= 202110
+		#ifndef MK_URP_2021_1_Or_Newer
+			#define MK_URP_2021_1_Or_Newer
+		#endif
+	#elif defined(MK_URP) && UNITY_VERSION >= 202020
+		#ifndef MK_URP_2020_2_Or_Newer
+			#define MK_URP_2020_2_Or_Newer
 		#endif
 	#endif
 
@@ -314,6 +358,11 @@
 	#endif
 	
 	#ifdef MK_LIT
+		#if (UNITY_VERSION >= 202120 || defined(_SCREEN_SPACE_OCCLUSION)) && !defined(MK_SURFACE_TYPE_TRANSPARENT)
+			#ifndef MK_SCREEN_SPACE_OCCLUSION
+				#define MK_SCREEN_SPACE_OCCLUSION
+			#endif
+		#endif
 		#ifdef _MK_RECEIVE_SHADOWS
 			#ifndef MK_RECEIVE_SHADOWS
 				#define MK_RECEIVE_SHADOWS
@@ -545,7 +594,7 @@
 				#ifndef MK_ENVIRONMENT_REFLECTIONS_ADVANCED
 					#define MK_ENVIRONMENT_REFLECTIONS_ADVANCED
 				#endif
-			#elif defined(_MK_ENVIRONMENT_REFLECTIONS_AMBIENT)
+			#elif defined(_MK_ENVIRONMENT_REFLECTIONS_AMBIENT) || defined(MK_FORCE_LIGHTMAPS)
 				#ifndef MK_ENVIRONMENT_REFLECTIONS_AMBIENT
 					#define MK_ENVIRONMENT_REFLECTIONS_AMBIENT
 				#endif
@@ -786,7 +835,7 @@
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// Input dependent defines
 	/////////////////////////////////////////////////////////////////////////////////////////////
-	#if defined(MK_POLYBRUSH) || defined(MK_OUTLINE_MAP) || defined(MK_VERTEX_ANIMATION_MAP) || defined(MK_THRESHOLD_MAP) || defined(MK_PARTICLES) || defined(MK_ALBEDO_MAP) || defined(MK_DISSOLVE) || defined(MK_GOOCH_MAP) || defined(MK_LightTransmission) || defined(MK_NORMAL_MAP) || defined(MK_DETAIL_NORMAL_MAP) || defined(MK_EMISSION_MAP) || defined(MK_OCCLUSION_MAP) || defined(MK_ARTISTIC_HATCHING) || defined(MK_ARTISTIC_DRAWN) || defined(MK_ARTISTIC_SKETCH) || defined(MK_REFRACTION_DISTORTION_MAP)
+	#if defined(MK_PBS_MAP_0) || defined(MK_PBS_MAP_1) || defined(MK_POLYBRUSH) || defined(MK_OUTLINE_MAP) || defined(MK_VERTEX_ANIMATION_MAP) || defined(MK_THRESHOLD_MAP) || defined(MK_PARTICLES) || defined(MK_ALBEDO_MAP) || defined(MK_DISSOLVE) || defined(MK_GOOCH_MAP) || defined(MK_THICKNESS_MAP) || defined(MK_NORMAL_MAP) || defined(MK_DETAIL_NORMAL_MAP) || defined(MK_EMISSION_MAP) || defined(MK_OCCLUSION_MAP) || defined(MK_HEIGHT_MAP) || defined(MK_ARTISTIC_HATCHING) || defined(MK_ARTISTIC_DRAWN) || defined(MK_ARTISTIC_SKETCH) || defined(MK_REFRACTION_DISTORTION_MAP)
 		#ifndef MK_TCM
 			#define MK_TCM
 		#endif
@@ -798,7 +847,7 @@
 		#endif
 	#endif
 
-	#if defined(MK_LIT) && (defined(MK_TCM) || defined(MK_TCD)) && defined(MK_HEIGHT_MAP) && defined(_MK_PARALLAX) && SHADER_TARGET >= 30
+	#if defined(MK_LIT) && defined(MK_HEIGHT_MAP) && defined(_MK_PARALLAX) && SHADER_TARGET >= 35
 		#ifndef MK_PARALLAX
 			#define MK_PARALLAX
 		#endif
@@ -832,7 +881,7 @@
 		#endif
 	#endif
 
-	#if	defined(MK_REFRACTION) || defined(MK_SOFT_FADE) || defined(MK_CAMERA_FADE) || defined(MK_NORMALIZED_SCREEN_UV)
+	#if	defined(MK_REFRACTION) || defined(MK_SOFT_FADE) || defined(MK_CAMERA_FADE) || defined(MK_NORMALIZED_SCREEN_UV) || defined(MK_SCREEN_SPACE_OCCLUSION)
 		#ifndef MK_SCREEN_UV
 			#define MK_SCREEN_UV
 		#endif
@@ -844,7 +893,7 @@
 		#endif
 	#endif
 
-	#if defined(MK_POS_NULL_CLIP) || defined(MK_REFRACTION) || defined(MK_SOFT_FADE) || defined(MK_CAMERA_FADE)
+	#if defined(MK_POS_NULL_CLIP) || defined(MK_REFRACTION) || defined(MK_SOFT_FADE) || defined(MK_CAMERA_FADE) || defined(MK_SCREEN_UV)
 		#ifndef MK_POS_CLIP
 			#define MK_POS_CLIP
 		#endif
@@ -944,6 +993,34 @@
 	#if defined(MK_FORWARD_BASE_PASS) || defined(MK_OUTLINE_PASS)
 		#ifndef MK_FOG
 			#define MK_FOG
+		#endif
+	#endif
+
+	#if defined(LIGHTMAP_ON) || defined(DYNAMICLIGHTMAP_ON) || defined(MK_ENVIRONMENT_REFLECTIONS)
+		#ifndef MK_LIGHTMAP_UV
+			#define MK_LIGHTMAP_UV
+		#endif
+	#endif
+
+	#ifdef MK_LIT
+		#if defined(MK_RECEIVE_SHADOWS)
+			#if defined(MK_URP_2021_1_Or_Newer)
+				#if defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE) || defined(_MAIN_LIGHT_SHADOWS_SCREEN)
+					#define MK_MAIN_LIGHT_CALCULATE_SHADOWS
+
+					#if defined(_MAIN_LIGHT_SHADOWS) || (defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT))
+						#define MK_SHADOW_COORD_INTERPOLATOR
+					#endif
+				#endif
+			#else
+				#if defined(_MAIN_LIGHT_SHADOWS)
+					#define MK_MAIN_LIGHT_CALCULATE_SHADOWS
+
+					#if !defined(_MAIN_LIGHT_SHADOWS_CASCADE)
+						#define MK_SHADOW_COORD_INTERPOLATOR
+					#endif
+				#endif
+			#endif
 		#endif
 	#endif
 #endif

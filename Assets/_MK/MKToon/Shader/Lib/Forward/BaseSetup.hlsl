@@ -29,7 +29,7 @@
 
 	//if particles are used disable dynamic lightmap
 	#if defined(DYNAMICLIGHTMAP_ON) && defined(MK_PARTICLES)
-		#undef DYNAMICLIGHTMAP_ON
+		//#undef DYNAMICLIGHTMAP_ON
 	#endif
 
 	#if defined(MK_URP) || defined(MK_LWRP)
@@ -45,6 +45,10 @@
 	#endif
 
 	#include "../Core.hlsl"
+
+	#if defined(MK_URP) && defined(MK_PARTICLES) && UNITY_VERSION >= 202020
+		#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ParticlesInstancing.hlsl"
+	#endif
 
 	#include "ProgramForward.hlsl"
 #endif

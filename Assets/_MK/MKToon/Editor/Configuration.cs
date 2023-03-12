@@ -17,6 +17,7 @@ namespace MK.Toon.Editor.InstallWizard
     //[CreateAssetMenu(fileName = "Configuration", menuName = "MK/Install Wizard/Create Configuration Asset")]
     public sealed class Configuration : ScriptableObject
     {
+        #pragma warning disable CS0414
         internal static bool isReady 
         { 
             get
@@ -30,8 +31,6 @@ namespace MK.Toon.Editor.InstallWizard
         [SerializeField]
         private RenderPipeline _renderPipeline = RenderPipeline.Built_in;
 
-        [SerializeField]
-        private string _version = "X.Y.Z";
 
         [SerializeField]
         internal bool showInstallerOnReload = true;
@@ -47,7 +46,17 @@ namespace MK.Toon.Editor.InstallWizard
         [SerializeField]
         private Object _basePackageLWRP = null;
         [SerializeField]
-        private Object _basePackageURP = null;
+        private Object _EditorURP = null;
+        [SerializeField]
+        private Object _basePackageURP_2019_X = null;
+        [SerializeField]
+        private Object _basePackageURP_2020_1 = null;
+        [SerializeField]
+        private Object _basePackageURP_2020_2_Or_Newer = null;
+        [SerializeField]
+        private Object _basePackageURP_2021_1 = null;
+        [SerializeField]
+        private Object _basePackageURP_2021_2_Or_Newer = null;
 
         [SerializeField][Space]
         private Object _examplesPackageInc = null;
@@ -94,7 +103,7 @@ namespace MK.Toon.Editor.InstallWizard
 
         internal static string TryGetPath()
         {
-            if(_instance != null)
+            if(isReady)
             {
                 return AssetDatabase.GetAssetPath(_instance);
             }
@@ -104,21 +113,9 @@ namespace MK.Toon.Editor.InstallWizard
             }
         }
 
-        internal static string TryGetVersion()
-        {
-            if(_instance != null)
-            {
-                return _instance._version;
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
         internal static Texture2D TryGetTitleImage()
         {
-            if(_instance != null)
+            if(isReady)
             {
                 return _instance._titleImage;
             }
@@ -130,7 +127,7 @@ namespace MK.Toon.Editor.InstallWizard
 
         internal static ExampleContainer[] TryGetExamples()
         {
-            if(_instance != null)
+            if(isReady)
             {
                 return _instance._examples;
             }
@@ -142,7 +139,7 @@ namespace MK.Toon.Editor.InstallWizard
 
         internal static bool TryGetShowInstallerOnReload()
         {
-            if(_instance != null)
+            if(isReady)
             {
                 return _instance.showInstallerOnReload;
             }
@@ -153,14 +150,15 @@ namespace MK.Toon.Editor.InstallWizard
         }
         internal static void TrySetShowInstallerOnReload(bool v)
         {
-            if(_instance != null)
+            if(isReady)
             {
                 _instance.showInstallerOnReload = v;
+                SaveInstance();
             }
         }
         internal static RenderPipeline TryGetRenderPipeline()
         {
-            if(_instance != null)
+            if(isReady)
             {
                 return _instance._renderPipeline;
             }
@@ -171,10 +169,18 @@ namespace MK.Toon.Editor.InstallWizard
         }
         internal static void TrySetRenderPipeline(RenderPipeline v)
         {
-            if(_instance != null)
+            if(isReady)
             {
                 _instance._renderPipeline = v;
 
+                SaveInstance();
+            }
+        }
+
+        internal static void SaveInstance()
+        {
+            if(isReady)
+            {
                 EditorUtility.SetDirty(_instance);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -183,53 +189,64 @@ namespace MK.Toon.Editor.InstallWizard
 
         internal static void ImportShaders(RenderPipeline renderPipeline)
         {
-            switch(renderPipeline)
+            if(isReady)
             {
-                case RenderPipeline.Built_in:
-                    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageBuiltin), false);
-                break;
-                case RenderPipeline.Lightweight:
-                    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageLWRP), false);
-                break;
-                case RenderPipeline.Universal:
-                    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP), false);
-                break;
-                default:
-                //All cases should be handled
-                break;
+                switch(renderPipeline)
+                {
+                    case RenderPipeline.Built_in:
+                        AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageBuiltin), false);
+                    break;
+                    //case RenderPipeline.Lightweight:
+                    //    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageLWRP), false);
+                    //break;
+                    case RenderPipeline.Universal:
+                        AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._EditorURP), false);
+                        #if UNITY_2021_2_OR_NEWER
+                            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP_2021_2_Or_Newer), false);
+                        #elif UNITY_2021_1_OR_NEWER
+                            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP_2021_1), false);
+                        #elif UNITY_2020_2_OR_NEWER
+                            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP_2020_2_Or_Newer), false);
+                        #elif UNITY_2020_1
+                            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP_2020_1), false);
+                        #else
+                            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._basePackageURP_2019_X), false);
+                        #endif
+                    break;
+                    default:
+                    //All cases should be handled
+                    break;
+                }
+                TrySetShowInstallerOnReload(false);
             }
-            _instance.showInstallerOnReload = false;
-
-            EditorUtility.SetDirty(_instance);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         internal static void ImportExamples(RenderPipeline renderPipeline)
         {
-            AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageInc), false);
-            switch(renderPipeline)
+            if(isReady)
             {
-                case RenderPipeline.Built_in:
-                    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageBuiltin), false);
-                break;
-                case RenderPipeline.Universal:
-                    AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageURP), false);
-                break;
-                default:
-                //All cases should be handled
-                break;
+                AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageInc), false);
+                switch(renderPipeline)
+                {
+                    case RenderPipeline.Built_in:
+                        AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageBuiltin), false);
+                    break;
+                    case RenderPipeline.Universal:
+                        AssetDatabase.ImportPackage(AssetDatabase.GetAssetPath(_instance._examplesPackageURP), false);
+                    break;
+                    default:
+                    //All cases should be handled
+                    break;
+                }
             }
-
-            EditorUtility.SetDirty(_instance);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
         }
 
         internal static void OpenReadMe()
         {
             AssetDatabase.OpenAsset(_instance._readMe);
         }
+
+        #pragma warning restore CS0414
     }
 }
 #endif

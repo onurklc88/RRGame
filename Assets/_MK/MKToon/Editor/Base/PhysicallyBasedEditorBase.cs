@@ -644,7 +644,7 @@ namespace MK.Toon.Editor
             //Workflow
             foreach (Material mat in _workflow.targets)
             {
-                EditorHelper.SetKeyword(Properties.metallicMap.GetValue(mat) && Properties.workflow.GetValue(mat) == Workflow.Metallic || Properties.specularMap.GetValue(mat) && Properties.workflow.GetValue(mat) == Workflow.Specular, Keywords.pbsMap0, mat);
+                EditorHelper.SetKeyword(Properties.metallicMap.GetValue(mat) && (Properties.workflow.GetValue(mat) == Workflow.Metallic || Properties.workflow.GetValue(mat) == Workflow.Roughness) || Properties.specularMap.GetValue(mat) && Properties.workflow.GetValue(mat) == Workflow.Specular, Keywords.pbsMap0, mat);
                 EditorHelper.SetKeyword(Properties.roughnessMap.GetValue(mat), Keywords.pbsMap1, mat);
             }
         }

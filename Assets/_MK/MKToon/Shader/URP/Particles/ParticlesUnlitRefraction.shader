@@ -96,7 +96,16 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 		[HideInInspector] _AdvancedTab ("", int) = 0
 		[HideInInspector] _ParticlesTab ("", int) = 0
 		[HideInInspector] _RefractionTab ("", int) = 0
+
+		/////////////////
+		// System	   //
+		/////////////////
+		[HideInInspector] _Cutoff ("", Range(0, 1)) = 0.5
+		[HideInInspector] _MainTex ("", 2D) = "white" {}
 	}
+	HLSLINCLUDE
+    	#pragma never_use_dxc
+    ENDHLSL
 	SubShader
 	{
 		Tags {"RenderType"="Transparent" "PerformanceChecks"="False" "IgnoreProjector" = "True" "PreviewType" = "Plane" "RenderPipeline" = "UniversalPipeline"}
@@ -117,7 +126,7 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 				ZFail [_StencilZFail]
 			}
 
-			Tags { "LightMode" = "UniversalForward" } 
+			Tags { "LightMode" = "UniversalForwardOnly" } 
 			Name "ForwardBase" 
 			Cull [_RenderFace]
 			Blend [_BlendSrc] [_BlendDst]
@@ -126,7 +135,7 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 			ColorMask RGB
 
 			HLSLPROGRAM
-			#pragma target 5.0
+			#pragma target 4.5
 			#pragma shader_feature_local __ _MK_SOFT_FADE
 			#pragma shader_feature_local __ _MK_CAMERA_FADE
 			#pragma shader_feature_local __ _MK_COLOR_BLEND_ADDITIVE _MK_COLOR_BLEND_SUBTRACTIVE _MK_COLOR_BLEND_OVERLAY _MK_COLOR_BLEND_COLOR _MK_COLOR_BLEND_DIFFERENCE
@@ -148,8 +157,10 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 
 			#pragma multi_compile_fog
 
-			#pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
+
+			#pragma multi_compile_instancing
+            #pragma instancing_options procedural:ParticleInstancingSetup
 
 			#define MK_URP
 			#define MK_REFRACTION
@@ -197,7 +208,7 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
             HLSLPROGRAM
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
-			#pragma target 5.0
+			#pragma target 4.5
 
             #pragma vertex Universal2DVert
             #pragma fragment Universal2DFrag
@@ -245,7 +256,7 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 				ZFail [_StencilZFail]
 			}
 
-			Tags { "LightMode" = "UniversalForward" } 
+			Tags { "LightMode" = "UniversalForwardOnly" } 
 			Name "ForwardBase" 
 			Cull [_RenderFace]
 			Blend [_BlendSrc] [_BlendDst]
@@ -276,8 +287,10 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 
 			#pragma multi_compile_fog
 
-			#pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
+
+			#pragma multi_compile_instancing
+            #pragma instancing_options procedural:ParticleInstancingSetup
 
 			#define MK_URP
 			#define MK_REFRACTION
@@ -326,134 +339,6 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
             #pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
 			#pragma target 3.5
-
-            #pragma vertex Universal2DVert
-            #pragma fragment Universal2DFrag
-			
-			#pragma shader_feature_local __ _MK_SURFACE_TYPE_TRANSPARENT
-            #pragma shader_feature_local __ _MK_ALBEDO_MAP
-			#pragma shader_feature_local __ _MK_ALPHA_CLIPPING
-            #pragma shader_feature_local __ _MK_BLEND_PREMULTIPLY _MK_BLEND_ADDITIVE _MK_BLEND_MULTIPLY
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_STUTTER
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_SINE _MK_VERTEX_ANIMATION_PULSE _MK_VERTEX_ANIMATION_NOISE
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_MAP
-			#pragma shader_feature_local __ _MK_DISSOLVE_DEFAULT _MK_DISSOLVE_BORDER_COLOR _MK_DISSOLVE_BORDER_RAMP
-			#pragma shader_feature_local __ _MK_COLOR_GRADING_ALBEDO _MK_COLOR_GRADING_FINAL_OUTPUT
-
-            #define MK_URP
-			#define MK_UNLIT
-			#define MK_PARTICLES
-
-            #include "../../Lib/Universal2D/Setup.hlsl"
-
-            ENDHLSL
-        }
-    }
-
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	// SM 3.0
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	SubShader
-	{
-		Tags {"RenderType"="Transparent" "PerformanceChecks"="False" "IgnoreProjector" = "True" "PreviewType" = "Plane" "RenderPipeline" = "UniversalPipeline"}
-
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// FORWARD BASE
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		Pass
-		{
-			Stencil
-			{
-				Ref [_StencilRef]
-				ReadMask [_StencilReadMask]
-				WriteMask [_StencilWriteMask]
-				Comp [_StencilComp]
-				Pass [_StencilPass]
-				Fail [_StencilFail]
-				ZFail [_StencilZFail]
-			}
-
-			Tags { "LightMode" = "UniversalForward" } 
-			Name "ForwardBase" 
-			Cull [_RenderFace]
-			Blend [_BlendSrc] [_BlendDst]
-			ZWrite [_ZWrite]
-			ZTest [_ZTest]
-			ColorMask RGB
-
-			HLSLPROGRAM
-			#pragma target 3.0
-			#pragma shader_feature_local __ _MK_SOFT_FADE
-			#pragma shader_feature_local __ _MK_CAMERA_FADE
-			#pragma shader_feature_local __ _MK_COLOR_BLEND_ADDITIVE _MK_COLOR_BLEND_SUBTRACTIVE _MK_COLOR_BLEND_OVERLAY _MK_COLOR_BLEND_COLOR _MK_COLOR_BLEND_DIFFERENCE
-			#pragma shader_feature_local __ _MK_SURFACE_TYPE_TRANSPARENT
-			#pragma shader_feature_local __ _MK_ALPHA_CLIPPING
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_STUTTER
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_SINE _MK_VERTEX_ANIMATION_PULSE _MK_VERTEX_ANIMATION_NOISE
-			#pragma shader_feature_local __ _MK_VERTEX_ANIMATION_MAP
-			#pragma shader_feature_local __ _MK_DISSOLVE_DEFAULT _MK_DISSOLVE_BORDER_COLOR _MK_DISSOLVE_BORDER_RAMP
-			#pragma shader_feature_local __ _MK_ALBEDO_MAP
-            #pragma shader_feature_local __ _MK_BLEND_PREMULTIPLY _MK_BLEND_ADDITIVE _MK_BLEND_MULTIPLY
-			#pragma shader_feature_local __ _MK_COLOR_GRADING_ALBEDO _MK_COLOR_GRADING_FINAL_OUTPUT
-			#pragma shader_feature_local __ _MK_REFRACTION_DISTORTION_MAP
-			#pragma shader_feature_local __ _MK_INDEX_OF_REFRACTION
-
-			#pragma fragmentoption ARB_precision_hint_fastest
-			#pragma vertex ForwardVert
-			#pragma fragment ForwardFrag
-
-			#pragma multi_compile_fog
-
-			#pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-
-			#define MK_URP
-			#define MK_REFRACTION
-			#define MK_PARTICLES
-			#define MK_UNLIT
-
-			#include "../../Lib/Forward/BaseSetup.hlsl"
-			
-			ENDHLSL
-		}
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// FORWARD ADD
-		/////////////////////////////////////////////////////////////////////////////////////////////
-
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// DEFERRED
-		/////////////////////////////////////////////////////////////////////////////////////////////
-
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// SHADOWCASTER
-		/////////////////////////////////////////////////////////////////////////////////////////////
-
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// META
-		/////////////////////////////////////////////////////////////////////////////////////////////
-
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// Depth Only
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		//Not needed on particles
-		
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		// Universal2D
-		/////////////////////////////////////////////////////////////////////////////////////////////
-		Pass
-        {
-            Name "Universal2D"
-            Tags{ "LightMode" = "Universal2D" }
-
-            Blend [_BlendSrc] [_BlendDst]
-            ZWrite [_ZWrite]
-            Cull [_RenderFace]
-
-            HLSLPROGRAM
-            #pragma prefer_hlslcc gles
-            #pragma exclude_renderers d3d11_9x
-			#pragma target 3.0
 
             #pragma vertex Universal2DVert
             #pragma fragment Universal2DFrag
@@ -501,7 +386,7 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 				ZFail [_StencilZFail]
 			}
 
-			Tags { "LightMode" = "UniversalForward" } 
+			Tags { "LightMode" = "UniversalForwardOnly" } 
 			Name "ForwardBase" 
 			Cull [_RenderFace]
 			Blend [_BlendSrc] [_BlendDst]
@@ -531,8 +416,10 @@ Shader "MK/Toon/URP/Particles/Unlit + Refraction"
 
 			#pragma multi_compile_fog
 
-			#pragma prefer_hlslcc gles
             #pragma exclude_renderers d3d11_9x
+
+			#pragma multi_compile_instancing
+            #pragma instancing_options procedural:ParticleInstancingSetup
 
 			#define MK_URP
 			#define MK_REFRACTION

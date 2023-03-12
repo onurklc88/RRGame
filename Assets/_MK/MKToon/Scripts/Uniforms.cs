@@ -194,5 +194,11 @@ namespace MK.Toon
         public static readonly Uniform particlesTab  = new Uniform("_ParticlesTab");
         public static readonly Uniform outlineTab    = new Uniform("_OutlineTab");
         public static readonly Uniform refractionTab = new Uniform("_RefractionTab");
+
+        /////////////////
+        // System      //
+        /////////////////
+        public static readonly Uniform mainTex = new Uniform("_MainTex");
+        public static readonly Uniform cutoff  = new Uniform("_Cutoff");
     }
 }

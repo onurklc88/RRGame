@@ -50,15 +50,12 @@
 
 		//texcoords
 		#if defined(MK_TCM) || defined(MK_TCD)
-			#if defined(MK_TCM)
-				//XY always RAW Coords
-				//interpolated in pixel shader, artistic UV would take an additional texcoord, could be optimized some day...
-				vertexOutput.uv.xy = VERTEX_INPUT.texcoord0.xy;
-			#else
-				vertexOutput.uv.xy = 0;
-			#endif
-			#if defined(MK_TCD)
-				vertexOutput.uv.zw = VERTEX_INPUT.texcoord0.xy * _DetailMap_ST.xy + _DetailMap_ST.zw;
+			//XY always RAW Coords
+			//interpolated in pixel shader, artistic UV would take an additional texcoord, could be optimized some day...
+			vertexOutput.uv.xy = VERTEX_INPUT.texcoord0.xy;
+			
+			#if defined(MK_OCCLUSION_UV_SECOND)
+				vertexOutput.uv.zw = VERTEX_INPUT.texcoord0.zw;
 			#else
 				vertexOutput.uv.zw = 0;
 			#endif
@@ -82,13 +79,11 @@
 					vertexOutputLight.vertexLighting = ComputeVertexLighting(vertexOutput.positionWorld.xyz, vertexOutput.normalWorld.xyz);
 				#endif
 
-				#ifdef MK_ENVIRONMENT_REFLECTIONS
+				#ifdef MK_LIGHTMAP_UV
 					vertexOutputLight.lightmapUV = 0;
 					#if defined(MK_URP) || defined(MK_LWRP)
 						#if defined(LIGHTMAP_ON)
 							vertexOutputLight.lightmapUV.xy = ComputeStaticLightmapUV(VERTEX_INPUT.staticLightmapUV.xy);
-						#else
-							vertexOutputLight.lightmapUV.rgb = ComputeSHVertex(vertexOutput.normalWorld.xyz);
 						#endif
 					#else
 						//lightmaps and ambient
@@ -153,7 +148,7 @@
 			PASS_NULL_CLIP_ARG(vertexOutput.nullClip)
 			PASS_FLIPBOOK_UV_ARG(vertexOutput.flipbookUV)
 		);
-		Surface surface = InitSurface(surfaceData, PASS_TEXTURE_2D(_AlbedoMap, SAMPLER_REPEAT_MAIN), _AlbedoColor);
+		Surface surface = InitSurface(surfaceData, PASS_SAMPLER_2D(_AlbedoMap), _AlbedoColor, vertexOutputLight.SV_CLIP_POS);
 		MKPBSData pbsData = ComputePBSData(surface, surfaceData);
 
 		#ifdef MK_LIT
@@ -165,22 +160,67 @@
 
 			//Do per pass light
 			LightingIndirect(surface, surfaceData, pbsData, light, lightData);
-			LightingDirect(surface, surfaceData, pbsData, light, lightData, surface.direct);
 
 			#if defined(MK_URP) || defined(MK_LWRP)
-				#ifdef _ADDITIONAL_LIGHTS
-					surface.goochDark = 0;
-
-					uint lightCount = GetAdditionalLightsCount();
-					half4 additionalDirect = 0;
-					for (uint lightIndex = 0u; lightIndex < lightCount; lightIndex++)
+				#if UNITY_VERSION >= 202120
+					uint meshRenderingLayers = GetMeshRenderingLightLayer();
+					if (IsMatchingLightLayer(light.layerMask, meshRenderingLayers))
 					{
-						MKLight additionalLight = ComputeAdditionalLight(lightIndex, surfaceData, vertexOutputLight);
-						MKLightData additionalLightData = ComputeLightData(additionalLight, surfaceData);
-						LightingDirectAdditional(surface, surfaceData, pbsData, additionalLight, additionalLightData, additionalDirect);
-						surface.direct += additionalDirect;
+						LightingDirect(surface, surfaceData, pbsData, light, lightData, surface.direct);
 					}
+
+					#ifdef _ADDITIONAL_LIGHTS
+						half4 gD = surface.goochDark;
+						surface.goochDark = 0;
+						uint lightCount = GetAdditionalLightsCount();
+						half4 additionalDirect = 0;
+
+						MKLight additionalLight;
+						MKLightData additionalLightData;
+						#if USE_CLUSTERED_LIGHTING
+							for (uint lightIndex = 0; lightIndex < min(_AdditionalLightsDirectionalCount, MAX_VISIBLE_LIGHTS); lightIndex++)
+							{
+								additionalLight = ComputeAdditionalLight(lightIndex, surfaceData, vertexOutputLight);
+								additionalLightData = ComputeLightData(additionalLight, surfaceData);
+
+								if (IsMatchingLightLayer(additionalLight.layerMask, meshRenderingLayers))
+								{
+									LightingDirectAdditional(surface, surfaceData, pbsData, additionalLight, additionalLightData, additionalDirect);
+								}
+							}
+						#endif
+						LIGHT_LOOP_BEGIN(lightCount)
+							additionalLight = ComputeAdditionalLight(lightIndex, surfaceData, vertexOutputLight);
+							additionalLightData = ComputeLightData(additionalLight, surfaceData);
+
+							if (IsMatchingLightLayer(additionalLight.layerMask, meshRenderingLayers))
+							{
+								LightingDirectAdditional(surface, surfaceData, pbsData, additionalLight, additionalLightData, additionalDirect);
+								surface.direct += additionalDirect;
+							}
+						LIGHT_LOOP_END
+						surface.goochDark = gD;
+					#endif
+				#else
+					LightingDirect(surface, surfaceData, pbsData, light, lightData, surface.direct);
+					#ifdef _ADDITIONAL_LIGHTS
+						half4 gD = surface.goochDark;
+						surface.goochDark = 0;
+						uint lightCount = GetAdditionalLightsCount();
+						half4 additionalDirect = 0;
+						
+						for (uint lightIndex = 0u; lightIndex < lightCount; lightIndex++)
+						{
+							MKLight additionalLight = ComputeAdditionalLight(lightIndex, surfaceData, vertexOutputLight);
+							MKLightData additionalLightData = ComputeLightData(additionalLight, surfaceData);
+							LightingDirectAdditional(surface, surfaceData, pbsData, additionalLight, additionalLightData, additionalDirect);
+							surface.direct += additionalDirect;
+						}
+						surface.goochDark = gD;
+					#endif
 				#endif
+			#else
+				LightingDirect(surface, surfaceData, pbsData, light, lightData, surface.direct);
 			#endif
 		#endif
 

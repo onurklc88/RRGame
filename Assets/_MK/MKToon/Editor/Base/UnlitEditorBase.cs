@@ -414,13 +414,19 @@ namespace MK.Toon.Editor
         {
             EditorGUI.BeginChangeCheck();
             materialEditor.ShaderProperty(_alphaClipping, UI.alphaClipping);
-            if(_alphaClipping.floatValue == 1)
-            {
-                materialEditor.ShaderProperty(_alphaCutoff, UI.alphaCutoff);
-            }
             if(EditorGUI.EndChangeCheck())
             {
                 ManageKeywordsAlphaClipping();
+                UpdateSystemProperties();
+            }
+            if(_alphaClipping.floatValue == 1)
+            {
+                EditorGUI.BeginChangeCheck();
+                materialEditor.ShaderProperty(_alphaCutoff, UI.alphaCutoff);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    UpdateSystemProperties();
+                }
             }
         }
 
@@ -466,6 +472,7 @@ namespace MK.Toon.Editor
             if(EditorGUI.EndChangeCheck())
             {
                 ManageKeywordsAlbedoMap();
+                UpdateSystemProperties();
             }
         }
 
@@ -781,7 +788,7 @@ namespace MK.Toon.Editor
             //Alpha Clipping
             foreach (Material mat in _alphaClipping.targets)
             {
-                EditorHelper.SetKeyword(Properties.alphaClipping.GetValue(mat), Keywords.alphaClipping, mat);
+                Properties.alphaClipping.SetValue(mat, Properties.alphaClipping.GetValue(mat));
                 //No Keyword == No Alpha Clipping
             }
         }
@@ -844,7 +851,15 @@ namespace MK.Toon.Editor
         {
             foreach (Material mat in _renderPriority.targets)
             {
-                 Properties.renderPriority.SetValue(mat, Properties.renderPriority.GetValue(mat));
+                Properties.renderPriority.SetValue(mat, Properties.renderPriority.GetValue(mat));
+            }
+        }
+
+        private void UpdateSystemProperties()
+        {
+            foreach (Material mat in _albedoMap.targets)
+            {
+                Properties.UpdateSystemProperties(mat);
             }
         }
 
@@ -856,6 +871,7 @@ namespace MK.Toon.Editor
             ManageKeywordsAlphaClipping();
             ManageKeywordsSurface();
             UpdateRenderPriority();
+            UpdateSystemProperties();
             ManageKeywordsColorGrading();
             ManageKeywordsVertexAnimation();
             ManageKeywordsVertexAnimationMap();
