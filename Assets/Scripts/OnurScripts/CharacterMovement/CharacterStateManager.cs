@@ -35,6 +35,7 @@ public class CharacterStateManager : MonoBehaviour
     
     private void Update()
     {
+        HandleGravity();
         HandleRotation();
         _characterController.Move(_currentMovement * Time.deltaTime * 5f);
     }
@@ -54,13 +55,30 @@ public class CharacterStateManager : MonoBehaviour
         }
     }
 
+    private void HandleGravity()
+    {
+        if (_characterController.isGrounded)
+        {
+            float groundedGravity = -.05f;
+            _currentMovement.y = groundedGravity;
+        }
+        else
+        {
+            float gravity = -9.8f;
+            _currentMovement.y += gravity;
+        }
+    }
+
 
    private void OnMovementInput(InputAction.CallbackContext context)
    {
-        _isMovementPressed = true;
+      
         _currentMovementInput = context.ReadValue<Vector2>();
         _currentMovement.x = _currentMovementInput.x;
         _currentMovement.z = _currentMovementInput.y;
-       
+        _isMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
    }
+
+
+
 }
