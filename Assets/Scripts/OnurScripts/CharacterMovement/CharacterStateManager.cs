@@ -7,15 +7,24 @@ using UnityEngine.InputSystem;
 public class CharacterStateManager : MonoBehaviour
 {
    private PlayerInput _playerInput;
-   private CharacterController _characterController; 
-   
-
-   //variables to store player input values
+   [HideInInspector] public CharacterController CharacterController;
+   [HideInInspector] public bool IsMovementPressed;
+  
+   [HideInInspector] public Vector3 _currentMovement;
    private Vector2 _currentMovementInput;
-   private Vector3 _currentMovement;
-   private bool _isMovementPressed;
    private float _rotationFactorPerFrame = 15f;
-    private void OnEnable()
+    
+    
+    
+    #region CharacterStates
+    private CharacterBaseState _currentState = null;
+    public CharacterIdleState CharacterIdleState = new CharacterIdleState();
+    public CharacterWalkState CharacterWalkState = new CharacterWalkState();
+    public CharacterSlipState CharacterSlipState = new CharacterSlipState();
+    public CharacterClimbState CharacterClimbState = new CharacterClimbState();
+    #endregion
+
+     private void OnEnable()
     {
         _playerInput.CharacterControls.Enable();
     }
@@ -27,17 +36,23 @@ public class CharacterStateManager : MonoBehaviour
     private void Awake()
     {
         _playerInput = new PlayerInput();
-        _characterController = GetComponent<CharacterController>();
+        CharacterController = GetComponent<CharacterController>();
+        _currentState = CharacterIdleState;
+        _currentState.EnterState(this);
+
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
+        _playerInput.CharacterControls.Slide.started += OnSlideMovement;
+        _playerInput.CharacterControls.Slide.canceled += OnSlideMovement;
     }
-    
+
+   
     private void Update()
     {
         HandleGravity();
         HandleRotation();
-        _characterController.Move(_currentMovement * Time.deltaTime * 5f);
+        _currentState.UpdateState(this);
     }
    
 
@@ -48,7 +63,7 @@ public class CharacterStateManager : MonoBehaviour
         positionToLookAt.y = 0f;
         positionToLookAt.z = _currentMovement.z;
         Quaternion currentRotation = transform.rotation;
-        if (_isMovementPressed)
+        if (IsMovementPressed)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
@@ -57,28 +72,37 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleGravity()
     {
-        if (_characterController.isGrounded)
+        if (CharacterController.isGrounded)
         {
-            float groundedGravity = -.05f;
+            float groundedGravity = -0.01f;
             _currentMovement.y = groundedGravity;
         }
         else
         {
-            float gravity = -9.8f;
+            float gravity = -2.8f;
             _currentMovement.y += gravity;
         }
+    }
+
+    private void OnSlideMovement(InputAction.CallbackContext context)
+    {
+
     }
 
 
    private void OnMovementInput(InputAction.CallbackContext context)
    {
-      
         _currentMovementInput = context.ReadValue<Vector2>();
         _currentMovement.x = _currentMovementInput.x;
         _currentMovement.z = _currentMovementInput.y;
-        _isMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
+        IsMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
    }
 
+    public void SwitchState(CharacterBaseState newState)
+    {
+        _currentState = newState;
+        _currentState.EnterState(this);
+    }
 
 
 }
