@@ -591,7 +591,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 5ad797ae30335c340a232b5983fa1947, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -629,7 +629,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808218063}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.45469287, y: 1.15, z: -8.719531}
+  m_LocalPosition: {x: -0.45469287, y: 1.15, z: -8.151}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -667,11 +667,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f89dcf4cb018e549b7ca65419b3728b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _characterProperties: {fileID: 11400000, guid: 3284bfdc771602a4ab5188b58a6fef41,
+    type: 2}
   CharacterController: {fileID: 0}
   IsMovementPressed: 0
+  IsSlidePressed: 0
+  IsAtackPressed: 0
   _currentMovement: {x: 0, y: 0, z: 0}
-  CharacterSlipState: {fileID: 0}
-  CharacterClimbState: {fileID: 0}
 --- !u!1 &1969758123
 GameObject:
   m_ObjectHideFlags: 0

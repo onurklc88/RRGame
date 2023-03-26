@@ -2,17 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 
 [RequireComponent(typeof(CharacterController))]
 public class CharacterStateManager : MonoBehaviour
 {
-   private PlayerInput _playerInput;
+
+   [SerializeField] private CharacterProperties _characterProperties;
    [HideInInspector] public CharacterController CharacterController;
    [HideInInspector] public bool IsMovementPressed;
-  
+   [HideInInspector] public bool IsSlidePressed;
+   [HideInInspector] public bool IsAtackPressed;
    [HideInInspector] public Vector3 _currentMovement;
+  
+   //getter and Setters
+   public float CharacterSpeed => _characterProperties.WalkSpeed;
+   private PlayerInput _playerInput;
    private Vector2 _currentMovementInput;
    private float _rotationFactorPerFrame = 15f;
+   private float _buttonPressedTime = 3f;
     
     
     
@@ -20,14 +28,14 @@ public class CharacterStateManager : MonoBehaviour
     private CharacterBaseState _currentState = null;
     public CharacterIdleState CharacterIdleState = new CharacterIdleState();
     public CharacterWalkState CharacterWalkState = new CharacterWalkState();
-    public CharacterSlipState CharacterSlipState = new CharacterSlipState();
+    public CharacterSlideState CharacterSlideState = new CharacterSlideState();
     public CharacterClimbState CharacterClimbState = new CharacterClimbState();
     #endregion
 
      private void OnEnable()
-    {
+     {
         _playerInput.CharacterControls.Enable();
-    }
+     }
     private void OnDisable()
     {
         _playerInput.CharacterControls.Disable();
@@ -44,7 +52,10 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
-        _playerInput.CharacterControls.Slide.canceled += OnSlideMovement;
+        _playerInput.CharacterControls.Attack.performed += OnAttackStarted;
+        _playerInput.CharacterControls.Attack.canceled += OnAttackEnded;
+        
+
     }
 
    
@@ -58,6 +69,8 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleRotation()
     {
+        if (IsSlidePressed) return;
+
         Vector3 positionToLookAt;
         positionToLookAt.x = _currentMovement.x;
         positionToLookAt.y = 0f;
@@ -68,6 +81,28 @@ public class CharacterStateManager : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
         }
+    }
+
+    private void OnAttackStarted(InputAction.CallbackContext context)
+    {
+        _buttonPressedTime = Time.time;
+    }
+
+  
+    private void OnAttackEnded(InputAction.CallbackContext context)
+    {
+        float heldTime = Time.time - _buttonPressedTime;
+        
+        if(heldTime < 0.5f)
+        {
+            Debug.Log("Tap");
+        }
+        else
+        {
+            Debug.Log("Hold");
+        }
+
+       
     }
 
     private void HandleGravity()
@@ -86,7 +121,8 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
-
+        IsSlidePressed = context.ReadValueAsButton();
+        SwitchState(CharacterSlideState);
     }
 
 
