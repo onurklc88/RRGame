@@ -10,8 +10,9 @@ public class CharacterIdleState : CharacterBaseState
     } 
     public override void UpdateState(CharacterStateManager character)
     {
+        
         if (character.IsMovementPressed)
-            ExitState(character);
+             ExitState(character);
     }
     public override void ExitState(CharacterStateManager character)
     {

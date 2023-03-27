@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: CharacterProperties
   m_EditorClassIdentifier: 
   WalkSpeed: 5
+  AttackArea: 1.5

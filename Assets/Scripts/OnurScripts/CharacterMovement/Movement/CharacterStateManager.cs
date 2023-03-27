@@ -8,34 +8,44 @@ using UnityEngine.InputSystem.Interactions;
 public class CharacterStateManager : MonoBehaviour
 {
 
-   [SerializeField] private CharacterProperties _characterProperties;
-   [HideInInspector] public CharacterController CharacterController;
-   [HideInInspector] public bool IsMovementPressed;
-   [HideInInspector] public bool IsSlidePressed;
-   [HideInInspector] public bool IsAtackPressed;
-   [HideInInspector] public Vector3 _currentMovement;
-  
-   //getter and Setters
-   public float CharacterSpeed => _characterProperties.WalkSpeed;
-   private PlayerInput _playerInput;
-   private Vector2 _currentMovementInput;
-   private float _rotationFactorPerFrame = 15f;
-   private float _buttonPressedTime = 3f;
-    
-    
-    
+    [SerializeField] private CharacterProperties _characterProperties;
+    [HideInInspector] public CharacterController CharacterController;
+    [HideInInspector] public bool IsMovementPressed;
+    [HideInInspector] public bool IsSlidePressed;
+    [HideInInspector] public bool IsAtackPressed;
+    [HideInInspector] public Vector3 _currentMovement;
+
+   
+    private bool _heavyAttack;
+
+    //getter and Setters
+
+    public CharacterProperties CharacterProperties => _characterProperties;
+    public float CharacterSpeed => _characterProperties.WalkSpeed;
+
+    public bool HeavyAttack => _heavyAttack;
+
+
+    private PlayerInput _playerInput;
+    private Vector2 _currentMovementInput;
+    private float _rotationFactorPerFrame = 15f;
+    private float _buttonPressedTime = 3f;
+
+
+
     #region CharacterStates
     private CharacterBaseState _currentState = null;
     public CharacterIdleState CharacterIdleState = new CharacterIdleState();
     public CharacterWalkState CharacterWalkState = new CharacterWalkState();
     public CharacterSlideState CharacterSlideState = new CharacterSlideState();
     public CharacterClimbState CharacterClimbState = new CharacterClimbState();
+    public CharacterAttackState CharacterAttackState = new CharacterAttackState();
     #endregion
 
-     private void OnEnable()
-     {
+    private void OnEnable()
+    {
         _playerInput.CharacterControls.Enable();
-     }
+    }
     private void OnDisable()
     {
         _playerInput.CharacterControls.Disable();
@@ -47,25 +57,22 @@ public class CharacterStateManager : MonoBehaviour
         CharacterController = GetComponent<CharacterController>();
         _currentState = CharacterIdleState;
         _currentState.EnterState(this);
-
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
         _playerInput.CharacterControls.Attack.performed += OnAttackStarted;
         _playerInput.CharacterControls.Attack.canceled += OnAttackEnded;
-        
-
     }
 
-   
+
     private void Update()
     {
         HandleGravity();
         HandleRotation();
         _currentState.UpdateState(this);
     }
-   
+
 
     private void HandleRotation()
     {
@@ -88,21 +95,22 @@ public class CharacterStateManager : MonoBehaviour
         _buttonPressedTime = Time.time;
     }
 
-  
+
     private void OnAttackEnded(InputAction.CallbackContext context)
     {
         float heldTime = Time.time - _buttonPressedTime;
-        
-        if(heldTime < 0.5f)
-        {
-            Debug.Log("Tap");
-        }
-        else
-        {
-            Debug.Log("Hold");
-        }
 
-       
+        if (heldTime < 0.5f)
+         _heavyAttack = false;
+        else
+         _heavyAttack = true;
+         
+       if(_currentState != CharacterSlideState)
+       {
+            SwitchState(CharacterAttackState);
+       }
+
+
     }
 
     private void HandleGravity()
@@ -126,13 +134,15 @@ public class CharacterStateManager : MonoBehaviour
     }
 
 
-   private void OnMovementInput(InputAction.CallbackContext context)
-   {
+    private void OnMovementInput(InputAction.CallbackContext context)
+    {
+        
         _currentMovementInput = context.ReadValue<Vector2>();
         _currentMovement.x = _currentMovementInput.x;
         _currentMovement.z = _currentMovementInput.y;
         IsMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
-   }
+      
+    }
 
     public void SwitchState(CharacterBaseState newState)
     {
@@ -140,5 +150,14 @@ public class CharacterStateManager : MonoBehaviour
         _currentState.EnterState(this);
     }
 
-
+    private void OnDrawGizmos()
+    {
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + transform.forward * 2f, 1.5f);
+    }
 }
+
+
+
+

@@ -4,5 +4,6 @@ using UnityEngine;
 public class CharacterProperties : ScriptableObject
 {
     public float WalkSpeed;
+    public float AttackArea;
 
 }
