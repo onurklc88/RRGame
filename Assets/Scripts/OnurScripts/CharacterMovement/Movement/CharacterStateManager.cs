@@ -15,14 +15,14 @@ public class CharacterStateManager : MonoBehaviour
     [HideInInspector] public bool IsAtackPressed;
     [HideInInspector] public Vector3 _currentMovement;
 
-   
+    private CharacterAttackState.AttackType _attackType;
     private bool _heavyAttack;
 
     //getter and Setters
 
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
-
+    public CharacterAttackState.AttackType AttackType => _attackType;
     public bool HeavyAttack => _heavyAttack;
 
 
@@ -44,6 +44,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnEnable()
     {
+        CharacterAttackState.AddActionTypes(this);
         _playerInput.CharacterControls.Enable();
     }
     private void OnDisable()
@@ -76,7 +77,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (IsSlidePressed) return;
+        if (IsSlidePressed || _currentState == CharacterAttackState) return;
 
         Vector3 positionToLookAt;
         positionToLookAt.x = _currentMovement.x;
@@ -101,14 +102,14 @@ public class CharacterStateManager : MonoBehaviour
         float heldTime = Time.time - _buttonPressedTime;
 
         if (heldTime < 0.5f)
-         _heavyAttack = false;
+            _attackType = CharacterAttackState.AttackType.Light;
         else
-         _heavyAttack = true;
-         
-       if(_currentState != CharacterSlideState)
-       {
+            _attackType = CharacterAttackState.AttackType.Heavy;
+
+        if (_currentState != CharacterSlideState)
+        {
             SwitchState(CharacterAttackState);
-       }
+        }
 
 
     }

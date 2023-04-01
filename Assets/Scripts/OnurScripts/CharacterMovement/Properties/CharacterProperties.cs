@@ -5,5 +5,7 @@ public class CharacterProperties : ScriptableObject
 {
     public float WalkSpeed;
     public float AttackArea;
+    public int LightAttackDamage;
+    public int HeavyAttackDamage;
 
 }
