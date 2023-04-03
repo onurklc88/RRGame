@@ -2,32 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
+using Cinemachine;
+
 
 [RequireComponent(typeof(CharacterController))]
 public class CharacterStateManager : MonoBehaviour
 {
 
     [SerializeField] private CharacterProperties _characterProperties;
+    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed;
     [HideInInspector] public bool IsAtackPressed;
-    [HideInInspector] public Vector3 _currentMovement;
+  
 
     private CharacterAttackState.AttackType _attackType;
-    private bool _heavyAttack;
+    public Vector3 _currentMovement;
 
     //getter and Setters
-
+    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
     public CharacterAttackState.AttackType AttackType => _attackType;
-    public bool HeavyAttack => _heavyAttack;
+    public Vector3 CurrentMove => _currentMovement;
 
 
+
+    
     private PlayerInput _playerInput;
-    private Vector2 _currentMovementInput;
+    private Vector2 _readVector;
     private float _rotationFactorPerFrame = 15f;
     private float _buttonPressedTime = 3f;
 
@@ -69,8 +73,8 @@ public class CharacterStateManager : MonoBehaviour
 
     private void Update()
     {
-        HandleGravity();
         HandleRotation();
+        HandleGravity();
         _currentState.UpdateState(this);
     }
 
@@ -118,42 +122,51 @@ public class CharacterStateManager : MonoBehaviour
     {
         if (CharacterController.isGrounded)
         {
-            float groundedGravity = -0.01f;
+            Debug.Log("A");
+            float groundedGravity = -0.5f;
             _currentMovement.y = groundedGravity;
         }
         else
         {
-            float gravity = -2.8f;
+            Debug.Log("B");
+            float gravity = -9.8f;
             _currentMovement.y += gravity;
+            CharacterController.SimpleMove(new Vector3(transform.position.x, _currentMovement.y, transform.position.z));
+           
         }
     }
 
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
+        if (_currentState == CharacterSlideState) return;
         IsSlidePressed = context.ReadValueAsButton();
-        SwitchState(CharacterSlideState);
+       SwitchState(CharacterSlideState);
     }
 
 
     private void OnMovementInput(InputAction.CallbackContext context)
     {
-        
-        _currentMovementInput = context.ReadValue<Vector2>();
-        _currentMovement.x = _currentMovementInput.x;
-        _currentMovement.z = _currentMovementInput.y;
-        IsMovementPressed = _currentMovementInput.x != 0 || _currentMovementInput.y != 0;
-      
+        _readVector = context.ReadValue<Vector2>();
+        Vector3 toConvert = new Vector3(_readVector.x, 0, _readVector.y);
+        _currentMovement = IsoVectorToConvert(toConvert);
+        IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
     }
+   
 
     public void SwitchState(CharacterBaseState newState)
     {
         _currentState = newState;
         _currentState.EnterState(this);
     }
-
+    private Vector3 IsoVectorToConvert(Vector3 vector)
+    {
+        Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);
+        Matrix4x4 isoMatrix = Matrix4x4.Rotate(rotation);
+        Vector3 result = isoMatrix.MultiplyPoint3x4(vector);
+        return result;
+    }
     private void OnDrawGizmos()
     {
-        
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position + transform.forward * 2f, 1.5f);
     }

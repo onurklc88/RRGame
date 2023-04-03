@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class CharacterAttackState : CharacterBaseState
 {
@@ -29,18 +30,10 @@ public class CharacterAttackState : CharacterBaseState
     public override void EnterState(CharacterStateManager character)
     {
        
-        AttackRange(character);
+         AttackRange(character);
         _attackActions[(int)character.AttackType]();
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), Camera.main.transform.position.y));
-
-        // Adjust the y-coordinate of the mouse position to match the height of the character
-        mousePos.y = character.transform.position.y;
-
-        // Calculate the angle between the character and the mouse position
-        float angle = Mathf.Atan2(mousePos.x - character.transform.position.x, mousePos.z - character.transform.position.z) * Mathf.Rad2Deg;
-
-        // Apply the calculated angle to the character's rotation
-        character.transform.rotation = Quaternion.Euler(0, angle, 0);
+     
+       //character.transform.LookAt(MousePointer.GetWorldRay(Camera.main, false));
         character.StartCoroutine(DelayState(character));
     }
     public override void UpdateState(CharacterStateManager character)
@@ -52,7 +45,7 @@ public class CharacterAttackState : CharacterBaseState
         character.SwitchState(character.CharacterIdleState);
         
     }
-
+   
     private void AttackRange(CharacterStateManager character)
     {
         Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * 2f, character.CharacterProperties.AttackArea);
