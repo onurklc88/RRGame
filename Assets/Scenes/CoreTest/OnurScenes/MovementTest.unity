@@ -703,7 +703,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0353577, y: 0.4984517, z: 6.704723}
+  m_LocalPosition: {x: 2.0353746, y: 0.49846148, z: 6.704735}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1616,7 +1616,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702126483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.035363, y: 0.4984548, z: 6.7047267}
+  m_LocalPosition: {x: 2.035386, y: 0.49846888, z: 6.704744}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1694,7 +1694,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734461252}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0353675, y: 0.49845695, z: 6.7047296}
+  m_LocalPosition: {x: 2.035395, y: 0.49847364, z: 6.704749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1870,6 +1870,7 @@ MonoBehaviour:
   IsMovementPressed: 0
   IsSlidePressed: 0
   IsAtackPressed: 0
+  _currentMovement: {x: 0, y: 0, z: 0}
 --- !u!1 &1969758123
 GameObject:
   m_ObjectHideFlags: 0

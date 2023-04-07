@@ -122,18 +122,35 @@ public class CharacterStateManager : MonoBehaviour
     {
         if (CharacterController.isGrounded)
         {
-            Debug.Log("A");
             float groundedGravity = -0.5f;
             _currentMovement.y = groundedGravity;
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f))
+            {
+                float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+                //Debug.Log("Slope angle: " + slopeAngle);
+                // If the slope angle is greater than the limit, rotate the character
+                if (slopeAngle > 5f)
+                {
+                    float sign = Mathf.Sign(hit.normal.z);
+                    float desiredXRotation = slopeAngle * sign;
+                    if (IsMovingUpSlope(hit.normal))
+                    {
+                        desiredXRotation *= -1f;
+                    }
+                    Quaternion slopeRotation = Quaternion.Euler(desiredXRotation, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation, 30f * Time.deltaTime);
+                }
+            }
         }
         else
         {
-            Debug.Log("B");
-            float gravity = -9.8f;
+           float gravity = -9.8f;
             _currentMovement.y += gravity;
             CharacterController.SimpleMove(new Vector3(transform.position.x, _currentMovement.y, transform.position.z));
            
         }
+
+       
     }
 
     private void OnSlideMovement(InputAction.CallbackContext context)
@@ -157,6 +174,12 @@ public class CharacterStateManager : MonoBehaviour
     {
         _currentState = newState;
         _currentState.EnterState(this);
+    }
+
+    private bool IsMovingUpSlope(Vector3 slopeNormal)
+    {
+        float dot = Vector3.Dot(slopeNormal, _currentMovement.normalized);
+        return dot > 0f;
     }
     private Vector3 IsoVectorToConvert(Vector3 vector)
     {
