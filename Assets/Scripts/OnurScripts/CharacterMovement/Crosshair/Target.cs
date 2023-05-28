@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using UnityEngine.UI;
+
+
 public class Target : MonoBehaviour
 {
     [SerializeField] private Transform aim;
@@ -13,6 +15,7 @@ public class Target : MonoBehaviour
     {
         Ray ray = MousePointer.GetWorldRay(Camera.main);
         aim.transform.position =  ray.origin;
+        Debug.Log(ray);
         //image.t = MousePointer.GetBoundedScreenPosition();
     }
 }

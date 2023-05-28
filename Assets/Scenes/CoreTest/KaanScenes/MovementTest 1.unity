@@ -447,7 +447,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &749057590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,7 +557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &771286955
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -747,7 +747,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0353901, y: 0.49847054, z: 6.704746}
+  m_LocalPosition: {x: 2.035395, y: 0.49847364, z: 6.704749}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1706,7 +1706,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702126483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0354028, y: 0.49847794, z: 6.704754}
+  m_LocalPosition: {x: 2.0354085, y: 0.49848175, z: 6.7047586}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1784,7 +1784,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734461252}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.0354085, y: 0.49848175, z: 6.7047586}
+  m_LocalPosition: {x: 2.0354133, y: 0.4984846, z: 6.7047615}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1850,6 +1850,7 @@ GameObject:
   - component: {fileID: 1808218065}
   - component: {fileID: 1808218069}
   - component: {fileID: 1808218070}
+  - component: {fileID: 1808218071}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -1961,6 +1962,21 @@ MonoBehaviour:
   IsSlidePressed: 0
   IsAtackPressed: 0
   _currentMovement: {x: 0, y: 0, z: 0}
+--- !u!114 &1808218071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808218063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b5a08759e59b94ea77339fe7f4aa29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &1969758123
 GameObject:
   m_ObjectHideFlags: 0

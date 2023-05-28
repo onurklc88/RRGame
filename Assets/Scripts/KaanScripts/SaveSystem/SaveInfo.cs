@@ -10,8 +10,6 @@ public static class SaveInfo
     public static void Init()
     {
         _player = Load<Player>();
-
-
     }
 
 
