@@ -6,10 +6,11 @@ using DG.Tweening;
 public class CharacterSlideState : CharacterBaseState
 {
 
-    Vector3 velocity;
+    private Vector3 _dashPosition;
     public override void EnterState(CharacterStateManager character)
     {
-       character.StartCoroutine(DelayState(character));
+       // if (character.IsSlidePressed) return;
+        character.StartCoroutine(DelayState(character));
     }
     public override void UpdateState(CharacterStateManager character)
     {
@@ -18,7 +19,6 @@ public class CharacterSlideState : CharacterBaseState
     public override void ExitState(CharacterStateManager character)
     {
         character.IsSlidePressed = false;
-        
         character.SwitchState(character.CharacterIdleState);
     }
 
@@ -28,8 +28,16 @@ public class CharacterSlideState : CharacterBaseState
         while(Time.time < startTime + 0.25)
         {
             
-            character.CharacterController.Move(character.transform.forward * 15f * Time.deltaTime);
-          
+            if (character.CurrentMove.magnitude < 1f)
+                _dashPosition = character.transform.position + character.transform.forward * 15f;
+            else
+                _dashPosition = character.transform.position + character.CurrentMove * 15f;
+              
+           
+         
+            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
+
+
             yield return null;
         }
 

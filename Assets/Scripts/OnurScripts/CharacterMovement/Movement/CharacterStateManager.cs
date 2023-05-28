@@ -19,6 +19,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private CharacterAttackState.AttackType _attackType;
     public Vector3 _currentMovement;
+    public Vector3 DashPosition;
 
     //getter and Setters
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
@@ -88,11 +89,14 @@ public class CharacterStateManager : MonoBehaviour
         positionToLookAt.y = 0f;
         positionToLookAt.z = _currentMovement.z;
         Quaternion currentRotation = transform.rotation;
+       
+        
         if (IsMovementPressed)
         {
             Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
         }
+        
     }
 
     private void OnAttackStarted(InputAction.CallbackContext context)
@@ -124,27 +128,13 @@ public class CharacterStateManager : MonoBehaviour
         {
             float groundedGravity = -0.5f;
             _currentMovement.y = groundedGravity;
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 10f))
-            {
-                float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
-                //Debug.Log("Slope angle: " + slopeAngle);
-                // If the slope angle is greater than the limit, rotate the character
-                if (slopeAngle > 5f)
-                {
-                    float sign = Mathf.Sign(hit.normal.z);
-                    float desiredXRotation = slopeAngle * sign;
-                    if (IsMovingUpSlope(hit.normal))
-                    {
-                        desiredXRotation *= -1f;
-                    }
-                    Quaternion slopeRotation = Quaternion.Euler(desiredXRotation, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation, 30f * Time.deltaTime);
-                }
-            }
+            Debug.Log("A");
+           
         }
         else
         {
-           float gravity = -9.8f;
+            Debug.Log("B");
+            float gravity = -0.5f;
             _currentMovement.y += gravity;
             CharacterController.SimpleMove(new Vector3(transform.position.x, _currentMovement.y, transform.position.z));
            
