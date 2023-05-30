@@ -128,12 +128,9 @@ public class CharacterStateManager : MonoBehaviour
         {
             float groundedGravity = -0.5f;
             _currentMovement.y = groundedGravity;
-            Debug.Log("A");
-           
         }
         else
         {
-            Debug.Log("B");
             float gravity = -0.5f;
             _currentMovement.y += gravity;
             CharacterController.SimpleMove(new Vector3(transform.position.x, _currentMovement.y, transform.position.z));

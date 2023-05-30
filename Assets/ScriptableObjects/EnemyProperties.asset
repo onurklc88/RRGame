@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b740f2452c5c9a479299615c31b8ca8, type: 3}
-  m_Name: CharacterProperties
+  m_Script: {fileID: 11500000, guid: 66db86f577b7aff40898917b672d6087, type: 3}
+  m_Name: EnemyProperties
   m_EditorClassIdentifier: 
-  WalkSpeed: 5
-  AttackArea: 1.5
-  LightAttackDamage: 3
+  WalkSpeed: 0
+  SprintSpeed: 0
+  AttackArea: 0
+  ChaseArea: 0
+  LightAttackDamage: 0
   HeavyAttackDamage: 0
+  EnemyHealth: 9

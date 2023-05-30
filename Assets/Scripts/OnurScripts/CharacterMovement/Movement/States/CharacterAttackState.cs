@@ -29,11 +29,9 @@ public class CharacterAttackState : CharacterBaseState
 
     public override void EnterState(CharacterStateManager character)
     {
-       
          AttackRange(character);
         _attackActions[(int)character.AttackType]();
-     
-       //character.transform.LookAt(MousePointer.GetWorldRay(Camera.main, false));
+        ChangeCharacterRotation(character);
         character.StartCoroutine(DelayState(character));
     }
     public override void UpdateState(CharacterStateManager character)
@@ -57,7 +55,6 @@ public class CharacterAttackState : CharacterBaseState
             if(inSightRange[i].transform.GetComponent<IDamageable>() != null)
             {
                _collidedObject = inSightRange[i].transform.GetComponent<IDamageable>();
-               
             }
         }
     }
@@ -65,8 +62,9 @@ public class CharacterAttackState : CharacterBaseState
 
     private void NormalAttack()
     {
-       if (_collidedObject == null) return;
         Debug.Log("Normal Attack");
+        if (_collidedObject == null) return;
+      
         _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage);
       
 
@@ -75,8 +73,9 @@ public class CharacterAttackState : CharacterBaseState
 
     private void HeavyAttack()
     {
-        if (_collidedObject == null) return;
         Debug.Log("Heavy Attack");
+        if (_collidedObject == null) return;
+    
         _collidedObject.TakeDamage(_character.CharacterProperties.HeavyAttackDamage);
       
     }
@@ -84,6 +83,20 @@ public class CharacterAttackState : CharacterBaseState
     private void LongRangeAttack()
     {
 
+    }
+
+    private void ChangeCharacterRotation(CharacterStateManager character)
+    {
+        var direction = GetMousePosition() - character.transform.position;
+        direction.y = 0;
+        character.transform.forward = direction;
+    }
+
+    private Vector3 GetMousePosition()
+    {
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out var hitInfo, Mathf.Infinity)) return Vector3.zero;
+        return hitInfo.point;
     }
 
     public override IEnumerator DelayState(CharacterStateManager character)

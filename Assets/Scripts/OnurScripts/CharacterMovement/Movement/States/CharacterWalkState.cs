@@ -10,7 +10,7 @@ public class CharacterWalkState : CharacterBaseState
 
     public override void EnterState(CharacterStateManager character)
     {
-        Debug.Log("Character Walk State");
+        
        
     }
     public override void UpdateState(CharacterStateManager character)
