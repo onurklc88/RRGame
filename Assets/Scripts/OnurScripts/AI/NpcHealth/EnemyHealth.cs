@@ -5,7 +5,7 @@ using System;
 
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
-    public static event Action OnEnemyDie;
+   // public static event Action OnEnemyDie;
     [SerializeField] private EnemyProperties _enemyProperties;
     private int _currentHealth;
     private void OnEnable()
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         
         if(_currentHealth <= 0)
         {
-            OnEnemyDie?.Invoke();
+          
             //Vfx Sound and Pool
         }
         else

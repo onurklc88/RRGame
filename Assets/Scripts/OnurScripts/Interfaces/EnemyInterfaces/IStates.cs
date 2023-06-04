@@ -1,6 +1,7 @@
 
-public interface IEnemy
+public interface IStates
 {
+    void SpawnState();
     void IdleState();
     void PatrolState();
     void ChaseState();

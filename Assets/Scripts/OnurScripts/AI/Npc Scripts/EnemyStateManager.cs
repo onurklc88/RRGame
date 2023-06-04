@@ -1,23 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class EnemyStateManager : MonoBehaviour,IEnemy
+[RequireComponent(typeof(NavMeshAgent))]
+public class EnemyStateManager : MonoBehaviour,IStates
 {
     private void OnEnable()
     {
-        EnemyHealth.OnEnemyDie += IdleState;
+       
     }
 
     private void OnDisable()
     {
-        EnemyHealth.OnEnemyDie -= IdleState;
+       
     }
 
-   public void IdleState()
-   {
-        Debug.Log("Im Dead");
-   }
+
+
+
+    #region States
+    public void SpawnState()
+    {
+
+    }
+    public void IdleState()
+    {
+
+    }
     public void PatrolState()
     {
 
@@ -34,4 +44,6 @@ public class EnemyStateManager : MonoBehaviour,IEnemy
     {
 
     }
+
+    #endregion
 }
