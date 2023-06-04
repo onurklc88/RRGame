@@ -24,6 +24,8 @@ public class CrosshairCursor : MonoBehaviour
         {
             Aim();
         }
+        if (Input.GetMouseButton(1))
+            Aim();
     }
 
 
