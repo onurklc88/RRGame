@@ -9,14 +9,16 @@ using System.Collections.Generic;
 
 public class CreatureStates : ScriptableObject
 {
-   
+    public enum CreatureState
+    {
+        Idle,
+        Patrol,
+        Chase,
+        Attack,
+        Die
+    }
 
-   // public List<Action> AddActionList() { SpawnState(), IdleState()}
-   
     
-
-    public void SwitchState(string newState) { }
-
     public void SpawnState(Creature creature)
     {
 
