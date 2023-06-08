@@ -5,50 +5,37 @@ using UnityEngine;
 public class Clawmarcher : Creature
 {
     private bool _playerDetection;
-    
+    [SerializeField] IState _idleState = new IdleState();
+    [SerializeField] IState _patrolState = new PatrolState();
+    [SerializeField] IState _chaseState = new ChaseState();
+    [SerializeField] IState _attackState = new AttackState();
+    private IState _currentState = null;
     private void Start()
     {
-        CurrentState = CreatureStates.CreatureState.Idle;
-        SetCreatureProperties();
+        _currentState = _patrolState;
+       // _currentState.ProcessState(this);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        ExecuteState(CurrentState);
+        _currentState.ProcessState(this);
     }
 
 
-    public override void ExecuteState(CreatureStates.CreatureState state)
+    public override void ExecuteState()
     {
-        switch (state)
-        {
-            case CreatureStates.CreatureState.Idle:
-              
-                break;
-            case CreatureStates.CreatureState.Patrol:
-                Debug.Log("Patrol");
-                break;
-            case CreatureStates.CreatureState.Chase:
-                Debug.Log("Chase");
-                break;
-            case CreatureStates.CreatureState.Attack:
-                Debug.Log("Attack");
-                break;
-            case CreatureStates.CreatureState.Die:
-                break;
-        }
+       _currentState.ProcessState(this);
     }
 
     public override void SetCreatureProperties()
     {
-        gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.ChaseArea;
-
+       gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.ChaseArea;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 6)
-            CurrentState = CreatureStates.CreatureState.Chase;
+        if (other.gameObject.layer == 6) { }
+           
     }
 
     private void OnTriggerStay(Collider other)
@@ -61,7 +48,7 @@ public class Clawmarcher : Creature
 
     private void OnTriggerExit(Collider other)
     {
-        CurrentState = CreatureStates.CreatureState.Patrol;
+        
     }
 
     private void CheckDistanceBetweenPlayer(Vector3 playerPosition)
@@ -69,9 +56,10 @@ public class Clawmarcher : Creature
          float distanceBetweenPlayer = Vector3.Distance(playerPosition, transform.position);
 
         if (distanceBetweenPlayer < 4f)
-            CurrentState = CreatureStates.CreatureState.Attack;
-         
+        {
 
+        }
+           
     }
     
 

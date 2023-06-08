@@ -1,10 +1,6 @@
 
-public interface IStates
+public interface IState
 {
-    void SpawnState();
-    void IdleState();
-    void PatrolState();
-    void ChaseState();
-    void AttackState();
-    void DieState();
+    void ProcessState(Creature creature);
 }
+
