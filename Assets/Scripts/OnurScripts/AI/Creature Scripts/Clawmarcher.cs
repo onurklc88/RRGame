@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class Clawmarcher : Creature
 {
-    private bool _playerDetection;
-    [SerializeField] IState _idleState = new IdleState();
-    [SerializeField] IState _patrolState = new PatrolState();
-    [SerializeField] IState _chaseState = new ChaseState();
-    [SerializeField] IState _attackState = new AttackState();
+   
     private IState _currentState = null;
+    
+
+
+
     private void Start()
     {
-        _currentState = _patrolState;
+        _currentState = StateFactory.Walk();
        // _currentState.ProcessState(this);
     }
-
-    private void FixedUpdate()
+    public override void SetCreatureProperties()
     {
-        _currentState.ProcessState(this);
+        gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.ChaseArea;
+    }
+    private void Update()
+    {
+        ExecuteState();
     }
 
 
@@ -27,14 +30,20 @@ public class Clawmarcher : Creature
        _currentState.ProcessState(this);
     }
 
-    public override void SetCreatureProperties()
+    public override void SwitchState(IState newState)
     {
-       gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.ChaseArea;
+         newState.SetupState(this);
+        _currentState = newState;
     }
+
+   
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 6) { }
+        if (other.gameObject.layer == 6)
+        {
+            SwitchState(StateFactory.Chase());
+        }
            
     }
 
@@ -48,7 +57,7 @@ public class Clawmarcher : Creature
 
     private void OnTriggerExit(Collider other)
     {
-        
+        SwitchState(StateFactory.Walk());
     }
 
     private void CheckDistanceBetweenPlayer(Vector3 playerPosition)
@@ -57,7 +66,7 @@ public class Clawmarcher : Creature
 
         if (distanceBetweenPlayer < 4f)
         {
-
+            SwitchState(StateFactory.Attack());
         }
            
     }

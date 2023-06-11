@@ -7,24 +7,24 @@ using System;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Creature : MonoBehaviour
 {
-  
+    [SerializeField] private NavMeshAgent _navMeshAgent;
     [SerializeField] private EnemyProperties _enemyProperties;
-    [SerializeField] private LayerMask _playerMask;
-    [SerializeField] private CreatureStates _creatureStates;
-    private IState _currentState = null;
-    public NavMeshAgent NavMeshAgent;
-   
-
-    #region Getters&Setter
-    //getters and setters
-    //public NavMeshAgent NavMeshAgent => _navMeshAgent;
+    [SerializeField] private float _idleDelayTime;
+    [SerializeField] private Transform[] _waypoint;
+    [HideInInspector] public int CurrentWaypointIndex = 0;
+    private StateFactory _stateFactory = new StateFactory();
+    #region Getters & Setters
+    public NavMeshAgent NavMeshAgent => _navMeshAgent;
+    public Transform[] Waypoint => _waypoint;
     public EnemyProperties EnemyProperties => _enemyProperties;
-    public LayerMask PlayerMask => _playerMask;
-    public IState CurrentState => _currentState;
+    public float AnimationDelayTime => _idleDelayTime;
+    public StateFactory StateFactory => _stateFactory;
+ 
     #endregion
 
     public abstract void SetCreatureProperties();
     public abstract void ExecuteState();
+    public abstract void SwitchState(IState newState);
 
    
 
