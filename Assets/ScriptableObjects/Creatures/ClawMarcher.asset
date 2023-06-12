@@ -15,7 +15,7 @@ MonoBehaviour:
   WalkSpeed: 0
   SprintSpeed: 0
   AttackArea: 0
-  ChaseArea: 5
+  ChaseArea: 7
   LightAttackDamage: 0
   HeavyAttackDamage: 0
   EnemyHealth: 0

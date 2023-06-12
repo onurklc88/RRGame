@@ -6,14 +6,12 @@ public class Clawmarcher : Creature
 {
    
     private IState _currentState = null;
-    
-
-
-
+   
     private void Start()
     {
+        SetCreatureProperties();
         _currentState = StateFactory.Walk();
-       // _currentState.ProcessState(this);
+     
     }
     public override void SetCreatureProperties()
     {
@@ -42,6 +40,7 @@ public class Clawmarcher : Creature
     {
         if (other.gameObject.layer == 6)
         {
+            PlayerCharacter = other.gameObject;
             SwitchState(StateFactory.Chase());
         }
            

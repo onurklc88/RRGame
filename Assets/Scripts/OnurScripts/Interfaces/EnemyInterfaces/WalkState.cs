@@ -21,9 +21,6 @@ public class WalkState : IState
     private void Patrol(Creature creature)
     {
 
-        float distance = Vector3.Distance(creature.transform.position, creature.Waypoint[creature.CurrentWaypointIndex].position);
-        //Debug.Log("Distance: " + distance);
-
 
         if (creature.transform.position.x != creature.Waypoint[creature.CurrentWaypointIndex].position.x)
         {

@@ -5,13 +5,19 @@ using UnityEngine;
 public class ChaseState : IState
 {
 
-    public void SetupState(Creature state)
+    public void SetupState(Creature creature)
     {
-
+        Debug.Log("Chase State");
+        creature.NavMeshAgent.speed = 5;
     }
-    public void ProcessState(Creature state)
+    public void ProcessState(Creature creature)
     {
-        Debug.Log("ChaseState");
+        ChasePlayer(creature);
+    }
+
+    private void ChasePlayer(Creature creature)
+    {
+        creature.NavMeshAgent.SetDestination(creature.PlayerCharacter.transform.position);
     }
 }
 
