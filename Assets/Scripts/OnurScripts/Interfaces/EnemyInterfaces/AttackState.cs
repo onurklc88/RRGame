@@ -1,47 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class AttackState : IState
 {
-    private Vector3 _dashPosition;
-    private Vector3 _playerPosition;
+    private Tween _dash;
+    private Vector3 _dashPoint;
+    private bool _alreadyAttacked = false;
+   
     public void SetupState(Creature creature)
     {
-        _playerPosition = creature.PlayerCharacter.transform.position;
+        creature.NavMeshAgent.isStopped = true;
+        creature.transform.LookAt(creature.PlayerCharacter.transform.position);
+
+        //this can be change
+        _dashPoint = creature.transform.position + (creature.transform.forward * 7f);
+         PlayAttackTween(creature);
     }
     public void ProcessState(Creature creature)
     {
-        Debug.Log("AttackState");
+       
     }
 
-    private void AttackPlayer(Creature creature)
+    private void PlayAttackTween(Creature creature)
     {
-        float startTime = Time.time;
-        while (Time.time < startTime + 0.25)
+        _dash = creature.transform.DOMove(_dashPoint, creature.EnemyProperties.AttackTime);
+        _dash.OnUpdate(() => 
         {
-            creature.NavMeshAgent.Move(_playerPosition * Time.deltaTime);
+            PlayerDetection(creature);
+        });
 
-            /*
-            if (character.CurrentMove.magnitude < 1f)
-                _dashPosition = character.transform.position + character.transform.forward * 15f;
-            else
-                _dashPosition = character.transform.position + character.CurrentMove * 15f;
+        _dash.OnComplete(() =>
+        {
+            creature.StartCoroutine(DelayState(creature));
+        });
 
+    }
 
+    private void PlayerDetection(Creature creature)
+    {
+        Collider[] inSightRange = Physics.OverlapSphere(creature.transform.position + creature.transform.forward * 1f, 1f, creature.PlayerMask);
+       
+        if (inSightRange.Length <= 0 ||_alreadyAttacked) return;
+        if (inSightRange[0].transform.GetComponent<IHealable>() != null)
+              inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
 
-            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
-
-
-            yield return null;
-            */
-        }
+        _alreadyAttacked = true;
     }
 
     private IEnumerator DelayState(Creature creature)
     {
-        Debug.Log("IDLE DELAY");
-        yield return new WaitForSeconds(creature.AnimationDelayTime);
+        
+        yield return new WaitForSeconds(1f);
+        creature.NavMeshAgent.isStopped = false;
+        _alreadyAttacked = false;
         creature.SwitchState(creature.StateFactory.Chase());
     }
+
+
 }

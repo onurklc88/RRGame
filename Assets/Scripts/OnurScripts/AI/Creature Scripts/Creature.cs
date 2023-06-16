@@ -13,17 +13,19 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] private EnemyProperties _enemyProperties;
     [SerializeField] private float _idleDelayTime;
     [SerializeField] private Transform[] _waypoint;
+    private LayerMask _playerLayer;
+    
     private IState _currentState;
     private StateFactory _stateFactory = new StateFactory();
-    
-    
+   
+
     #region Getters & Setters
     public NavMeshAgent NavMeshAgent => _navMeshAgent;
     public Transform[] Waypoint => _waypoint;
     public EnemyProperties EnemyProperties => _enemyProperties;
     public float AnimationDelayTime => _idleDelayTime;
     public StateFactory StateFactory => _stateFactory;
-   
+    public LayerMask PlayerMask => _playerLayer;
     public IState CurrentState => _currentState;
 
     #endregion
@@ -31,8 +33,12 @@ public abstract class Creature : MonoBehaviour
     public abstract void SetCreatureProperties();
     public abstract void ExecuteState();
     public abstract void SwitchState(IState newState);
+    public virtual void SetPlayerLayer()
+    {
+        _playerLayer = LayerMask.GetMask("Player");
+    }
+    
 
-   
 
 
 }

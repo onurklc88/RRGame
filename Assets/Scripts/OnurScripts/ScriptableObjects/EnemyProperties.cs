@@ -8,12 +8,11 @@ public class EnemyProperties : ScriptableObject
 
 
     public float WalkSpeed;
-    public float SprintSpeed;
     [Header("Agression Settings")]
 
 
-    public float AttackArea;
-    public float ChaseArea;
+    public float AgressionRange;
+    public float AttackTime;
     [Header("Damage Settings")]
 
 

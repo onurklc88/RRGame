@@ -821,7 +821,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815372959}
   m_LocalRotation: {x: 0.31598538, y: 0.3596048, z: -0.13088542, w: 0.8681629}
-  m_LocalPosition: {x: -5.871446, y: 7.5778756, z: -19.736753}
+  m_LocalPosition: {x: -13.496754, y: 7.5778766, z: 3.353249}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -857,7 +857,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7885382, y: 1.2039506, z: 7.5455027}
+  m_LocalPosition: {x: 2.8432345, y: 1.2999039, z: 7.659857}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1544,7 +1544,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245726616}
   m_LocalRotation: {x: 0.31598538, y: 0.3596048, z: -0.13088542, w: 0.8681629}
-  m_LocalPosition: {x: -5.871446, y: 7.5778756, z: -19.736753}
+  m_LocalPosition: {x: -13.496754, y: 7.5778766, z: 3.353249}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2021,7 +2021,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1702126483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7488785, y: 1.1427848, z: 7.4726076}
+  m_LocalPosition: {x: 2.8445995, y: 1.3025169, z: 7.662971}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2099,7 +2099,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734461252}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7204742, y: 1.1022916, z: 7.4243503}
+  m_LocalPosition: {x: 2.8433452, y: 1.3001144, z: 7.660108}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2231,7 +2231,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808218063}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.45469287, y: 1.15, z: -14.32}
+  m_LocalPosition: {x: -8.08, y: 1.15, z: 8.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2278,22 +2278,18 @@ MonoBehaviour:
   IsAtackPressed: 0
   _currentMovement: {x: 0, y: 0, z: 0}
   DashPosition: {x: 0, y: 0, z: 0}
---- !u!54 &1808218071
-Rigidbody:
+--- !u!114 &1808218071
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1808218063}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14bd6b7b5b874c749998cb97ec2ea30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2012240896
 GameObject:
   m_ObjectHideFlags: 3
@@ -3599,7 +3595,7 @@ Transform:
   m_GameObject: {fileID: 8675915457533608191}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1.2973601}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8675915458348068286}
@@ -3770,7 +3766,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.798396, y: 0, z: -0.5751608}
+  velocity: {x: 0.26697066, y: 0, z: 0.5278599}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -3783,7 +3779,6 @@ GameObject:
   - component: {fileID: 8675915458348068288}
   - component: {fileID: 8675915458348068289}
   - component: {fileID: 8675915458348068290}
-  - component: {fileID: 8675915458348068291}
   m_Layer: 0
   m_Name: Mimic
   m_TagString: Untagged
@@ -3799,7 +3794,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8675915458348068284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.955719, y: 1.49, z: 24.6}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3826,7 +3821,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1.4
+  m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &8675915458348068289
@@ -3863,37 +3858,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8675915458348068291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8675915458348068284}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96179edeb213c4c479cd5bd1cc0e2715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  legPrefab: {fileID: 1682633662898237459, guid: fb7bce2dee9494540a1866bb5d230a51,
-    type: 3}
-  numberOfLegs: 5
-  partsPerLeg: 4
-  legCount: 0
-  deployedLegs: 0
-  minimumAnchoredLegs: 2
-  minimumAnchoredParts: 8
-  minLegLifetime: 5
-  maxLegLifetime: 15
-  legPlacerOrigin: {x: 0, y: 0, z: 0}
-  newLegRadius: 3
-  minLegDistance: 4.5
-  maxLegDistance: 6.2999997
-  legResolution: 40
-  minGrowCoef: 4.5
-  maxGrowCoef: 6.5
-  newLegCooldown: 0.3
-  velocity: {x: -0.86541855, y: 0, z: -0.026756015}
 --- !u!4 &8730984064109546418
 Transform:
   m_ObjectHideFlags: 0

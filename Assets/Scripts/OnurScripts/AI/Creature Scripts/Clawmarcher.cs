@@ -6,20 +6,22 @@ public class Clawmarcher : Creature
 {
    
     private IState _currentState = null;
-   
+    
     private void Start()
     {
+        SetPlayerLayer();
         SetCreatureProperties();
         _currentState = StateFactory.Walk();
      
     }
     public override void SetCreatureProperties()
     {
-        gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.ChaseArea;
+        gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.AgressionRange;
     }
     private void Update()
     {
         ExecuteState();
+      
     }
 
 
@@ -49,8 +51,7 @@ public class Clawmarcher : Creature
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == 6)
-             CheckDistanceBetweenPlayer(other.transform.position);
-        
+            PlayerCharacter.transform.position = other.transform.position;
        
     }
 
@@ -58,18 +59,5 @@ public class Clawmarcher : Creature
     {
         SwitchState(StateFactory.Walk());
     }
-
-    private void CheckDistanceBetweenPlayer(Vector3 playerPosition)
-    {
-         float distanceBetweenPlayer = Vector3.Distance(playerPosition, transform.position);
-
-        if (distanceBetweenPlayer < 4f)
-        {
-            SwitchState(StateFactory.Attack());
-        }
-           
-    }
     
-
-
 }

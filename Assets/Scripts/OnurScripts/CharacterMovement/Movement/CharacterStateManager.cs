@@ -45,7 +45,8 @@ public class CharacterStateManager : MonoBehaviour
     public CharacterSlideState CharacterSlideState = new CharacterSlideState();
     public CharacterClimbState CharacterClimbState = new CharacterClimbState();
     public CharacterAttackState CharacterAttackState = new CharacterAttackState();
-    #endregion
+    public CharacterKnockbackState CharacterKnockbackState = new CharacterKnockbackState();
+     #endregion
 
     private void OnEnable()
     {
