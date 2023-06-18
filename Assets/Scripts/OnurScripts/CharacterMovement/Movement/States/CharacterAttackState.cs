@@ -40,7 +40,7 @@ public class CharacterAttackState : CharacterBaseState
     }
     public override void ExitState(CharacterStateManager character)
     {
-        character.SwitchState(character.CharacterIdleState);
+        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
         
     }
    

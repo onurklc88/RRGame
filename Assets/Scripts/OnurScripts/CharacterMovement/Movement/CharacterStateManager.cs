@@ -15,46 +15,40 @@ public class CharacterStateManager : MonoBehaviour
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed;
     [HideInInspector] public bool IsAtackPressed;
-  
-
     private CharacterAttackState.AttackType _attackType;
+    private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
     public Vector3 _currentMovement;
     public Vector3 DashPosition;
 
+    #region Getters & Setters
     //getter and Setters
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
     public CharacterAttackState.AttackType AttackType => _attackType;
     public Vector3 CurrentMove => _currentMovement;
+    public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
 
 
+    #endregion
 
     
     private PlayerInput _playerInput;
     private Vector2 _readVector;
     private float _rotationFactorPerFrame = 15f;
     private float _buttonPressedTime = 3f;
-
-
-
-    #region CharacterStates
     private CharacterBaseState _currentState = null;
-    public CharacterIdleState CharacterIdleState = new CharacterIdleState();
-    public CharacterWalkState CharacterWalkState = new CharacterWalkState();
-    public CharacterSlideState CharacterSlideState = new CharacterSlideState();
-    public CharacterClimbState CharacterClimbState = new CharacterClimbState();
-    public CharacterAttackState CharacterAttackState = new CharacterAttackState();
-    public CharacterKnockbackState CharacterKnockbackState = new CharacterKnockbackState();
-     #endregion
+   
 
     private void OnEnable()
     {
-        CharacterAttackState.AddActionTypes(this);
+        _characterStateFactory.CharacterAttackState.AddActionTypes(this);
+        CharacterHealth.PlayerKnockbackEvent += SwitchState;
         _playerInput.CharacterControls.Enable();
     }
     private void OnDisable()
     {
+        CharacterHealth.PlayerKnockbackEvent -= SwitchState;
         _playerInput.CharacterControls.Disable();
     }
 
@@ -62,7 +56,8 @@ public class CharacterStateManager : MonoBehaviour
     {
         _playerInput = new PlayerInput();
         CharacterController = GetComponent<CharacterController>();
-        _currentState = CharacterIdleState;
+       
+        _currentState = _characterStateFactory.CharacterIdleState;
         _currentState.EnterState(this);
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
@@ -83,7 +78,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (IsSlidePressed || _currentState == CharacterAttackState) return;
+        if (IsSlidePressed || _currentState == _characterStateFactory.CharacterAttackState) return;
 
         Vector3 positionToLookAt;
         positionToLookAt.x = _currentMovement.x;
@@ -115,9 +110,9 @@ public class CharacterStateManager : MonoBehaviour
         else
             _attackType = CharacterAttackState.AttackType.Heavy;
 
-        if (_currentState != CharacterSlideState)
+        if (_currentState != _characterStateFactory.CharacterSlideState)
         {
-            SwitchState(CharacterAttackState);
+            SwitchState(_characterStateFactory.CharacterAttackState);
         }
 
 
@@ -143,9 +138,9 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
-        if (_currentState == CharacterSlideState) return;
+        if (_currentState == _characterStateFactory.CharacterSlideState) return;
         IsSlidePressed = context.ReadValueAsButton();
-       SwitchState(CharacterSlideState);
+       SwitchState(_characterStateFactory.CharacterSlideState);
     }
 
 

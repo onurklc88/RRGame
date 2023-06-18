@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: ClawMarcher
   m_EditorClassIdentifier: 
   WalkSpeed: 0
-  SprintSpeed: 0
-  AttackArea: 0
-  ChaseArea: 20
+  AgressionRange: 20
+  AttackTime: 1
   LightAttackDamage: 0
   HeavyAttackDamage: 0
   EnemyHealth: 0

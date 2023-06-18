@@ -22,7 +22,7 @@ public class CharacterWalkState : CharacterBaseState
     }
     public override void ExitState(CharacterStateManager character)
     {
-        character.SwitchState(character.CharacterIdleState);
+        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
 
  

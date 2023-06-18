@@ -16,6 +16,6 @@ public class CharacterIdleState : CharacterBaseState
     }
     public override void ExitState(CharacterStateManager character)
     {
-        character.SwitchState(character.CharacterWalkState);
+        character.SwitchState(character.CharacterStateFactory.CharacterWalkState);
     }
 }

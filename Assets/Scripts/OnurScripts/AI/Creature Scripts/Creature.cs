@@ -26,6 +26,7 @@ public abstract class Creature : MonoBehaviour
     public float AnimationDelayTime => _idleDelayTime;
     public StateFactory StateFactory => _stateFactory;
     public LayerMask PlayerMask => _playerLayer;
+  
     public IState CurrentState => _currentState;
 
     #endregion

@@ -13,10 +13,9 @@ public class AttackState : IState
     {
         creature.NavMeshAgent.isStopped = true;
         creature.transform.LookAt(creature.PlayerCharacter.transform.position);
-
-        //this can be change
         _dashPoint = creature.transform.position + (creature.transform.forward * 7f);
-         PlayAttackTween(creature);
+        PlayAttackTween(creature);
+       
     }
     public void ProcessState(Creature creature)
     {
@@ -42,11 +41,12 @@ public class AttackState : IState
     {
         Collider[] inSightRange = Physics.OverlapSphere(creature.transform.position + creature.transform.forward * 1f, 1f, creature.PlayerMask);
        
-        if (inSightRange.Length <= 0 ||_alreadyAttacked) return;
-        if (inSightRange[0].transform.GetComponent<IHealable>() != null)
-              inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
+        if (inSightRange.Length <= 0 || _alreadyAttacked) return;
 
         _alreadyAttacked = true;
+
+        if (inSightRange[0].transform.GetComponent<IHealable>() != null)
+              inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
     }
 
     private IEnumerator DelayState(Creature creature)

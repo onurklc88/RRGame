@@ -5,7 +5,8 @@ using System;
 
 public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
 {
-    public static event Action PlayerKnockbackEvent; 
+    private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
+    public static event Action<CharacterBaseState> PlayerKnockbackEvent; 
 
     public void TakeHeal(int healValue)
     {
@@ -14,7 +15,7 @@ public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
 
     public void TakeDamage(int damageValue)
     {
-        PlayerKnockbackEvent?.Invoke();
         Debug.Log("Aww..its hurts");
+        PlayerKnockbackEvent?.Invoke(_characterStateFactory.CharacterKnockbackState);
     }
 }

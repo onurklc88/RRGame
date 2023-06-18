@@ -19,7 +19,7 @@ public class CharacterSlideState : CharacterBaseState
     public override void ExitState(CharacterStateManager character)
     {
         character.IsSlidePressed = false;
-        character.SwitchState(character.CharacterIdleState);
+        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
 
     public override IEnumerator DelayState(CharacterStateManager character)
