@@ -13,13 +13,13 @@ public class CharacterStateManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
-    [HideInInspector] public bool IsSlidePressed;
+    [HideInInspector] public bool IsSlidePressed = false;
     [HideInInspector] public bool IsAtackPressed;
     private CharacterAttackState.AttackType _attackType;
     private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
     public Vector3 _currentMovement;
     public Vector3 DashPosition;
-
+    private Vector3 _positionToLookAt;
     #region Getters & Setters
     //getter and Setters
     public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
@@ -29,6 +29,7 @@ public class CharacterStateManager : MonoBehaviour
     public Vector3 CurrentMove => _currentMovement;
     public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
 
+    public Vector3 PositionToLookAt => _positionToLookAt;
 
     #endregion
 
@@ -75,26 +76,26 @@ public class CharacterStateManager : MonoBehaviour
         _currentState.UpdateState(this);
     }
 
-
-    private void HandleRotation()
+    #region Inputs and movements
+    private void OnSlideMovement(InputAction.CallbackContext context)
     {
-        if (IsSlidePressed || _currentState == _characterStateFactory.CharacterAttackState) return;
 
-        Vector3 positionToLookAt;
-        positionToLookAt.x = _currentMovement.x;
-        positionToLookAt.y = 0f;
-        positionToLookAt.z = _currentMovement.z;
-        Quaternion currentRotation = transform.rotation;
-       
-        
-        if (IsMovementPressed)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
-        }
-        
+        //slide movement tek x yönünde rotasyon olarak hareket edecek
+        if (_currentState == _characterStateFactory.CharacterSlideState) return;
+        IsSlidePressed = context.ReadValueAsButton();
+        SwitchState(_characterStateFactory.CharacterSlideState);
     }
 
+
+    private void OnMovementInput(InputAction.CallbackContext context)
+    {
+        //bu ýnputlarý slide anýnda disable etmemiz gerekiyor
+        _readVector = context.ReadValue<Vector2>();
+        Vector3 toConvert = new Vector3(_readVector.x, 0, _readVector.y);
+        _currentMovement = IsoVectorToConvert(toConvert);
+        IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
+    }
+    
     private void OnAttackStarted(InputAction.CallbackContext context)
     {
         _buttonPressedTime = Time.time;
@@ -117,7 +118,20 @@ public class CharacterStateManager : MonoBehaviour
 
 
     }
+    private bool IsMovingUpSlope(Vector3 slopeNormal)
+    {
+        float dot = Vector3.Dot(slopeNormal, _currentMovement.normalized);
+        return dot > 0f;
+    }
+    private Vector3 IsoVectorToConvert(Vector3 vector)
+    {
+        Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);
+        Matrix4x4 isoMatrix = Matrix4x4.Rotate(rotation);
+        Vector3 result = isoMatrix.MultiplyPoint3x4(vector);
+        return result;
+    }
 
+    #endregion
     private void HandleGravity()
     {
         if (CharacterController.isGrounded)
@@ -136,22 +150,24 @@ public class CharacterStateManager : MonoBehaviour
        
     }
 
-    private void OnSlideMovement(InputAction.CallbackContext context)
+    private void HandleRotation()
     {
-        if (_currentState == _characterStateFactory.CharacterSlideState) return;
-        IsSlidePressed = context.ReadValueAsButton();
-       SwitchState(_characterStateFactory.CharacterSlideState);
-    }
+        if (_currentState == _characterStateFactory.CharacterAttackState || IsSlidePressed) return;
+        
+       
+        _positionToLookAt.x = _currentMovement.x;
+        _positionToLookAt.y = 0f;
+        _positionToLookAt.z = _currentMovement.z;
+        Quaternion currentRotation = transform.rotation;
 
+       
+        if (!IsMovementPressed) return;
+        
+            Quaternion targetRotation = Quaternion.LookRotation(_positionToLookAt);
+            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
+        
 
-    private void OnMovementInput(InputAction.CallbackContext context)
-    {
-        _readVector = context.ReadValue<Vector2>();
-        Vector3 toConvert = new Vector3(_readVector.x, 0, _readVector.y);
-        _currentMovement = IsoVectorToConvert(toConvert);
-        IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
     }
-   
 
     public void SwitchState(CharacterBaseState newState)
     {
@@ -159,18 +175,7 @@ public class CharacterStateManager : MonoBehaviour
         _currentState.EnterState(this);
     }
 
-    private bool IsMovingUpSlope(Vector3 slopeNormal)
-    {
-        float dot = Vector3.Dot(slopeNormal, _currentMovement.normalized);
-        return dot > 0f;
-    }
-    private Vector3 IsoVectorToConvert(Vector3 vector)
-    {
-        Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);
-        Matrix4x4 isoMatrix = Matrix4x4.Rotate(rotation);
-        Vector3 result = isoMatrix.MultiplyPoint3x4(vector);
-        return result;
-    }
+   
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

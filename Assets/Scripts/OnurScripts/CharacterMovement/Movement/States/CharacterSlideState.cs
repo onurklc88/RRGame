@@ -7,9 +7,15 @@ public class CharacterSlideState : CharacterBaseState
 {
 
     private Vector3 _dashPosition;
+    private Vector3 _slideRotation;
     public override void EnterState(CharacterStateManager character)
     {
-       // if (character.IsSlidePressed) return;
+        // if (character.IsSlidePressed) return;
+        _slideRotation.x = 0f;
+        _slideRotation.y = 0f;
+        _slideRotation.z = character.CurrentMove.z;
+        Quaternion targetRotation = Quaternion.LookRotation(_slideRotation);
+        character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, 1f * Time.deltaTime);
         character.StartCoroutine(DelayState(character));
     }
     public override void UpdateState(CharacterStateManager character)
@@ -27,18 +33,22 @@ public class CharacterSlideState : CharacterBaseState
         float startTime = Time.time;
         while(Time.time < startTime + 0.25)
         {
-            
-            if (character.CurrentMove.magnitude < 1f)
-                _dashPosition = character.transform.position + character.transform.forward * 15f;
-            else
+            //burda yeni bir current move datasý almamasý gerekiyor
+            //character Y pos bakýp karar ver
+            if (character.transform.position.y > 1.2f)
+            {
+                
                 _dashPosition = character.transform.position + character.CurrentMove * 15f;
+            }
+            else
+            {
+                _dashPosition = character.transform.position + character.transform.forward * 20f;
+                Debug.Log("C");
+            }
+                
               
-           
-         
-            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
-
-
-            yield return null;
+           character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
+           yield return null;
         }
 
        

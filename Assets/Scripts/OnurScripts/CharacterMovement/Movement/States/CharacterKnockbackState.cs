@@ -18,7 +18,7 @@ public class CharacterKnockbackState : CharacterBaseState
     }
     public override void ExitState(CharacterStateManager character)
     {
-        
+        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
 
     public override IEnumerator DelayState(CharacterStateManager character)
@@ -27,11 +27,8 @@ public class CharacterKnockbackState : CharacterBaseState
         float startTime = Time.time;
         while (Time.time < startTime + 0.25)
         {
-           
-            character.CharacterController.Move((knockbackPosition) * Time.deltaTime);
-
-
-            yield return null;
+           character.CharacterController.Move((knockbackPosition) * Time.deltaTime);
+           yield return null;
         }
 
 
