@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.InputSystem;
-using Cinemachine;
+using DG.Tweening;
+
 
 public class CharacterAttackState : CharacterBaseState
 {
@@ -32,14 +32,24 @@ public class CharacterAttackState : CharacterBaseState
          AttackRange(character);
         _attackActions[(int)character.AttackType]();
         ChangeCharacterRotation(character);
-        character.StartCoroutine(DelayState(character));
+        
     }
     public override void UpdateState(CharacterStateManager character)
     {
-        //AttackRange(character);
+        
+        if (character.LongRangeStarted)
+        {
+            ChangeCharacterRotation(character);
+        }
+        else
+        {
+            ExitState(character);
+        }
     }
     public override void ExitState(CharacterStateManager character)
     {
+        Vector3 _attackPosition = character.transform.position + character.transform.forward * 2f;
+        character.transform.DOMove(_attackPosition, 0.5f);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
         
     }
@@ -63,11 +73,14 @@ public class CharacterAttackState : CharacterBaseState
     private void NormalAttack()
     {
         Debug.Log("Normal Attack");
+        
         if (_collidedObject == null) return;
-      
-        _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage);
-      
 
+        
+
+        _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage);
+
+        _character.StartCoroutine(DelayState(_character));
 
     }
 
@@ -77,13 +90,16 @@ public class CharacterAttackState : CharacterBaseState
         if (_collidedObject == null) return;
     
         _collidedObject.TakeDamage(_character.CharacterProperties.HeavyAttackDamage);
-      
+        _character.StartCoroutine(DelayState(_character));
+
     }
 
     private void LongRangeAttack()
     {
-
+        
     }
+    
+
 
     private void ChangeCharacterRotation(CharacterStateManager character)
     {
@@ -101,7 +117,7 @@ public class CharacterAttackState : CharacterBaseState
 
     public override IEnumerator DelayState(CharacterStateManager character)
     {
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(1f);
         ExitState(character);
     }
 

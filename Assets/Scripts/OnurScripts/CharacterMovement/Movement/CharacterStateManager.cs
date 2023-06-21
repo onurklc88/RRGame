@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Cinemachine;
+using System;
+
 
 
 [RequireComponent(typeof(CharacterController))]
 public class CharacterStateManager : MonoBehaviour
 {
+    public static event Action<bool> SwitchCamAngle;
+
+
 
     [SerializeField] private CharacterProperties _characterProperties;
-    [SerializeField] private CinemachineVirtualCamera _virtualCamera;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
@@ -20,15 +23,17 @@ public class CharacterStateManager : MonoBehaviour
     public Vector3 _currentMovement;
     public Vector3 DashPosition;
     private Vector3 _positionToLookAt;
+    private bool _longRangeStarted;
+
+
     #region Getters & Setters
     //getter and Setters
-    public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
     public CharacterAttackState.AttackType AttackType => _attackType;
     public Vector3 CurrentMove => _currentMovement;
     public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
-
+    public bool LongRangeStarted => _longRangeStarted;
     public Vector3 PositionToLookAt => _positionToLookAt;
 
     #endregion
@@ -64,8 +69,10 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
-        _playerInput.CharacterControls.Attack.performed += OnAttackStarted;
-        _playerInput.CharacterControls.Attack.canceled += OnAttackEnded;
+        _playerInput.CharacterControls.MeleeAttack.performed += OnMeleeAttackStarted;
+        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttackEnded;
+        _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
+        _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
     }
 
 
@@ -74,35 +81,42 @@ public class CharacterStateManager : MonoBehaviour
         HandleRotation();
         HandleGravity();
         _currentState.UpdateState(this);
+        Debug.Log("Press: " + IsMovementPressed);
     }
 
     #region Inputs and movements
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
-
-        //slide movement tek x yönünde rotasyon olarak hareket edecek
-        if (_currentState == _characterStateFactory.CharacterSlideState) return;
+        //timer eklenecek
         IsSlidePressed = context.ReadValueAsButton();
+      
         SwitchState(_characterStateFactory.CharacterSlideState);
     }
 
 
     private void OnMovementInput(InputAction.CallbackContext context)
     {
-        //bu ýnputlarý slide anýnda disable etmemiz gerekiyor
         _readVector = context.ReadValue<Vector2>();
         Vector3 toConvert = new Vector3(_readVector.x, 0, _readVector.y);
         _currentMovement = IsoVectorToConvert(toConvert);
-        IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
+        if(_currentState == _characterStateFactory.CharacterAttackState)
+        {
+            IsMovementPressed = false;
+        }
+        else
+        {
+            IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
+        }
+        
     }
     
-    private void OnAttackStarted(InputAction.CallbackContext context)
+    private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
         _buttonPressedTime = Time.time;
     }
 
 
-    private void OnAttackEnded(InputAction.CallbackContext context)
+    private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
         float heldTime = Time.time - _buttonPressedTime;
 
@@ -115,9 +129,25 @@ public class CharacterStateManager : MonoBehaviour
         {
             SwitchState(_characterStateFactory.CharacterAttackState);
         }
-
-
     }
+
+    private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
+    {
+       _longRangeStarted = context.ReadValueAsButton();
+        SwitchCamAngle?.Invoke(_longRangeStarted);
+       _attackType = CharacterAttackState.AttackType.LongRange;
+        //cam events
+        if (_currentState != _characterStateFactory.CharacterSlideState)
+             SwitchState(_characterStateFactory.CharacterAttackState);
+        
+       
+    }
+    private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
+    {
+        _longRangeStarted = context.ReadValueAsButton();
+        SwitchCamAngle?.Invoke(_longRangeStarted);
+    }
+
     private bool IsMovingUpSlope(Vector3 slopeNormal)
     {
         float dot = Vector3.Dot(slopeNormal, _currentMovement.normalized);

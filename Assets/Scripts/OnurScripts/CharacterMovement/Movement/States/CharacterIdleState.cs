@@ -6,11 +6,11 @@ public class CharacterIdleState : CharacterBaseState
 {
     public override void EnterState(CharacterStateManager character) 
     {
-       // Debug.Log("Welcome to IdleState");
+       Debug.Log("Welcome to IdleState");
     } 
     public override void UpdateState(CharacterStateManager character)
     {
-        
+        //eðer attack state'ten buraya gelirsek delay koy
         if (character.IsMovementPressed)
              ExitState(character);
     }

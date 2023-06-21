@@ -55,9 +55,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Attack"",
+                    ""name"": ""MeleeAttack"",
                     ""type"": ""Button"",
                     ""id"": ""f6517c61-57b4-4657-99dc-4070e44b7fbd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LongRangeAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""0bdf9066-4cbc-4cc7-a8bc-e156e6c1c4c6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -182,7 +191,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Attack"",
+                    ""action"": ""MeleeAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62636f32-ea09-4a7a-b757-8fb56a1e9255"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LongRangeAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -196,7 +216,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_CharacterControls_Move = m_CharacterControls.FindAction("Move", throwIfNotFound: true);
         m_CharacterControls_Slide = m_CharacterControls.FindAction("Slide", throwIfNotFound: true);
         m_CharacterControls_Interaction = m_CharacterControls.FindAction("Interaction", throwIfNotFound: true);
-        m_CharacterControls_Attack = m_CharacterControls.FindAction("Attack", throwIfNotFound: true);
+        m_CharacterControls_MeleeAttack = m_CharacterControls.FindAction("MeleeAttack", throwIfNotFound: true);
+        m_CharacterControls_LongRangeAttack = m_CharacterControls.FindAction("LongRangeAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -259,7 +280,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Move;
     private readonly InputAction m_CharacterControls_Slide;
     private readonly InputAction m_CharacterControls_Interaction;
-    private readonly InputAction m_CharacterControls_Attack;
+    private readonly InputAction m_CharacterControls_MeleeAttack;
+    private readonly InputAction m_CharacterControls_LongRangeAttack;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -267,7 +289,8 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_CharacterControls_Move;
         public InputAction @Slide => m_Wrapper.m_CharacterControls_Slide;
         public InputAction @Interaction => m_Wrapper.m_CharacterControls_Interaction;
-        public InputAction @Attack => m_Wrapper.m_CharacterControls_Attack;
+        public InputAction @MeleeAttack => m_Wrapper.m_CharacterControls_MeleeAttack;
+        public InputAction @LongRangeAttack => m_Wrapper.m_CharacterControls_LongRangeAttack;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -286,9 +309,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interaction.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteraction;
                 @Interaction.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteraction;
                 @Interaction.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnInteraction;
-                @Attack.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
-                @Attack.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
-                @Attack.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
+                @MeleeAttack.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMeleeAttack;
+                @MeleeAttack.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMeleeAttack;
+                @MeleeAttack.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMeleeAttack;
+                @LongRangeAttack.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLongRangeAttack;
+                @LongRangeAttack.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLongRangeAttack;
+                @LongRangeAttack.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLongRangeAttack;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -302,9 +328,12 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Interaction.started += instance.OnInteraction;
                 @Interaction.performed += instance.OnInteraction;
                 @Interaction.canceled += instance.OnInteraction;
-                @Attack.started += instance.OnAttack;
-                @Attack.performed += instance.OnAttack;
-                @Attack.canceled += instance.OnAttack;
+                @MeleeAttack.started += instance.OnMeleeAttack;
+                @MeleeAttack.performed += instance.OnMeleeAttack;
+                @MeleeAttack.canceled += instance.OnMeleeAttack;
+                @LongRangeAttack.started += instance.OnLongRangeAttack;
+                @LongRangeAttack.performed += instance.OnLongRangeAttack;
+                @LongRangeAttack.canceled += instance.OnLongRangeAttack;
             }
         }
     }
@@ -314,6 +343,7 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnSlide(InputAction.CallbackContext context);
         void OnInteraction(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
+        void OnMeleeAttack(InputAction.CallbackContext context);
+        void OnLongRangeAttack(InputAction.CallbackContext context);
     }
 }

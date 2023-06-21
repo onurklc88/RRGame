@@ -33,18 +33,12 @@ public class CharacterSlideState : CharacterBaseState
         float startTime = Time.time;
         while(Time.time < startTime + 0.25)
         {
-            //burda yeni bir current move datasý almamasý gerekiyor
-            //character Y pos bakýp karar ver
+            
             if (character.transform.position.y > 1.2f)
-            {
-                
-                _dashPosition = character.transform.position + character.CurrentMove * 15f;
-            }
+             _dashPosition = character.transform.position + character.CurrentMove * 15f;
             else
-            {
-                _dashPosition = character.transform.position + character.transform.forward * 20f;
-                Debug.Log("C");
-            }
+              _dashPosition = character.transform.position + character.transform.forward * 15f;
+            
                 
               
            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
