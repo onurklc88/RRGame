@@ -62,9 +62,6 @@ public class CharacterStateManager : MonoBehaviour
     {
         _playerInput = new PlayerInput();
         CharacterController = GetComponent<CharacterController>();
-       
-        _currentState = _characterStateFactory.CharacterIdleState;
-        _currentState.EnterState(this);
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
@@ -74,6 +71,11 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
     }
+    private void Start()
+    {
+        _currentState = _characterStateFactory.CharacterIdleState;
+        _currentState.EnterState(this);
+    }
 
 
     private void Update()
@@ -81,7 +83,8 @@ public class CharacterStateManager : MonoBehaviour
         HandleRotation();
         HandleGravity();
         _currentState.UpdateState(this);
-        Debug.Log("Press: " + IsMovementPressed);
+       // Debug.Log("LongRangeAttack: " + LongRangeStarted);
+        //Debug.Log("Press: " + IsMovementPressed);
     }
 
     #region Inputs and movements
@@ -112,13 +115,16 @@ public class CharacterStateManager : MonoBehaviour
     
     private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
+        //tum attack typlearý için condition check yap
         _buttonPressedTime = Time.time;
     }
 
 
     private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
-        float heldTime = Time.time - _buttonPressedTime;
+        //tum attack typlearý için condition check yap
+        if (_currentState == _characterStateFactory.CharacterAttackState) return;
+            float heldTime = Time.time - _buttonPressedTime;
 
         if (heldTime < 0.5f)
             _attackType = CharacterAttackState.AttackType.Light;
@@ -133,26 +139,26 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
     {
-       _longRangeStarted = context.ReadValueAsButton();
+        //tum attack typlearý için condition check yap
+        Debug.Log("Current Staten: " + _currentState);
+        if (_currentState == _characterStateFactory.CharacterAttackState) return;
+
+        _longRangeStarted = context.ReadValueAsButton();
         SwitchCamAngle?.Invoke(_longRangeStarted);
-       _attackType = CharacterAttackState.AttackType.LongRange;
-        //cam events
+        _attackType = CharacterAttackState.AttackType.None;
         if (_currentState != _characterStateFactory.CharacterSlideState)
-             SwitchState(_characterStateFactory.CharacterAttackState);
-        
-       
+            SwitchState(_characterStateFactory.CharacterAttackState);
+
     }
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
+       
         _longRangeStarted = context.ReadValueAsButton();
         SwitchCamAngle?.Invoke(_longRangeStarted);
+        _attackType = CharacterAttackState.AttackType.LongRange;
+        SwitchState(_characterStateFactory.CharacterAttackState);
     }
 
-    private bool IsMovingUpSlope(Vector3 slopeNormal)
-    {
-        float dot = Vector3.Dot(slopeNormal, _currentMovement.normalized);
-        return dot > 0f;
-    }
     private Vector3 IsoVectorToConvert(Vector3 vector)
     {
         Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);

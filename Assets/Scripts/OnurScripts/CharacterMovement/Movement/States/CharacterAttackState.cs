@@ -13,10 +13,11 @@ public class CharacterAttackState : CharacterBaseState
         Light,
         Heavy,
         LongRange,
+        None
     }
     private IDamageable _collidedObject;
     private List<Action> _attackActions = new List<Action>();
-    
+    private float _attackDashDuration = 0.5f;
    
 
     public void AddActionTypes(CharacterStateManager character)
@@ -29,29 +30,21 @@ public class CharacterAttackState : CharacterBaseState
 
     public override void EnterState(CharacterStateManager character)
     {
-         AttackRange(character);
-        _attackActions[(int)character.AttackType]();
-        ChangeCharacterRotation(character);
-        
+        if(character.AttackType != AttackType.None)
+            _attackActions[(int)character.AttackType]();
+    
     }
     public override void UpdateState(CharacterStateManager character)
     {
         
         if (character.LongRangeStarted)
-        {
             ChangeCharacterRotation(character);
-        }
-        else
-        {
-            ExitState(character);
-        }
+        
+      
     }
     public override void ExitState(CharacterStateManager character)
     {
-        Vector3 _attackPosition = character.transform.position + character.transform.forward * 2f;
-        character.transform.DOMove(_attackPosition, 0.5f);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
-        
     }
    
     private void AttackRange(CharacterStateManager character)
@@ -73,30 +66,34 @@ public class CharacterAttackState : CharacterBaseState
     private void NormalAttack()
     {
         Debug.Log("Normal Attack");
-        
-        if (_collidedObject == null) return;
-
-        
-
-        _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage);
-
+        AttackRange(_character);
+        ChangeCharacterRotation(_character);
+        if (_collidedObject != null) { _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage); }
+        AttackDash();
         _character.StartCoroutine(DelayState(_character));
-
     }
 
     private void HeavyAttack()
     {
         Debug.Log("Heavy Attack");
-        if (_collidedObject == null) return;
-    
-        _collidedObject.TakeDamage(_character.CharacterProperties.HeavyAttackDamage);
+        AttackRange(_character);
+        ChangeCharacterRotation(_character);
+        if (_collidedObject != null) { _collidedObject.TakeDamage(_character.CharacterProperties.HeavyAttackDamage); }
+        AttackDash();
         _character.StartCoroutine(DelayState(_character));
+    }
 
+    private void AttackDash()
+    {
+        Vector3 _attackPosition = _character.transform.position + _character.transform.forward * 2f;
+        _character.transform.DOMove(_attackPosition, _attackDashDuration);
+        
     }
 
     private void LongRangeAttack()
     {
-        
+        Debug.Log("ThrowArrow");
+        _character.StartCoroutine(DelayState(_character));
     }
     
 
@@ -117,7 +114,7 @@ public class CharacterAttackState : CharacterBaseState
 
     public override IEnumerator DelayState(CharacterStateManager character)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(_attackDashDuration);
         ExitState(character);
     }
 
