@@ -8,4 +8,8 @@ public class CharacterStateFactory
     public CharacterClimbState CharacterClimbState = new CharacterClimbState();
     public CharacterAttackState CharacterAttackState = new CharacterAttackState();
     public CharacterKnockbackState CharacterKnockbackState = new CharacterKnockbackState();
+    //Attacks
+    public LightAttack LightAttack = new LightAttack();
+    public HeavyAttack HeavyAttack = new HeavyAttack();
+    public LongRangeCombat LongRangeCombat = new LongRangeCombat();
 }

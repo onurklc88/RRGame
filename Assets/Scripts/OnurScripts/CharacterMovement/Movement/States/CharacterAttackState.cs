@@ -2,49 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using DG.Tweening;
 
 
 public class CharacterAttackState : CharacterBaseState
 {
     private CharacterStateManager _character;
-    public enum AttackType
+    public enum CombatType
     {
-        Light,
-        Heavy,
-        LongRange,
-        None
+       Melee,
+       LongRange
     }
-    private IDamageable _collidedObject;
-    private List<Action> _attackActions = new List<Action>();
-    private float _attackDashDuration = 0.5f;
+    public CombatType CurrentCombatType;
+    public CharacterAttackState CurrentAttackType;
    
 
+    private IDamageable _collidedObject;
+    private float _attackDashDuration = 0.5f;
     public void AddActionTypes(CharacterStateManager character)
     {
-        _character = character;
-        _attackActions.Add(NormalAttack);
-        _attackActions.Add(HeavyAttack);
-        _attackActions.Add(LongRangeAttack);
+     
     }
-
+    
+   
     public override void EnterState(CharacterStateManager character)
     {
-        if(character.AttackType != AttackType.None)
-            _attackActions[(int)character.AttackType]();
-    
+        _character = character;
     }
     public override void UpdateState(CharacterStateManager character)
     {
         
-        if (character.LongRangeStarted)
+     
             ChangeCharacterRotation(character);
-        
-      
     }
     public override void ExitState(CharacterStateManager character)
     {
-        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
+         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
    
     private void AttackRange(CharacterStateManager character)
@@ -63,17 +57,22 @@ public class CharacterAttackState : CharacterBaseState
     }
 
 
-    private void NormalAttack()
+   
+
+    private void MeleeLightAttack()
     {
+        Debug.Log("Light Attack ");
+        
         Debug.Log("Normal Attack");
         AttackRange(_character);
         ChangeCharacterRotation(_character);
         if (_collidedObject != null) { _collidedObject.TakeDamage(_character.CharacterProperties.LightAttackDamage); }
         AttackDash();
         _character.StartCoroutine(DelayState(_character));
+        
     }
 
-    private void HeavyAttack()
+    private void MeleeHeavyAttack()
     {
         Debug.Log("Heavy Attack");
         AttackRange(_character);
@@ -83,6 +82,10 @@ public class CharacterAttackState : CharacterBaseState
         _character.StartCoroutine(DelayState(_character));
     }
 
+
+
+   
+
     private void AttackDash()
     {
         Vector3 _attackPosition = _character.transform.position + _character.transform.forward * 2f;
@@ -90,7 +93,7 @@ public class CharacterAttackState : CharacterBaseState
         
     }
 
-    private void LongRangeAttack()
+    private void ThrowArrow()
     {
         Debug.Log("ThrowArrow");
         _character.StartCoroutine(DelayState(_character));

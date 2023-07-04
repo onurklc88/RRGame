@@ -18,7 +18,7 @@ public class CharacterStateManager : MonoBehaviour
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
     [HideInInspector] public bool IsAtackPressed;
-    private CharacterAttackState.AttackType _attackType;
+   
     private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
     public Vector3 _currentMovement;
     public Vector3 DashPosition;
@@ -30,7 +30,7 @@ public class CharacterStateManager : MonoBehaviour
     //getter and Setters
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
-    public CharacterAttackState.AttackType AttackType => _attackType;
+    //public CharacterAttackState.AttackType AttackType => _attackType;
     public Vector3 CurrentMove => _currentMovement;
     public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
     public bool LongRangeStarted => _longRangeStarted;
@@ -115,48 +115,45 @@ public class CharacterStateManager : MonoBehaviour
     
     private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
-        //tum attack typlearý için condition check yap
-        _buttonPressedTime = Time.time;
+       _buttonPressedTime = Time.time;
+       _characterStateFactory.CharacterAttackState.CurrentCombatType = CharacterAttackState.CombatType.Melee;
     }
 
 
     private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
-        //tum attack typlearý için condition check yap
-        if (_currentState == _characterStateFactory.CharacterAttackState) return;
-            float heldTime = Time.time - _buttonPressedTime;
-
+          
+        float heldTime = Time.time - _buttonPressedTime;
         if (heldTime < 0.5f)
-            _attackType = CharacterAttackState.AttackType.Light;
+            _characterStateFactory.CharacterAttackState.CurrentAttackType = _characterStateFactory.LightAttack;
         else
-            _attackType = CharacterAttackState.AttackType.Heavy;
+            _characterStateFactory.CharacterAttackState.CurrentAttackType = _characterStateFactory.HeavyAttack;
 
         if (_currentState != _characterStateFactory.CharacterSlideState)
-        {
+        { 
             SwitchState(_characterStateFactory.CharacterAttackState);
         }
+      
     }
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
     {
-        //tum attack typlearý için condition check yap
-        Debug.Log("Current Staten: " + _currentState);
-        if (_currentState == _characterStateFactory.CharacterAttackState) return;
-
-        _longRangeStarted = context.ReadValueAsButton();
+        _characterStateFactory.CharacterAttackState.CurrentCombatType = CharacterAttackState.CombatType.LongRange;
+        //_longRangeStarted = context.ReadValueAsButton();
         SwitchCamAngle?.Invoke(_longRangeStarted);
-        _attackType = CharacterAttackState.AttackType.None;
+      //  _attackType = CharacterAttackState.AttackType.None;
         if (_currentState != _characterStateFactory.CharacterSlideState)
             SwitchState(_characterStateFactory.CharacterAttackState);
 
     }
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
-       
+      
         _longRangeStarted = context.ReadValueAsButton();
         SwitchCamAngle?.Invoke(_longRangeStarted);
-        _attackType = CharacterAttackState.AttackType.LongRange;
+        //_attackType = CharacterAttackState.AttackType.LongRange;
         SwitchState(_characterStateFactory.CharacterAttackState);
+        //_attackType = CharacterAttackState.AttackType.None;
     }
 
     private Vector3 IsoVectorToConvert(Vector3 vector)
