@@ -60,7 +60,7 @@ namespace Test
         private void Shot()
         {
             Debug.Log("Shot");
-            GameObject bullet = GameManager.instance.objectPool.GetPooledObject(0);
+            //GameObject bullet = GameManager.instance.objectPool.GetPooledObject(0);
 
 
 

@@ -32,10 +32,8 @@ public class ObjectPool : MonoBehaviour
                 pools[j].pooledObjects.Enqueue(poolObject);
             }
         }
-
-       
-
     }
+
     public GameObject GetPooledObject(int objectType)
     {
         if(objectType >= pools.Length)
@@ -43,9 +41,10 @@ public class ObjectPool : MonoBehaviour
             return null;
         }
         GameObject obj = pools[objectType].pooledObjects.Dequeue();
-        obj.SetActive(true);
+       // obj.SetActive(true);
         pools[objectType].pooledObjects.Enqueue(obj);
         return obj;
     }
-    
+
+   
 }
