@@ -9,7 +9,7 @@ using DG.Tweening;
 public class CharacterAttackState : CharacterBaseState
 {
     protected IDamageable CollidedObject;
-    private float _attackDashDuration = 0.5f;
+    private float _attackDashDuration = 0.2f;
   
    
     public override void EnterState(CharacterStateManager character)

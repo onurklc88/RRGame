@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using DG.Tweening;
 
 
 
@@ -10,6 +11,17 @@ using System;
 public class CharacterStateManager : MonoBehaviour
 {
     public static event Action<bool> SwitchCamAngle;
+    #region Getters & Setters
+
+    public CharacterProperties CharacterProperties => _characterProperties;
+    public float CharacterSpeed => _characterProperties.WalkSpeed;
+
+    public Vector3 CurrentMove => _currentMovement;
+    public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
+    public ObjectPool ObjectPool => _objectPool;
+    public Vector3 PositionToLookAt => _positionToLookAt;
+
+    #endregion
     [SerializeField] private CharacterProperties _characterProperties;
     [SerializeField] private ObjectPool _objectPool;
     [HideInInspector] public CharacterController CharacterController;
@@ -20,23 +32,13 @@ public class CharacterStateManager : MonoBehaviour
     private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
     private Vector3 _currentMovement;
     private Vector3 _positionToLookAt;
-    #region Getters & Setters
-    //getter and Setters
-    public CharacterProperties CharacterProperties => _characterProperties;
-    public float CharacterSpeed => _characterProperties.WalkSpeed;
-    //public CharacterAttackState.AttackType AttackType => _attackType;
-    public Vector3 CurrentMove => _currentMovement;
-    public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
-    public ObjectPool ObjectPool => _objectPool;
-    public Vector3 PositionToLookAt => _positionToLookAt;
-
-    #endregion
     private PlayerInput _playerInput;
     private Vector2 _readVector;
     private float _rotationFactorPerFrame = 15f;
-    private float _buttonPressedTime = 3f;
+    private float _lastAttackTime;
+    private int _maxAttackCount;
     private CharacterBaseState _currentState = null;
-   
+    private bool _canCharacterSlide = true;
 
     private void OnEnable()
     {
@@ -75,17 +77,18 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
-        _playerInput.CharacterControls.MeleeAttack.performed += OnMeleeAttackStarted;
-        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttackEnded;
+        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
     }
 
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
-        //timer eklenecek
+        if (!_canCharacterSlide) return;
+        _canCharacterSlide = false;
         IsSlidePressed = context.ReadValueAsButton();
         SwitchState(_characterStateFactory.CharacterSlideState);
+        DOVirtual.DelayedCall(1f, () =>{ _canCharacterSlide = true;});
     }
 
     private void OnMovementInput(InputAction.CallbackContext context)
@@ -99,23 +102,21 @@ public class CharacterStateManager : MonoBehaviour
             IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
     }
     
+    
     private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
-        if (_currentState == _characterStateFactory.CharacterSlideState || _characterStateFactory.CurrentCombatType == CharacterStateFactory.CombatType.LongRange) return;
-        _characterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.Melee;
-        _buttonPressedTime = Time.time;
-    }
-
-    private void OnMeleeAttackEnded(InputAction.CallbackContext context)
-    {
-        float heldTime = Time.time - _buttonPressedTime;
        
-        if (heldTime < 1f)
+        if (_currentState == _characterStateFactory.CharacterSlideState || _currentState == _characterStateFactory.CharacterAttackState) return;
+
+      
+        _characterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.Melee;
+        if (context.duration < 0.5f)
            _characterStateFactory.CharacterAttackState = _characterStateFactory.LightAttack;
         else
            _characterStateFactory.CharacterAttackState = _characterStateFactory.HeavyAttack;
         
         SwitchState(_characterStateFactory.CharacterAttackState);
+        
     }
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
@@ -129,6 +130,7 @@ public class CharacterStateManager : MonoBehaviour
     }
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
+        if (_currentState == _characterStateFactory.CharacterSlideState || _characterStateFactory.CurrentCombatType == CharacterStateFactory.CombatType.Melee) return;
         SwitchCamAngle?.Invoke(false);
         _characterStateFactory.CharacterAttackState.AttackBehaviour(this);
     }
@@ -159,18 +161,17 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (_currentState == _characterStateFactory.CharacterAttackState || IsSlidePressed) return;
+        if (_currentState == _characterStateFactory.CharacterAttackState || _currentState == _characterStateFactory.CharacterSlideState) return;
         
         _positionToLookAt.x = _currentMovement.x;
         _positionToLookAt.y = 0f;
         _positionToLookAt.z = _currentMovement.z;
         Quaternion currentRotation = transform.rotation;
-
-       
+        
         if (!IsMovementPressed) return;
         
-            Quaternion targetRotation = Quaternion.LookRotation(_positionToLookAt);
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.LookRotation(_positionToLookAt);
+        transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
     }
 
     public void SwitchState(CharacterBaseState newState)
@@ -179,7 +180,6 @@ public class CharacterStateManager : MonoBehaviour
         _currentState.EnterState(this);
     }
 
-   
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
