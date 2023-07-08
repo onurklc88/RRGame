@@ -5,7 +5,7 @@ public class ThrowBomb : CharacterAttackState
 {
     public override void EnterState(CharacterStateManager character)
     {
-
+      
     }
     public override void UpdateState(CharacterStateManager character)
     {

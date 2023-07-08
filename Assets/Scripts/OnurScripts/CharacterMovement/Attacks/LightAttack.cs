@@ -11,8 +11,8 @@ public class LightAttack : CharacterAttackState
     
     public override void EnterState(CharacterStateManager character)
     {
-      
 
+        /*
         if(_firstAttacktime == 0)
         {
             _firstAttacktime = Time.time;
@@ -32,7 +32,6 @@ public class LightAttack : CharacterAttackState
                 Debug.Log("SpamDetected");
               //  character.StartCoroutine(DelayState(character));
                 ExitState(character);
-               
             }
           
         }
@@ -41,17 +40,13 @@ public class LightAttack : CharacterAttackState
             _spamCount++;
             AttackBehaviour(character);
         }
-
-      
-
-
-
-       
+        */
+        AttackBehaviour(character);
     }
 
     public override void AttackBehaviour(CharacterStateManager character)
     {
-       
+        Debug.Log("Ligt Attack");
         AttackRange(character);
         TrackCursorPosition(character);
         if (CollidedObject != null) { CollidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage); }
