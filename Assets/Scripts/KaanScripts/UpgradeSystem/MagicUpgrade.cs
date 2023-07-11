@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class MagicUpgrade : Upgrade
 {
+    //1.3x first level, every level increase 0.3x and 5th level max damage 2.5x
+
+    [SerializeField] private float increaseMagic = 0.3f;
+
     public override void DoUpgrade()
     {
         if (Check())
         {
-            Debug.Log("Magic");
             DropCost();
             Level++;
             SetLevelImage();
@@ -18,7 +21,10 @@ public class MagicUpgrade : Upgrade
 
     public override void SetLevelUpgrade()
     {
-        //Set Upgrade Settings.
+        Debug.Log(SaveInfo._upgradeSave.magicPower);
+        SaveInfo._upgradeSave.magicPower += increaseMagic;
+        Debug.Log(SaveInfo._upgradeSave.magicPower);
+        SaveInfo._upgradeSave.Save();
     }
 
     public override bool Check()

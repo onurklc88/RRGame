@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         SaveInfo.Init();
         //SaveInfo._player.health = 10;
-       // SaveInfo._player.Save();
+        // SaveInfo._player.Save();
     }
 
     // Update is called once per frame

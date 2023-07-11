@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SelectUpgrade : MonoBehaviour
 {
+
     public StrengthUpgrade _strengthUpgrade;
     public HasteUpgrade _hasteUpgrade;
     public DexterityUpgrade _dexterityUpgrade;

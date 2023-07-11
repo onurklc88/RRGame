@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DexterityUpgrade : Upgrade
 {
+    [SerializeField] private float decreaseChargeSpeed = 0.2f;
 
     public override void DoUpgrade()
     {
         if (Check())
         {
-            Debug.Log("Dexterity");
             DropCost();
             Level++;
             SetLevelImage();
@@ -19,7 +19,8 @@ public class DexterityUpgrade : Upgrade
 
     public override void SetLevelUpgrade()
     {
-        //Set Upgrade Settings.
+        SaveInfo._upgradeSave.dexterityChargeSpeed -= decreaseChargeSpeed;
+        SaveInfo._upgradeSave.Save();
     }
 
     public override bool Check()

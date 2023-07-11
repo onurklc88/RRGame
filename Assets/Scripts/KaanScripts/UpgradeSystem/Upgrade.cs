@@ -5,10 +5,13 @@ using UnityEngine;
 
 public abstract class Upgrade : MonoBehaviour
 {
+    
     [SerializeField] protected string upgradeName;
     [SerializeField] protected List<GameObject> levelImage = new List<GameObject>();
     [SerializeField] protected int level = 0;
     [SerializeField] protected int maxLevel = 5;
+
+
 
     protected bool isActive;
     protected List<int> costList = new List<int>(5) { 400,600,800,1000,1500 };

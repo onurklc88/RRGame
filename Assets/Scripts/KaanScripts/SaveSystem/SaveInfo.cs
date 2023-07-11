@@ -5,11 +5,13 @@ using UnityEngine;
 public static class SaveInfo
 {
     public static Player _player;
+    public static UpgradeSave _upgradeSave;
 
 
     public static void Init()
     {
         _player = Load<Player>();
+        _upgradeSave = Load<UpgradeSave>();
     }
 
 
