@@ -15,8 +15,7 @@ public class ThrowArrow : CharacterAttackState
     }
     public override void AttackBehaviour(CharacterStateManager character)
     {
-       
-       GameObject arrow = character.ObjectPool.GetPooledObject(0);
+       GameObject arrow = ObjectPool.GetPooledObject(0);
        arrow.transform.position = character.transform.position + character.transform.forward;
        arrow.SetActive(true);
        Vector3 arrowMovePosition = arrow.transform.position + character.transform.forward * 50f;

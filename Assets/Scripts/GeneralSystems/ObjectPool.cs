@@ -10,39 +10,41 @@ public class ObjectPool : MonoBehaviour
     
     public struct Pool
     {
-        public string name;
-        public Queue<GameObject> pooledObjects;
-        public GameObject objectPrefab;
-        public int poolSize;
+        public string Name;
+        public Queue<GameObject> PooledObjects;
+        public GameObject ObjectPrefab;
+        public int PoolSize;
     }
-    [SerializeField] private Pool[] pools = null;
 
-    
+    [SerializeField] private Pool[] _pools;
+    public static Pool[] pools = null;
+  
     private void Awake()
     {
+        pools = _pools;
        for(int j = 0; j < pools.Length; j++)
         {
-            pools[j].pooledObjects = new Queue<GameObject>();
+            pools[j].PooledObjects = new Queue<GameObject>();
 
-            for (int i = 0; i < pools[j].poolSize; i++)
+            for (int i = 0; i < pools[j].PoolSize; i++)
             {
-                GameObject poolObject = Instantiate(pools[j].objectPrefab);
+                GameObject poolObject = Instantiate(pools[j].ObjectPrefab);
                 poolObject.transform.SetParent(transform);
                 poolObject.SetActive(false);
-                pools[j].pooledObjects.Enqueue(poolObject);
+                pools[j].PooledObjects.Enqueue(poolObject);
             }
         }
     }
 
-    public GameObject GetPooledObject(int objectType)
+    public static GameObject GetPooledObject(int objectType)
     {
         if(objectType >= pools.Length)
         {
             return null;
         }
-        GameObject obj = pools[objectType].pooledObjects.Dequeue();
+        GameObject obj = pools[objectType].PooledObjects.Dequeue();
        // obj.SetActive(true);
-        pools[objectType].pooledObjects.Enqueue(obj);
+        pools[objectType].PooledObjects.Enqueue(obj);
         return obj;
     }
 

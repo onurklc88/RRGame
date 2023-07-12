@@ -21,7 +21,6 @@ public class Clawmarcher : Creature
     private void Update()
     {
         ExecuteState();
-      
     }
 
 

@@ -15,7 +15,6 @@ public class CharacterWalkState : CharacterBaseState
     }
     public override void UpdateState(CharacterStateManager character)
     {
-     
         if (character.IsMovementPressed)
             character.CharacterController.Move(character.CurrentMove * Time.deltaTime * character.CharacterSpeed);
        else

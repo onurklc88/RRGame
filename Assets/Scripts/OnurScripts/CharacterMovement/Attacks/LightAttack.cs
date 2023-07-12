@@ -49,7 +49,7 @@ public class LightAttack : CharacterAttackState
         Debug.Log("Ligt Attack");
         AttackRange(character);
         TrackCursorPosition(character);
-        if (CollidedObject != null) { CollidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage); }
+        if (_collidedObject != null) { _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage); }
         AttackDash(character);
         character.StartCoroutine(DelayState(character));
     }
