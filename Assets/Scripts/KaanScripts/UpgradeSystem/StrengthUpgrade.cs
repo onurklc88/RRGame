@@ -23,6 +23,8 @@ public class StrengthUpgrade : Upgrade
     {
         SaveInfo._upgradeSave.strengthDamage += increaseDamage;
         SaveInfo._upgradeSave.Save();
+
+
     }
 
     public override bool Check()

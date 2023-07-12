@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class UpgradeSaveInput : SaveSystem
 {
-
     public float strengthDamage;
 
     public float dexterityChargeSpeed;
@@ -26,8 +25,6 @@ public class UpgradeSaveInput : SaveSystem
         hasteDodgeDelay = 2; //animation time + dodgedelay = dodgetime, example anim time = .5f
 
         magicPower = 5;
-
-
     }
 
 }
