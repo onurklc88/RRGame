@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DexterityUpgrade : Upgrade
 {
-    [SerializeField] private float decreaseChargeSpeed = 0.2f;
+    [SerializeField] private float _decreaseChargeSpeed = 0.2f;
 
     public override void DoUpgrade()
     {
@@ -19,13 +19,13 @@ public class DexterityUpgrade : Upgrade
 
     public override void SetLevelUpgrade()
     {
-        SaveInfo._upgradeSave.dexterityChargeSpeed -= decreaseChargeSpeed;
-        SaveInfo._upgradeSave.Save();
+        SaveInfo.UpgradeSave.DexterityChargeSpeed -= _decreaseChargeSpeed;
+        SaveInfo.UpgradeSave.Save();
     }
 
     public override bool Check()
     {
-        isActive = CheckCost() && CheckLevel();
-        return isActive;
+        _isActive = CheckCost() && CheckLevel();
+        return _isActive;
     }
 }

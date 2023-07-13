@@ -8,7 +8,7 @@ public class UpgradeSave : UpgradeSaveInput
 {
     public UpgradeSave()
     {
-        base.Value = this;
+        base._value = this;
     }
     
 }

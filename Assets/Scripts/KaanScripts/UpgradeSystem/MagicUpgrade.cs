@@ -6,7 +6,7 @@ public class MagicUpgrade : Upgrade
 {
     //1.3x first level, every level increase 0.3x and 5th level max damage 2.5x
 
-    [SerializeField] private float increaseMagic = 0.3f;
+    [SerializeField] private float _increaseMagic = 0.3f;
 
     public override void DoUpgrade()
     {
@@ -21,15 +21,15 @@ public class MagicUpgrade : Upgrade
 
     public override void SetLevelUpgrade()
     {
-        Debug.Log(SaveInfo._upgradeSave.magicPower);
-        SaveInfo._upgradeSave.magicPower += increaseMagic;
-        Debug.Log(SaveInfo._upgradeSave.magicPower);
-        SaveInfo._upgradeSave.Save();
+        Debug.Log(SaveInfo.UpgradeSave.MagicPower);
+        SaveInfo.UpgradeSave.MagicPower += _increaseMagic;
+        Debug.Log(SaveInfo.UpgradeSave.MagicPower);
+        SaveInfo.UpgradeSave.Save();
     }
 
     public override bool Check()
     {
-        isActive = CheckCost() && CheckLevel();
-        return isActive;
+        _isActive = CheckCost() && CheckLevel();
+        return _isActive;
     }
 }

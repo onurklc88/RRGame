@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class UpgradeSaveInput : SaveSystem
 {
-    public float strengthDamage;
+    public float StrengthDamage;
 
-    public float dexterityChargeSpeed;
+    public float DexterityChargeSpeed;
 
-    public float hasteRunSpeed;
-    public float hasteDodgeDelay;
+    public float HasteRunSpeed;
+    public float HasteDodgeDelay;
 
-    public float magicPower;
+    public float MagicPower;
 
     public UpgradeSaveInput()
     {
         //If play firts time, set these values
 
-        strengthDamage = 5;
+        StrengthDamage = 5;
 
-        dexterityChargeSpeed = 1.5f;
+        DexterityChargeSpeed = 1.5f;
 
-        hasteRunSpeed = 10;  
-        hasteDodgeDelay = 2; //animation time + dodgedelay = dodgetime, example anim time = .5f
+        HasteRunSpeed = 10;  
+        HasteDodgeDelay = 2; //animation time + dodgedelay = dodgetime, example anim time = .5f
 
-        magicPower = 5;
+        MagicPower = 5;
     }
 
 }

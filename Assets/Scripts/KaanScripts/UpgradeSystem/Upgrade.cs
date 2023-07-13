@@ -6,27 +6,27 @@ using UnityEngine;
 public abstract class Upgrade : MonoBehaviour
 {
     
-    [SerializeField] protected string upgradeName;
-    [SerializeField] protected List<GameObject> levelImage = new List<GameObject>();
-    [SerializeField] protected int level = 0;
-    [SerializeField] protected int maxLevel = 5;
+    [SerializeField] protected string _upgradeName;
+    [SerializeField] protected List<GameObject> _levelImage = new List<GameObject>();
+    [SerializeField] protected int _level = 0;
+    [SerializeField] protected int _maxLevel = 5;
 
 
 
-    protected bool isActive;
-    protected List<int> costList = new List<int>(5) { 400,600,800,1000,1500 };
+    protected bool _isActive;
+    protected List<int> _costList = new List<int>(5) { 400,600,800,1000,1500 };
 
     public int Level
     {
         get
         {
-            level = PlayerPrefs.GetInt(upgradeName + "Level");
-            return level;
+            _level = PlayerPrefs.GetInt(_upgradeName + "Level");
+            return _level;
         }
         set
         {
-            level = value;
-            PlayerPrefs.SetInt(upgradeName+"Level", level);
+            _level = value;
+            PlayerPrefs.SetInt(_upgradeName+"Level", _level);
         }
     }
 
@@ -41,16 +41,16 @@ public abstract class Upgrade : MonoBehaviour
 
     
 
-    protected void DropCost() { EconomyManager.instance.Money -= costList[Level]; }
-    protected bool CheckCost() { return costList[Level] <= EconomyManager.instance.Money; }
-    protected bool CheckLevel() { return Level < maxLevel; }
+    protected void DropCost() { EconomyManager.instance.Money -= _costList[Level]; }
+    protected bool CheckCost() { return _costList[Level] <= EconomyManager.instance.Money; }
+    protected bool CheckLevel() { return Level < _maxLevel; }
     protected void SetLevelImage()
     {
         if (Level > 0)
         {
             for (int i = 0; i < Level; i++)
             {
-                levelImage[i].SetActive(true);
+                _levelImage[i].SetActive(true);
             }
         }
     }

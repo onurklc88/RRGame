@@ -4,14 +4,14 @@ using UnityEngine;
 
 public static class SaveInfo
 {
-    public static Player _player;
-    public static UpgradeSave _upgradeSave;
+    public static Player Player;
+    public static UpgradeSave UpgradeSave;
 
 
     public static void Init()
     {
-        _player = Load<Player>();
-        _upgradeSave = Load<UpgradeSave>();
+        Player = Load<Player>();
+        UpgradeSave = Load<UpgradeSave>();
     }
 
 

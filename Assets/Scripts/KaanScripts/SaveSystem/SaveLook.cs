@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SaveLook : MonoBehaviour
 {
-    public Player _player;
-    public UpgradeSave _upgradeSave;
+    public Player Player;
+    public UpgradeSave UpgradeSave;
 
     private void Start()
     {
-        _player = SaveInfo._player;
-        _upgradeSave = SaveInfo._upgradeSave;
+        Player = SaveInfo.Player;
+        UpgradeSave = SaveInfo.UpgradeSave;
     }
 }

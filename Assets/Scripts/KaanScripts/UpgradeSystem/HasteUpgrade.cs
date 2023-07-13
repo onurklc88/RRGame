@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class HasteUpgrade : Upgrade
 {
-    [SerializeField] private float increaseRunSpeed = 0.2f;
-    [SerializeField] private float decreaseDodgeDelay = 0.35f;
+    [SerializeField] private float _increaseRunSpeed = 0.2f;
+    [SerializeField] private float _decreaseDodgeDelay = 0.35f;
 
     public override void DoUpgrade()
     {
@@ -20,14 +20,14 @@ public class HasteUpgrade : Upgrade
 
     public override void SetLevelUpgrade()
     {
-        SaveInfo._upgradeSave.hasteRunSpeed += increaseRunSpeed;
-        SaveInfo._upgradeSave.hasteDodgeDelay -= decreaseDodgeDelay;
-        SaveInfo._upgradeSave.Save();
+        SaveInfo.UpgradeSave.HasteRunSpeed += _increaseRunSpeed;
+        SaveInfo.UpgradeSave.HasteDodgeDelay -= _decreaseDodgeDelay;
+        SaveInfo.UpgradeSave.Save();
     }
 
     public override bool Check()
     {
-        isActive = CheckCost() && CheckLevel();
-        return isActive;
+        _isActive = CheckCost() && CheckLevel();
+        return _isActive;
     }
 }

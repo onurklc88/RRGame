@@ -7,20 +7,20 @@ public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager instance;
 
-    private int money;
+    private int _money;
 
-    public int setMoney;
+    public int SetMoney;
     
     public int Money
     {
         get
         {
             //money = PlayerPrefs.GetInt("Money");
-            return money;
+            return _money;
         }
         set
         {
-            money = value;
+            _money = value;
             //PlayerPrefs.SetInt("Money", money);
         }
     }
@@ -32,7 +32,7 @@ public class EconomyManager : MonoBehaviour
     }
     void Start()
     {
-        Money = setMoney;
+        Money = SetMoney;
     }
 
 }

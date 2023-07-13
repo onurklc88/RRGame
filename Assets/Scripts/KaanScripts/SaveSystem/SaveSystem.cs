@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SaveSystem
 {
-    protected object Value;
+    protected object _value;
 
     public void Save()
     {
-        string save = JsonUtility.ToJson(Value);
+        string save = JsonUtility.ToJson(_value);
 
-        PlayerPrefs.SetString(Value.ToString(), save);
+        PlayerPrefs.SetString(_value.ToString(), save);
     }
 }

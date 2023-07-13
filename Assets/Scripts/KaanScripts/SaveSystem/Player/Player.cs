@@ -8,6 +8,6 @@ public class Player : PlayerSaveInput
 {
     public Player()
     {
-        base.Value = this;
+        base._value = this;
     }
 }
