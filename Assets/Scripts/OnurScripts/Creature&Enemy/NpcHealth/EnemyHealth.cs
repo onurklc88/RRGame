@@ -7,7 +7,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 {
    // public static event Action OnEnemyDie;
     [SerializeField] private EnemyProperties _enemyProperties;
-    private int _currentHealth;
+    private float _currentHealth;
     private void OnEnable()
     {
         
@@ -21,7 +21,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _currentHealth = _enemyProperties.EnemyHealth;
     }
-    public void TakeDamage(int damageValue)
+    public void TakeDamage(float damageValue)
     {
         
         if(_currentHealth <= 0)

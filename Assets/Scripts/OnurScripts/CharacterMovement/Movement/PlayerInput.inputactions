@@ -49,6 +49,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Arrow",
+                    "type": "Button",
+                    "id": "b3709a9b-124d-4178-b9b7-62a6eb86176e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Bomb",
+                    "type": "Button",
+                    "id": "64bd8dc1-bb5f-4697-84c6-732a07e9272c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -181,6 +199,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "LongRangeAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5365ca9c-9312-4a42-a3f2-b5e669fd58fc",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Bomb",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7f69ef5-8c1f-4177-9d51-bc31de82832d",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Arrow",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

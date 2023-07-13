@@ -71,6 +71,24 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Arrow"",
+                    ""type"": ""Button"",
+                    ""id"": ""b3709a9b-124d-4178-b9b7-62a6eb86176e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Bomb"",
+                    ""type"": ""Button"",
+                    ""id"": ""64bd8dc1-bb5f-4697-84c6-732a07e9272c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -205,6 +223,28 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""LongRangeAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5365ca9c-9312-4a42-a3f2-b5e669fd58fc"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Bomb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b7f69ef5-8c1f-4177-9d51-bc31de82832d"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Arrow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -218,6 +258,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_CharacterControls_Interaction = m_CharacterControls.FindAction("Interaction", throwIfNotFound: true);
         m_CharacterControls_MeleeAttack = m_CharacterControls.FindAction("MeleeAttack", throwIfNotFound: true);
         m_CharacterControls_LongRangeAttack = m_CharacterControls.FindAction("LongRangeAttack", throwIfNotFound: true);
+        m_CharacterControls_Arrow = m_CharacterControls.FindAction("Arrow", throwIfNotFound: true);
+        m_CharacterControls_Bomb = m_CharacterControls.FindAction("Bomb", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -284,6 +326,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Interaction;
     private readonly InputAction m_CharacterControls_MeleeAttack;
     private readonly InputAction m_CharacterControls_LongRangeAttack;
+    private readonly InputAction m_CharacterControls_Arrow;
+    private readonly InputAction m_CharacterControls_Bomb;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -293,6 +337,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Interaction => m_Wrapper.m_CharacterControls_Interaction;
         public InputAction @MeleeAttack => m_Wrapper.m_CharacterControls_MeleeAttack;
         public InputAction @LongRangeAttack => m_Wrapper.m_CharacterControls_LongRangeAttack;
+        public InputAction @Arrow => m_Wrapper.m_CharacterControls_Arrow;
+        public InputAction @Bomb => m_Wrapper.m_CharacterControls_Bomb;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -317,6 +363,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @LongRangeAttack.started += instance.OnLongRangeAttack;
             @LongRangeAttack.performed += instance.OnLongRangeAttack;
             @LongRangeAttack.canceled += instance.OnLongRangeAttack;
+            @Arrow.started += instance.OnArrow;
+            @Arrow.performed += instance.OnArrow;
+            @Arrow.canceled += instance.OnArrow;
+            @Bomb.started += instance.OnBomb;
+            @Bomb.performed += instance.OnBomb;
+            @Bomb.canceled += instance.OnBomb;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -336,6 +388,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @LongRangeAttack.started -= instance.OnLongRangeAttack;
             @LongRangeAttack.performed -= instance.OnLongRangeAttack;
             @LongRangeAttack.canceled -= instance.OnLongRangeAttack;
+            @Arrow.started -= instance.OnArrow;
+            @Arrow.performed -= instance.OnArrow;
+            @Arrow.canceled -= instance.OnArrow;
+            @Bomb.started -= instance.OnBomb;
+            @Bomb.performed -= instance.OnBomb;
+            @Bomb.canceled -= instance.OnBomb;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -360,5 +418,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnInteraction(InputAction.CallbackContext context);
         void OnMeleeAttack(InputAction.CallbackContext context);
         void OnLongRangeAttack(InputAction.CallbackContext context);
+        void OnArrow(InputAction.CallbackContext context);
+        void OnBomb(InputAction.CallbackContext context);
     }
 }

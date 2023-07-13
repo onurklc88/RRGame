@@ -13,7 +13,7 @@ public class HeavyAttack : CharacterAttackState
         Debug.Log("Greetings from Heavy Attack");
         AttackRange(character);
         TrackCursorPosition(character);
-        if (CollidedObject != null) { CollidedObject.TakeDamage(character.CharacterProperties.HeavyAttackDamage); }
+        if (_collidedObject != null) { _collidedObject.TakeDamage(character.CharacterProperties.HeavyAttackDamage); }
         AttackDash(character);
         character.StartCoroutine(DelayState(character));
     }

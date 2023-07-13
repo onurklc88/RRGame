@@ -8,8 +8,9 @@ using DG.Tweening;
 
 public class CharacterAttackState : CharacterBaseState
 {
-    protected IDamageable CollidedObject;
+    protected IDamageable _collidedObject;
     private float _attackDashDuration = 0.2f;
+    
   
    
     public override void EnterState(CharacterStateManager character)
@@ -36,7 +37,7 @@ public class CharacterAttackState : CharacterBaseState
         {
             if(inSightRange[i].transform.GetComponent<IDamageable>() != null)
             {
-               CollidedObject = inSightRange[i].transform.GetComponent<IDamageable>();
+               _collidedObject = inSightRange[i].transform.GetComponent<IDamageable>();
             }
         }
     }
@@ -53,12 +54,15 @@ public class CharacterAttackState : CharacterBaseState
         var direction = GetMousePosition() - character.transform.position;
         direction.y = 0;
         character.transform.forward = direction;
+        //Quaternion targetRotation = Quaternion.LookRotation(direction);
+        //character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, 15f * Time.deltaTime);
     }
 
     private Vector3 GetMousePosition()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out var hitInfo, Mathf.Infinity)) return Vector3.zero;
+        Debug.Log("hit info: " + hitInfo.transform.gameObject.name);
         return hitInfo.point;
     }
 

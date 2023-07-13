@@ -25,7 +25,6 @@ public class WalkState : IState
         if (creature.transform.position.x != creature.Waypoint[creature.CurrentWaypointIndex].position.x)
         {
             creature.NavMeshAgent.SetDestination(creature.Waypoint[creature.CurrentWaypointIndex].position);
-           
         }
         else
         {

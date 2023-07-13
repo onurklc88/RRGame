@@ -2,28 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
 using DG.Tweening;
 
 
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterStateManager : MonoBehaviour
+public class CharacterStateManager : MonoBehaviour, IWeaponListener
 {
-    public static event Action<bool> SwitchCamAngle;
+   
     #region Getters & Setters
-
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
-
     public Vector3 CurrentMove => _currentMovement;
     public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
-    public ObjectPool ObjectPool => _objectPool;
     public Vector3 PositionToLookAt => _positionToLookAt;
-
-    #endregion
+     #endregion
     [SerializeField] private CharacterProperties _characterProperties;
-    [SerializeField] private ObjectPool _objectPool;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
@@ -34,20 +28,22 @@ public class CharacterStateManager : MonoBehaviour
     private Vector3 _positionToLookAt;
     private PlayerInput _playerInput;
     private Vector2 _readVector;
+    private Weapon _currentWeapon;
     private float _rotationFactorPerFrame = 15f;
-    private float _lastAttackTime;
-    private int _maxAttackCount;
     private CharacterBaseState _currentState = null;
     private bool _canCharacterSlide = true;
 
     private void OnEnable()
     {
-        CharacterHealth.PlayerKnockbackEvent += SwitchState;
+        
+        EventLibrary.OnPlayerTakeDamage.AddListener(SwitchState);
+        EventLibrary.OnWeaponChange.AddListener(GetCurrentWeaponProperties);
         _playerInput.CharacterControls.Enable();
     }
     private void OnDisable()
     {
-        CharacterHealth.PlayerKnockbackEvent -= SwitchState;
+        EventLibrary.OnPlayerTakeDamage.RemoveListener(SwitchState);
+        EventLibrary.OnWeaponChange.RemoveListener(GetCurrentWeaponProperties);
         _playerInput.CharacterControls.Disable();
     }
 
@@ -77,7 +73,7 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
-        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttackStarted;
+        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttack;
         _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
     }
@@ -102,21 +98,18 @@ public class CharacterStateManager : MonoBehaviour
             IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;
     }
     
-    
-    private void OnMeleeAttackStarted(InputAction.CallbackContext context)
+    private void OnMeleeAttack(InputAction.CallbackContext context)
     {
-       
         if (_currentState == _characterStateFactory.CharacterSlideState || _currentState == _characterStateFactory.CharacterAttackState) return;
 
-      
         _characterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.Melee;
+      
         if (context.duration < 0.5f)
            _characterStateFactory.CharacterAttackState = _characterStateFactory.LightAttack;
         else
            _characterStateFactory.CharacterAttackState = _characterStateFactory.HeavyAttack;
         
         SwitchState(_characterStateFactory.CharacterAttackState);
-        
     }
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
@@ -124,14 +117,23 @@ public class CharacterStateManager : MonoBehaviour
         if (_currentState == _characterStateFactory.CharacterSlideState || _characterStateFactory.CurrentCombatType == CharacterStateFactory.CombatType.Melee) return;
 
         _characterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.LongRange;
-        SwitchCamAngle?.Invoke(true);
-        _characterStateFactory.CharacterAttackState = _characterStateFactory.ThrowBomb;
+        EventLibrary.OnLongRangeAttack.Invoke(true);
+        switch (_currentWeapon)
+        {
+            case Arrow:
+                _characterStateFactory.CharacterAttackState = _characterStateFactory.ThrowArrow;
+                break;
+            case Bomb:
+                _characterStateFactory.CharacterAttackState = _characterStateFactory.ThrowBomb;
+                break;
+        }
+       
         SwitchState(_characterStateFactory.CharacterAttackState);
     }
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
         if (_currentState == _characterStateFactory.CharacterSlideState || _characterStateFactory.CurrentCombatType == CharacterStateFactory.CombatType.Melee) return;
-        SwitchCamAngle?.Invoke(false);
+        EventLibrary.OnLongRangeAttack.Invoke(false);
         _characterStateFactory.CharacterAttackState.AttackBehaviour(this);
     }
     
@@ -180,6 +182,10 @@ public class CharacterStateManager : MonoBehaviour
         _currentState.EnterState(this);
     }
 
+    public void GetCurrentWeaponProperties(Weapon weapon)
+    {
+        _currentWeapon = weapon;
+     }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

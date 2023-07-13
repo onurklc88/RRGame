@@ -13,8 +13,7 @@ public class ThrowBomb : CharacterAttackState
     }
     public override void AttackBehaviour(CharacterStateManager character)
     {
-
-        GameObject bomb = character.ObjectPool.GetPooledObject(1);
+        GameObject bomb = ObjectPool.GetPooledObject(1);
         bomb.transform.position = character.transform.position + character.transform.forward;
         bomb.SetActive(true);
         Vector3 bombMovePosition = new Vector3(bomb.transform.position.x, 0f, bomb.transform.position.z) + character.transform.forward * 15f;
