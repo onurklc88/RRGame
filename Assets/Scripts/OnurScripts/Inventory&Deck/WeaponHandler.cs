@@ -9,10 +9,9 @@ public class WeaponHandler : MonoBehaviour
 {
     
     private PlayerInput _playerInput;
-    private Arrow _arrow = new Arrow();
-    private Bomb _bomb = new Bomb();
-   // private CharacterStateManager ch = new CharacterStateManager();
-    private Dictionary<string, Weapon> _weaponDictionary = new Dictionary<string, Weapon>();
+    private Weapons _weapons = new Weapons();
+    
+    private Dictionary<string, ThrowableWeapon> _weaponDictionary = new Dictionary<string, ThrowableWeapon>();
 
     private void OnEnable()
     {
@@ -25,9 +24,9 @@ public class WeaponHandler : MonoBehaviour
 
     private void Start()
     {
-        EventLibrary.OnWeaponChange.Invoke(_arrow);
-        _weaponDictionary.Add("Arrow", _arrow);
-        _weaponDictionary.Add("Bomb", _bomb);
+        EventLibrary.OnWeaponChange.Invoke(_weapons.Arrow);
+        _weaponDictionary.Add("Arrow", _weapons.Arrow);
+        _weaponDictionary.Add("Bomb", _weapons.Bomb);
     }
     private void Awake()
     {

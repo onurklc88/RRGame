@@ -9,33 +9,30 @@ using DG.Tweening;
 [RequireComponent(typeof(CharacterController))]
 public class CharacterStateManager : MonoBehaviour, IWeaponListener
 {
-   
     #region Getters & Setters
     public CharacterProperties CharacterProperties => _characterProperties;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
     public Vector3 CurrentMove => _currentMovement;
     public CharacterStateFactory CharacterStateFactory => _characterStateFactory;
     public Vector3 PositionToLookAt => _positionToLookAt;
+    public ThrowableWeapon CurrentWeapon => _currentWeapon;
      #endregion
     [SerializeField] private CharacterProperties _characterProperties;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
-  
-   
     private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
     private Vector3 _currentMovement;
     private Vector3 _positionToLookAt;
     private PlayerInput _playerInput;
     private Vector2 _readVector;
-    private Weapon _currentWeapon;
+    private ThrowableWeapon _currentWeapon;
     private float _rotationFactorPerFrame = 15f;
     private CharacterBaseState _currentState = null;
     private bool _canCharacterSlide = true;
-
+   
     private void OnEnable()
     {
-        
         EventLibrary.OnPlayerTakeDamage.AddListener(SwitchState);
         EventLibrary.OnWeaponChange.AddListener(GetCurrentWeaponProperties);
         _playerInput.CharacterControls.Enable();
@@ -134,9 +131,10 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     {
         if (_currentState == _characterStateFactory.CharacterSlideState || _characterStateFactory.CurrentCombatType == CharacterStateFactory.CombatType.Melee) return;
         EventLibrary.OnLongRangeAttack.Invoke(false);
+       
         _characterStateFactory.CharacterAttackState.AttackBehaviour(this);
     }
-    
+   
     private Vector3 IsoVectorToConvert(Vector3 vector)
     {
         Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);
@@ -182,10 +180,10 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
         _currentState.EnterState(this);
     }
 
-    public void GetCurrentWeaponProperties(Weapon weapon)
+    public void GetCurrentWeaponProperties(ThrowableWeapon weapon)
     {
         _currentWeapon = weapon;
-     }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

@@ -6,21 +6,23 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public ObjectPool objectPool;
+    
 
     public GameObject player;
+    public MeleeWeapons currentWeapon;
     private void Awake()
     {
         if (instance == null)
             instance = this;
         else
             Destroy(gameObject);
+
+        SaveInfo.Init();
     }
     void Start()
     {
-        SaveInfo.Init();
-        //SaveInfo._player.health = 10;
-        // SaveInfo._player.Save();
+
+        SaveInfo.Player.SelectedWeapon = currentWeapon;
     }
 
     // Update is called once per frame

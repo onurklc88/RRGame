@@ -1,52 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class LightAttack : CharacterAttackState
 {
-    private int _spamCount;
-    private int _maxSpamCount = 2;
-    private float _firstAttacktime = 0;
-    private bool _spammed;
+    
+    private float _firstAttacktime = 0f;
+    private float _currentAttackTime = 0f;
+    private int _currentSwings;
+    private bool _canSwing = true;
+    private float _animationDelay = 0.4f;
     
     public override void EnterState(CharacterStateManager character)
     {
 
-        /*
-        if(_firstAttacktime == 0)
+        if (_canSwing == false)
+        {
+            ExitState(character);
+            return;
+        }
+     
+        if (_firstAttacktime == 0)
         {
             _firstAttacktime = Time.time;
-           // Debug.Log("_first Attack time: " + _firstAttacktime);
-        }
-        
-        if(_spamCount == _maxSpamCount)
-        {
-            _spamCount = 0;
-            if (!CheckTimeBetweenFirstAttack(Time.time))
-            {
-                _firstAttacktime = 0;
-                AttackBehaviour(character);
-            }
-            else
-            {
-                Debug.Log("SpamDetected");
-              //  character.StartCoroutine(DelayState(character));
-                ExitState(character);
-            }
-          
+            
         }
         else
         {
-            _spamCount++;
+            _firstAttacktime = ResetFirstAttackTime(Time.time);
+        }
+        
+           
+        
+      
+
+        if(_currentSwings  == SaveInfo.Player.SelectedWeapon.SwingCount)
+        {
+           
+            if (CheckTimeBetweenFirstAttack(Time.time))
+            {
+                //Debug.Log("Spam detected");
+                _canSwing = false;
+                 DOVirtual.DelayedCall(1f, () =>  {  _canSwing = true; });
+                ExitState(character);
+                _currentSwings = 0;
+                _firstAttacktime = 0;
+              
+
+            }
+            else
+            {
+                //Debug.Log("Spam is not detected");
+                _currentSwings = 0;
+                _firstAttacktime = 0;
+                AttackBehaviour(character);
+            }
+        }
+        else
+        {
+            _currentSwings++;
+            
             AttackBehaviour(character);
         }
-        */
-        AttackBehaviour(character);
-    }
+       // Debug.Log("CurrentSwing: " + _currentSwings);
+ }
 
     public override void AttackBehaviour(CharacterStateManager character)
     {
-        Debug.Log("Ligt Attack");
+       // Debug.Log("Ligt Attack");
         AttackRange(character);
         TrackCursorPosition(character);
         if (_collidedObject != null) { _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage); }
@@ -54,23 +76,39 @@ public class LightAttack : CharacterAttackState
         character.StartCoroutine(DelayState(character));
     }
 
-    private bool CheckTimeBetweenFirstAttack(float lastTime)
+    private bool CheckTimeBetweenFirstAttack(float currentTime)
     {
-
-        //Debug.Log("First attack time: "+ _firstAttacktime+ " Last Attack Time: " +lastTime);
-        Debug.Log("Difference: " + (lastTime - _firstAttacktime));
-       
-
-            if ((lastTime - _firstAttacktime) < 1.2f)
-            {
-            _spammed = true;
-           // character.StartCoroutine(DelayState(character));
-            return true;
-            }
-             else
-            return false;
+            if ((currentTime - _firstAttacktime) < 2f)
+                return true;
+            else
+                return false;
     }
 
-   
+    private float ResetFirstAttackTime(float intervalTime)
+    {
+
+        //Debug.Log("Time interval: " + (intervalTime - _firstAttacktime));
+        if((intervalTime - _firstAttacktime) > 2f)
+        {
+          _currentSwings = 0;
+          return 0f;
+        }
+        else
+        {
+          
+            return _firstAttacktime;
+        }
+    }
+
+    public override IEnumerator DelayState(CharacterStateManager character)
+    {
+        yield return new WaitForSeconds(_animationDelay);
+        ExitState(character);
+
+    }
+
+
+
+
 
 }

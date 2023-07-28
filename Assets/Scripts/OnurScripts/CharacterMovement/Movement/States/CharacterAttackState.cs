@@ -10,12 +10,14 @@ public class CharacterAttackState : CharacterBaseState
 {
     protected IDamageable _collidedObject;
     private float _attackDashDuration = 0.2f;
-    
-  
-   
+    Vector3 _spawnposition;
+    Vector3 hitPosition;
+    protected Vector3 _hitDirection;
+
+
     public override void EnterState(CharacterStateManager character)
     {
-        
+        _spawnposition = character.transform.position + character.transform.forward;
     }
     public override void UpdateState(CharacterStateManager character)
     {
@@ -29,7 +31,7 @@ public class CharacterAttackState : CharacterBaseState
     public virtual void AttackBehaviour(CharacterStateManager character) { }
     protected void AttackRange(CharacterStateManager character)
     {
-        Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * 2f, character.CharacterProperties.AttackArea);
+        Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * SaveInfo.Player.SelectedWeapon.Range, character.CharacterProperties.AttackArea);
       
         if (inSightRange.Length <= 0) return;
        
@@ -51,25 +53,20 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-        var direction = GetMousePosition() - character.transform.position;
-        direction.y = 0;
+        var direction = MouseTarget.GetMousePosition() - character.transform.position;
+        direction.y = 0f;
         character.transform.forward = direction;
-        //Quaternion targetRotation = Quaternion.LookRotation(direction);
-        //character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, 15f * Time.deltaTime);
+        //character.Test.transform.position = GetMousePosition();
     }
 
-    private Vector3 GetMousePosition()
-    {
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out var hitInfo, Mathf.Infinity)) return Vector3.zero;
-        Debug.Log("hit info: " + hitInfo.transform.gameObject.name);
-        return hitInfo.point;
-    }
+  
 
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         yield return new WaitForSeconds(_attackDashDuration);
         ExitState(character);
     }
+
+    
 
 }

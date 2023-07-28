@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class ThrowArrow : CharacterAttackState
 {
+    float asd = 10f;
     public override void EnterState(CharacterStateManager character)
     {
      
@@ -17,9 +18,15 @@ public class ThrowArrow : CharacterAttackState
     {
        GameObject arrow = ObjectPool.GetPooledObject(0);
        arrow.transform.position = character.transform.position + character.transform.forward;
+       
        arrow.SetActive(true);
-       Vector3 arrowMovePosition = arrow.transform.position + character.transform.forward * 50f;
-       arrow.transform.DOMove(arrowMovePosition, 1f);
+        Vector3 arrowMovePosition = arrow.transform.position + character.transform.forward * 40f;
+        // Vector3 direction = GetMousePosition();
+
+        // direction.y = character.transform.position.y;
+        //Vector3 arrowMovePosition = arrow.transform.position + MouseTarget.Target().transform.forward * 10f;
+        arrow.transform.DOMove(arrowMovePosition, 1f);
+       
        ExitState(character);
     }
 

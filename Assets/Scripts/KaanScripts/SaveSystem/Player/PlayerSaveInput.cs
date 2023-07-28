@@ -5,9 +5,8 @@ using UnityEngine;
 public class PlayerSaveInput : SaveSystem
 {
     //SAVE INPUTS
-    public int health;
-
-    
+    public int Health;
+    public MeleeWeapons SelectedWeapon;
 
 
 

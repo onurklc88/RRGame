@@ -7,7 +7,7 @@ using Cinemachine;
 public class CameraManager : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera _virtualCamera;
-    [SerializeField] private GameObject _mainCamera;
+   
 
     private void OnEnable()
     {

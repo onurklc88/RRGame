@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class Arrow : Weapon
+public class Arrow : ThrowableWeapon
 {
     [SerializeField] private CinemachineImpulseSource _impulseSource;
     protected override void OnTriggerEnter(Collider other)
@@ -13,6 +13,9 @@ public class Arrow : Weapon
 
         WeaponAction();
     }
+
+   
+
 
     protected override void WeaponAction()
     {

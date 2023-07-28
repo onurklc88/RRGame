@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 
 
-public class Bomb : Weapon
+public class Bomb : ThrowableWeapon
 {
    [SerializeField] private CinemachineImpulseSource _impulseSource;
 

@@ -1,6 +1,6 @@
 
 
-public class StateFactory
+public class EnemyStateFactory
 {
     IState _context;
    

@@ -1,5 +1,5 @@
 
 public interface  IWeaponListener 
 {
-    void GetCurrentWeaponProperties(Weapon weapon);
+    void GetCurrentWeaponProperties(ThrowableWeapon weapon);
 }
