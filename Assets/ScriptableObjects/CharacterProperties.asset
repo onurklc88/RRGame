@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b740f2452c5c9a479299615c31b8ca8, type: 3}
   m_Name: CharacterProperties
   m_EditorClassIdentifier: 
-  WalkSpeed: 5
+  WalkSpeed: 17
   AttackArea: 1.5
   LightAttackDamage: 3
   HeavyAttackDamage: 0

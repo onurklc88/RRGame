@@ -37,11 +37,7 @@ public class MouseTarget : MonoBehaviour
         return hitPositionIngoredHeight;
     }
 
-    public static GameObject Target()
-    {
-        return _target;
-    }
-
+  
 
     private void OnDrawGizmos()
     {

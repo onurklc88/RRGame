@@ -27,11 +27,11 @@ public class CameraManager : MonoBehaviour
     {
         if (started)
         {
-            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 12, .5f);
+            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 20, .5f);
         }
         else
         {
-            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 10, .5f);
+            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 15.1f, .5f);
         }
     }
 
