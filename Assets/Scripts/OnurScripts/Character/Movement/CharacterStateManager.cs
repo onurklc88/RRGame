@@ -89,7 +89,8 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
         _readVector = context.ReadValue<Vector2>();
         Vector3 toConvert = new Vector3(_readVector.x, 0, _readVector.y);
         _currentMovement = IsoVectorToConvert(toConvert);
-        if(_currentState == _characterStateFactory.CharacterAttackState)
+       
+        if (_currentState == _characterStateFactory.CharacterAttackState)
              IsMovementPressed = false;
         else
             IsMovementPressed = _readVector.x != 0 || _readVector.y != 0;

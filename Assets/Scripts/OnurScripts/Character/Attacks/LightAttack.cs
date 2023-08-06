@@ -14,6 +14,7 @@ public class LightAttack : CharacterAttackState
     
     public override void EnterState(CharacterStateManager character)
     {
+        
         if (_firstAttacktime == 0)
             _firstAttacktime = Time.time;
        else
@@ -49,7 +50,9 @@ public class LightAttack : CharacterAttackState
             AttackBehaviour(character);
         }
        // Debug.Log("CurrentSwing: " + _currentSwings);
- }
+        
+        AttackBehaviour(character);
+    }
 
     public override void AttackBehaviour(CharacterStateManager character)
     {

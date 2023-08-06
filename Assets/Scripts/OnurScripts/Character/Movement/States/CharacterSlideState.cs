@@ -10,13 +10,14 @@ public class CharacterSlideState : CharacterBaseState
     private Vector3 _slideRotation;
     public override void EnterState(CharacterStateManager character)
     {
-        // if (character.IsSlidePressed) return;
+      
         EventLibrary.PlayDashAnimation.Invoke(true);
         _slideRotation.x = 0f;
         _slideRotation.y = 0f;
         _slideRotation.z = character.CurrentMove.z;
         Quaternion targetRotation = Quaternion.LookRotation(_slideRotation);
         character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, 1f * Time.deltaTime);
+        _dashPosition = character.transform.position + character.CurrentMove * 70f;
         character.StartCoroutine(DelayState(character));
     }
     public override void UpdateState(CharacterStateManager character)
@@ -35,19 +36,11 @@ public class CharacterSlideState : CharacterBaseState
         float startTime = Time.time;
         while(Time.time < startTime + 0.25)
         {
-            
-            if (character.transform.position.y > 1.2f)
-             _dashPosition = character.transform.position + character.CurrentMove * 70f;
-            else
-              _dashPosition = character.transform.position + character.transform.forward * 70f;
-            
-                
-              
            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
            yield return null;
         }
 
-       
+        //yield return new WaitForSeconds(1f);
         ExitState(character);
     }
 }

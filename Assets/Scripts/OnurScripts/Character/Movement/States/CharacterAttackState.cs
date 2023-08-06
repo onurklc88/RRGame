@@ -13,7 +13,7 @@ public class CharacterAttackState : CharacterBaseState
     Vector3 _spawnposition;
     Vector3 hitPosition;
     protected Vector3 _hitDirection;
-
+    Rigidbody asd;
 
     public override void EnterState(CharacterStateManager character)
     {
@@ -47,13 +47,13 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void AttackDash(CharacterStateManager character)
     {
-        Vector3 _attackPosition = character.transform.position + character.transform.forward * 2f;
-        character.transform.DOMove(_attackPosition, _attackDashDuration);
+        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 50f;
+        character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-        var direction = MouseTarget.GetMousePosition() - character.transform.position;
+        var direction = MouseTarget.GetGroundedLayer() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;
         //character.Test.transform.position = GetMousePosition();
@@ -67,6 +67,17 @@ public class CharacterAttackState : CharacterBaseState
         ExitState(character);
     }
 
-    
+    private IEnumerator MovePlayerToDashPoisiton(CharacterStateManager character, Vector3 dashPoint)
+    {
+        float startTime = Time.time;
+        while (Time.time < startTime + 0.25)
+        {
+            character.CharacterController.Move((dashPoint - character.transform.position) * Time.deltaTime);
+            yield return null;
+        }
+
+        //yield return new WaitForSeconds(1f);
+        ExitState(character);
+    }
 
 }

@@ -33,7 +33,15 @@ public class MouseTarget : MonoBehaviour
         
         var ray = _depthCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _layermask)) return Vector3.zero;
-        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, 1.08f, hitInfo.point.z);
+        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, 2.74f, hitInfo.point.z);
+        return hitPositionIngoredHeight;
+    }
+
+    public static Vector3 GetGroundedLayer()
+    {
+        var ray = _depthCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue)) return Vector3.zero;
+        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, 2.74f, hitInfo.point.z);
         return hitPositionIngoredHeight;
     }
 

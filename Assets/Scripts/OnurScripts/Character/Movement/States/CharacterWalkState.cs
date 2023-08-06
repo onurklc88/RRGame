@@ -22,7 +22,6 @@ public class CharacterWalkState : CharacterBaseState
     public override void ExitState(CharacterStateManager character)
     {
         EventLibrary.StartRunAnimation.Invoke(false);
-        Debug.Log("Anan");
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
 
