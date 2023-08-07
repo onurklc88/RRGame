@@ -49,9 +49,8 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void AttackDash(CharacterStateManager character)
     {
-        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 20f;
-        dashPoisiton = MouseTarget.GetMousePositionOnSlope() - character.transform.position;
-        character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton * 2f));
+         Vector3 dashPoisiton = character.transform.position + character.transform.forward * 20f;
+        character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 
     protected void TrackCursorPosition(CharacterStateManager character)
@@ -59,7 +58,6 @@ public class CharacterAttackState : CharacterBaseState
         var direction = MouseTarget.GetMousePosition() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;
-        //character.Test.transform.position = GetMousePosition();
     }
 
   
@@ -75,11 +73,12 @@ public class CharacterAttackState : CharacterBaseState
         float startTime = Time.time;
         while (Time.time < startTime + 0.25)
         {
+            dashPoint.y += -50f;
             character.CharacterController.Move((dashPoint - character.transform.position) * Time.deltaTime);
             yield return null;
         }
 
-        //yield return new WaitForSeconds(1f);
+      
         ExitState(character);
     }
 

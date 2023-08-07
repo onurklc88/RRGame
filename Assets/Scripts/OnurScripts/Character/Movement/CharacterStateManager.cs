@@ -31,6 +31,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     private CharacterBaseState _currentState = null;
     private bool _canCharacterSlide = true;
     public bool IsPlayerOnSlope = false;
+    private float _gravity = -0.5f;
    
     private void OnEnable()
     {
@@ -147,17 +148,19 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     }
 
     #endregion
-    private void HandleGravity()
+    public void HandleGravity()
     {
+        
+
         if (CharacterController.isGrounded)
         {
-            float groundedGravity = -0.5f;
-            _currentMovement.y = groundedGravity;
+           
+            _currentMovement.y = _gravity;
         }
         else
         {
-            float gravity = -0.5f;
-            _currentMovement.y += gravity;
+          
+            _currentMovement.y += _gravity;
             CharacterController.SimpleMove(new Vector3(transform.position.x, _currentMovement.y, transform.position.z));
         }
     }

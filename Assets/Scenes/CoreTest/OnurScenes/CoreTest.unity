@@ -1254,7 +1254,7 @@ GameObject:
   - component: {fileID: 764250073}
   - component: {fileID: 764250072}
   - component: {fileID: 764250071}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17362,7 +17362,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.20752366, y: 0, z: 0.39880005}
+  velocity: {x: 0.31552532, y: 0, z: 0.32675773}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
