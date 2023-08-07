@@ -4,27 +4,29 @@ using UnityEngine;
 
 public class MouseTarget : MonoBehaviour
 {
-    
-    
+
+    private LayerMask _slopeLayer = 9;
     private LayerMask _groundLayer = 3;
     private static GameObject _depthCamera;
-    private static int _layermask;
+    private static int _layerMask;
+    private static int _slopeMask;
     private static GameObject _target;
+    public static GameObject Character;
 
     private void Awake()
     {
-        _layermask = (1 << _groundLayer);
+        Cursor.visible = false;
+        _layerMask = (1 << _groundLayer);
+        _slopeMask = (1 << _slopeLayer);
         _depthCamera = GameObject.Find("DepthCamera").gameObject;
         _target = GameObject.Find("TargetAim");
-
+        Character = GameObject.Find("Character");
     }
     private void Update()
     {
-        _target.transform.position = GetMousePosition();
-        var direction = GetMousePosition();
-        direction.y = 0;
-        if (direction == Vector3.zero) return;
-        _target.transform.forward = direction;
+        _target.transform.position = new Vector3(GetMousePosition().x, Character.transform.position.y, GetMousePosition().z);
+        
+       
     }
 
     public static Vector3 GetMousePosition()
@@ -32,16 +34,17 @@ public class MouseTarget : MonoBehaviour
         if (_depthCamera == null) return Vector3.zero;
         
         var ray = _depthCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _layermask)) return Vector3.zero;
-        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, 2.74f, hitInfo.point.z);
+        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _layerMask)) return Vector3.zero;
+        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, Character.transform.position.y, hitInfo.point.z);
         return hitPositionIngoredHeight;
     }
 
-    public static Vector3 GetGroundedLayer()
+    public static Vector3 GetMousePositionOnSlope()
     {
+        if (_depthCamera == null) return Vector3.zero;
         var ray = _depthCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue)) return Vector3.zero;
-        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, 2.74f, hitInfo.point.z);
+        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _slopeMask)) return Vector3.zero;
+        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z);
         return hitPositionIngoredHeight;
     }
 
@@ -51,6 +54,6 @@ public class MouseTarget : MonoBehaviour
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(GetMousePosition(), 0.5f);
-        Gizmos.DrawLine(Camera.main.transform.forward, GetMousePosition());
+        Gizmos.DrawLine(Camera.main.transform.position, GetMousePositionOnSlope());
     }
 }

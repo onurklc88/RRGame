@@ -12,6 +12,9 @@ public class CharacterCollisions : MonoBehaviour
             case 8:
                 
                 break;
+            case 9:
+                Debug.Log("SLope");
+                break;
         }
     }
 }

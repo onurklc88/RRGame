@@ -30,6 +30,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     private float _rotationFactorPerFrame = 15f;
     private CharacterBaseState _currentState = null;
     private bool _canCharacterSlide = true;
+    public bool IsPlayerOnSlope = false;
    
     private void OnEnable()
     {
@@ -185,6 +186,11 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     public void GetCurrentWeaponProperties(ThrowableWeapon weapon)
     {
         _currentWeapon = weapon;
+    }
+
+    private void GetSlopeLayer()
+    {
+        IsPlayerOnSlope = true;
     }
     private void OnDrawGizmos()
     {
