@@ -24,6 +24,7 @@ public class Arrow : ThrowableWeapon
 
       
         EventLibrary.OnWeaponDestroy.Invoke(_impulseSource);
+        
         gameObject.SetActive(false);
         
 
