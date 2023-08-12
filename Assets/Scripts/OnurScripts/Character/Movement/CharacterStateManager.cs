@@ -75,6 +75,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
         _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttack;
         _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
+        _playerInput.CharacterControls.Interaction.started += OnPlayerInteraction;
     }
 
     private void OnSlideMovement(InputAction.CallbackContext context)
@@ -138,6 +139,11 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
        
         _characterStateFactory.CharacterAttackState.AttackBehaviour(this);
     }
+
+    private void OnPlayerInteraction(InputAction.CallbackContext context)
+    {
+        SwitchState(_characterStateFactory.CharacterClimbState);
+    }
    
     private Vector3 IsoVectorToConvert(Vector3 vector)
     {
@@ -167,7 +173,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
 
     private void HandleRotation()
     {
-        if (_currentState == _characterStateFactory.CharacterAttackState || _currentState == _characterStateFactory.CharacterSlideState) return;
+        if (_currentState == _characterStateFactory.CharacterAttackState || _currentState == _characterStateFactory.CharacterSlideState || _currentState == _characterStateFactory.CharacterClimbState) return;
         
         _positionToLookAt.x = _currentMovement.x;
         _positionToLookAt.y = 0f;
