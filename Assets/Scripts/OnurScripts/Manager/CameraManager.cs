@@ -12,16 +12,12 @@ public class CameraManager : MonoBehaviour
     private void OnEnable()
     {
         EventLibrary.OnLongRangeAttack.AddListener(SwitchAttackCameraAngle);
-        EventLibrary.OnWeaponDestroy.AddListener(CameraShake);
-       
     }
 
     private void OnDisable()
     {
         EventLibrary.OnLongRangeAttack.RemoveListener(SwitchAttackCameraAngle);
-        EventLibrary.OnWeaponDestroy.RemoveListener(CameraShake);
-
-    }
+   }
 
     private void SwitchAttackCameraAngle(bool started)
     {
@@ -35,18 +31,5 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    private void CameraShake(CinemachineImpulseSource source)
-    {
-    
-        switch (source.name)
-        {
-            case "Arrow(Clone)":
-               source.GenerateImpulseWithForce(1f);
-                break;
-            case "Bomb(Clone)":
-                source.GenerateImpulseWithForce(0.5f); 
-                break;
-        }
-        
-    }
+  
 }

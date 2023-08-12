@@ -1,4 +1,3 @@
-using Cinemachine;
 using System;
 
 public static class EventLibrary
@@ -14,7 +13,7 @@ public static class EventLibrary
     
     //Camera events
     public static readonly GameEvent<bool> OnLongRangeAttack = new GameEvent<bool>();
-    public static readonly GameEvent<CinemachineImpulseSource> OnWeaponDestroy = new GameEvent<CinemachineImpulseSource>();
+  
 
     //AnimationEvents
     public static readonly GameEvent<bool> StartRunAnimation = new GameEvent<bool>();

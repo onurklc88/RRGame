@@ -8,7 +8,7 @@ public class Bomb : ThrowableWeapon
 {
    [SerializeField] private CinemachineImpulseSource _impulseSource;
 
-
+  
     protected override void OnTriggerEnter(Collider other)
     {
         CheckExplosionArea();
@@ -18,8 +18,7 @@ public class Bomb : ThrowableWeapon
 
     protected override void WeaponAction()
     {
-       
-        EventLibrary.OnWeaponDestroy.Invoke(_impulseSource);
+        _impulseSource.GenerateImpulseWithForce(0.5f);
         gameObject.SetActive(false);
     }
 

@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: EnemyProperties
   m_EditorClassIdentifier: 
   WalkSpeed: 0
-  SprintSpeed: 0
-  AttackArea: 0
-  ChaseArea: 0
+  AgressionRange: 0
+  AttackTime: 0
   LightAttackDamage: 0
   HeavyAttackDamage: 0
-  EnemyHealth: 9
+  EnemyHealth: 3
