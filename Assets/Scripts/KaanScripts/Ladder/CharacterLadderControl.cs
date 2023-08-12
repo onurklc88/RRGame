@@ -1,10 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CharacterLadderControl : MonoBehaviour
 {
     [HideInInspector] public bool IsLadder;
+
+
+
+
+    private string a = "ferhat";
 
     void Update()
     {
@@ -26,4 +32,16 @@ public class CharacterLadderControl : MonoBehaviour
     }
 
 
+
+
+
+    public void Deneme()
+    {
+
+
+
+    }
 }
+
+
+
