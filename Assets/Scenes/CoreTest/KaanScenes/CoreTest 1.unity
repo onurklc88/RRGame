@@ -2294,6 +2294,88 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1255470024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1255470026}
+  - component: {fileID: 1255470025}
+  m_Layer: 0
+  m_Name: Spline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1255470025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255470024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e68924c9f6324bbfd049d3bae754c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  editorDrawPivot: 1
+  editorPathColor: {r: 1, g: 1, b: 1, a: 1}
+  editorAlwaysDraw: 0
+  editorDrawThickness: 0
+  editorBillboardThickness: 1
+  isNewlyCreated: 0
+  editorUpdateMode: 0
+  multithreaded: 0
+  updateMode: 0
+  triggerGroups: []
+  _spline:
+    points: []
+    type: 0
+    linearAverageDirection: 1
+    customValueInterpolation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customNormalInterpolation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sampleRate: 10
+    closed: 0
+    _knotParametrization: 0
+  _originalSamplePercents: []
+  _is2D: 0
+  hasSamples: 0
+  _optimizeAngleThreshold: 0.5
+  _space: 1
+  _sampleMode: 0
+  _subscribers: []
+  _rawSamples: []
+  _nodes: []
+--- !u!4 &1255470026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255470024}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.241322, y: 5.7104588, z: 1.6344426}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1287122803
 GameObject:
   m_ObjectHideFlags: 0
@@ -3718,8 +3800,6 @@ MonoBehaviour:
   CharacterController: {fileID: 0}
   IsMovementPressed: 0
   IsSlidePressed: 0
-  IsLadder: 0
-  IsPlayerOnSlope: 0
 --- !u!114 &1808218071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3856,7 +3936,7 @@ Transform:
   m_GameObject: {fileID: 1920594779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.466, z: -1.55}
-  m_LocalScale: {x: 2.0484562, y: 0.05526341, z: 2.0712502}
+  m_LocalScale: {x: 2.0484562, y: 0.060325537, z: 2.0712502}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1408316756}
@@ -17685,7 +17765,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.36058855, y: 0, z: 0.708852}
+  velocity: {x: -0.3878885, y: 0, z: -0.083679534}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -17704,7 +17784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8675915458348068286
 Transform:
   m_ObjectHideFlags: 0
@@ -17942,8 +18022,6 @@ MonoBehaviour:
   CharacterController: {fileID: 0}
   IsMovementPressed: 0
   IsSlidePressed: 0
-  IsLadder: 0
-  IsPlayerOnSlope: 0
 --- !u!143 &8791236692560099169
 CharacterController:
   m_ObjectHideFlags: 0
@@ -17998,6 +18076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ffef7486ce17d44938a74d489e8a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ladder: {fileID: 0}
 --- !u!4 &8794975312266183483
 Transform:
   m_ObjectHideFlags: 0
