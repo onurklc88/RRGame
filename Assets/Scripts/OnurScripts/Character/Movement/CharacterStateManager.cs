@@ -30,7 +30,6 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
     private float _rotationFactorPerFrame = 15f;
     private CharacterBaseState _currentState = null;
     private bool _canCharacterSlide = true;
-    public bool IsPlayerOnSlope = false;
     private float _gravity = -0.5f;
    
     private void OnEnable()
@@ -197,10 +196,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
         _currentWeapon = weapon;
     }
 
-    private void GetSlopeLayer()
-    {
-        IsPlayerOnSlope = true;
-    }
+   
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

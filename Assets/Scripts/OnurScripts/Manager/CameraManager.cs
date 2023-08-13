@@ -21,16 +21,16 @@ public class CameraManager : MonoBehaviour
 
     private void SwitchAttackCameraAngle(bool started)
     {
-        /*
+        
         if (started)
         {
-            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 20, .5f);
+            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 35, .5f);
         }
         else
         {
-            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 15.1f, .5f);
+            DOTween.To(x => _virtualCamera.m_Lens.OrthographicSize = x, _virtualCamera.m_Lens.OrthographicSize, 25f, .5f);
         }
-        */
+        
     }
 
   

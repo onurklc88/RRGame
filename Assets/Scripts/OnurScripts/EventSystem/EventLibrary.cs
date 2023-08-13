@@ -1,5 +1,5 @@
 using System;
-
+using UnityEngine;
 public static class EventLibrary
 {
     //CharacterEvents
@@ -19,6 +19,7 @@ public static class EventLibrary
     public static readonly GameEvent<bool> StartRunAnimation = new GameEvent<bool>();
     public static readonly GameEvent<bool> PlayDashAnimation = new GameEvent<bool>();
 
-
+    //Object Pool
+    public static readonly GameEvent<GameObject> ResetPooledObject = new GameEvent<GameObject>();
     
 }

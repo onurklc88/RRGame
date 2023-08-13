@@ -18,7 +18,16 @@ public class ObjectPool : MonoBehaviour
 
     [SerializeField] private Pool[] _pools;
     public static Pool[] pools = null;
-  
+
+    private void OnEnable()
+    {
+        EventLibrary.ResetPooledObject.AddListener(ResetPooledObject);
+    }
+    private void OnDisable()
+    {
+        EventLibrary.ResetPooledObject.RemoveListener(ResetPooledObject);
+    }
+
     private void Awake()
     {
         pools = _pools;
@@ -43,9 +52,17 @@ public class ObjectPool : MonoBehaviour
             return null;
         }
         GameObject obj = pools[objectType].PooledObjects.Dequeue();
-       // obj.SetActive(true);
         pools[objectType].PooledObjects.Enqueue(obj);
         return obj;
+    }
+
+    private void ResetPooledObject(GameObject obj)
+    {
+        obj.transform.position = Vector3.zero;
+        obj.transform.SetParent(transform);
+        Debug.Log("object name: " + obj.name +"pos:  " + obj.transform.position);
+        obj.SetActive(false);
+      
     }
 
    

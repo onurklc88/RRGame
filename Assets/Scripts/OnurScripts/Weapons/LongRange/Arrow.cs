@@ -9,10 +9,7 @@ public class Arrow : ThrowableWeapon
     [SerializeField] private CinemachineImpulseSource _impulseSource;
     
 
-    private void OnEnable()
-    {
-      
-    }
+   
     protected override void OnTriggerEnter(Collider other)
     {
         if(other.transform.GetComponent<IDamageable>() != null)
@@ -26,16 +23,12 @@ public class Arrow : ThrowableWeapon
         
         if(_collidedObject != null)
         {
-             Debug.Log("Detected");
             _collidedObject.TakeDamage(_damage);
+            _collidedObject = null;
         }
-        else
-        {
-            Debug.Log("Null");
-        }
-           
-
-        _impulseSource.GenerateImpulse(1f);
-         gameObject.SetActive(false);
+            
+       _impulseSource.GenerateImpulse(1f);
+        gameObject.SetActive(false);
+      
     }
 }
