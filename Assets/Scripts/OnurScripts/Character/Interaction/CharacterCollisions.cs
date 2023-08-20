@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterCollisions : MonoBehaviour
 {
-    [HideInInspector] public GameObject Ladder;
+    [HideInInspector] public GameObject TemporaryObject;
 
     private void OnTriggerEnter(Collider interactableObject)
     {
@@ -14,7 +14,7 @@ public class CharacterCollisions : MonoBehaviour
         {
             case 8:
                 //
-                Ladder = interactableObject.gameObject;
+                TemporaryObject = interactableObject.gameObject;
                 break;
             case 9:
                 Debug.Log("SLope");
@@ -22,6 +22,11 @@ public class CharacterCollisions : MonoBehaviour
         }
 
 
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        TemporaryObject = null;
     }
 
 }

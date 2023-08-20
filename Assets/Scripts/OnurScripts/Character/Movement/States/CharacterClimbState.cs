@@ -1,21 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using DG.Tweening;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using static Dreamteck.Splines.ParticleController;
+using static ToonyColorsPro.ShaderGenerator.Enums;
 
 public class CharacterClimbState : CharacterBaseState
 {
-    private GameObject _ladder;
+
+    private Ladder _ladder;
+    private bool _openUpdate;
+
     public override void EnterState(CharacterStateManager character)
     {
+        _ladder = character.GetComponent<CharacterCollisions>().TemporaryObject.transform.parent.GetComponent<Ladder>();
+        _openUpdate = false;
 
-        _ladder = character.GetComponent<CharacterCollisions>().Ladder;
+        HoldLadder(character);
+
 
         Debug.Log("Greetings from ClimbState");
         //character.StartCoroutine(DelayState(character));
-        
     }
     public override void UpdateState(CharacterStateManager character)
     {
+        if (!_openUpdate) { return; }
+
         if (Input.GetKey(KeyCode.W))
         {
             character.transform.Translate(Vector3.up * 6 * Time.deltaTime);
@@ -25,6 +37,10 @@ public class CharacterClimbState : CharacterBaseState
             character.transform.Translate(Vector3.up * -6 * Time.deltaTime);
         }
 
+        if (character.transform.position.y > _ladder.UpExitLimit.position.y)
+            UpExit(character);
+        else if(character.transform.position.y < _ladder.DownExitLimit.position.y)
+            DownExit(character);
 
     }
     public override void ExitState(CharacterStateManager character)
@@ -40,5 +56,26 @@ public class CharacterClimbState : CharacterBaseState
         ExitState(character);
     }
 
+    private void HoldLadder(CharacterStateManager character)
+    {
+        character.transform.DOMove(_ladder.EnterPoint.position, .2f);
+        DOTween.To(() => character.transform.eulerAngles, x => character.transform.eulerAngles = x, _ladder.Rot, .2f).OnComplete(() =>
+        {
+            _openUpdate = true;
+        });
+    }
 
+    private void UpExit(CharacterStateManager character)
+    {
+        character.transform.DOMove(_ladder.ExitPointUp.position, .2f);
+
+        ExitState(character);
+    }
+
+    private void DownExit(CharacterStateManager character)
+    {
+        character.transform.DOMove(_ladder.ExitPointDown.position, .2f);
+        DOTween.To(() => character.transform.eulerAngles, x => character.transform.eulerAngles = x, new Vector3(_ladder.Rot.x, _ladder.Rot.y + 180, _ladder.Rot.z), .2f);
+        ExitState(character);
+    }
 }

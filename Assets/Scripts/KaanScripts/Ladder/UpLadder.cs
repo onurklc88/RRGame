@@ -19,8 +19,7 @@ public class UpLadder : MonoBehaviour
     //            {
     //                other.GetComponent<CharacterStateManager>().IsLadder = false;
     //            });
-    //        }
-            
+    //        }   
     //    }
     //}
 }

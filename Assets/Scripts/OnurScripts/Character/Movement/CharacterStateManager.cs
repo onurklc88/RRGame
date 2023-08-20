@@ -141,7 +141,7 @@ public class CharacterStateManager : MonoBehaviour, IWeaponListener
 
     private void OnPlayerInteraction(InputAction.CallbackContext context)
     {
-        SwitchState(_characterStateFactory.CharacterClimbState);
+        if(GetComponent<CharacterCollisions>().TemporaryObject != null) { SwitchState(_characterStateFactory.CharacterClimbState); }
     }
    
     private Vector3 IsoVectorToConvert(Vector3 vector)
