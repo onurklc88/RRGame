@@ -26,7 +26,7 @@ public class ExperiencePoint : MonoBehaviour
     {
         Debug.Log("xp alindi");
         //xp alinca neler olcagi
-
+        EconomyManager.instance.Money++;
         Destroy(gameObject);
     }
 }
