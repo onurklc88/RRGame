@@ -60,7 +60,6 @@ public class ObjectPool : MonoBehaviour
     {
         obj.transform.position = Vector3.zero;
         obj.transform.SetParent(transform);
-        Debug.Log("object name: " + obj.name +"pos:  " + obj.transform.position);
         obj.SetActive(false);
       
     }
