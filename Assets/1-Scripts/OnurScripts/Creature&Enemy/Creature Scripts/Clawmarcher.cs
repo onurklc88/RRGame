@@ -6,12 +6,13 @@ public class Clawmarcher : Creature
 {
    
     private IState _currentState = null;
-    
+   
     private void Start()
     {
+        LoadWayPoints();
         SetPlayerLayer();
         SetCreatureProperties();
-        _currentState = StateFactory.Walk();
+        _currentState = EnemyStateFactory.Walk();
      
     }
     public override void SetCreatureProperties()
@@ -35,6 +36,7 @@ public class Clawmarcher : Creature
         _currentState = newState;
     }
 
+    
    
 
     private void OnTriggerEnter(Collider other)
@@ -42,9 +44,17 @@ public class Clawmarcher : Creature
         if (other.gameObject.layer == 6)
         {
             PlayerCharacter = other.gameObject;
-            SwitchState(StateFactory.Chase());
+            SwitchState(EnemyStateFactory.Chase());
         }
            
+    }
+
+    private void LoadWayPoints()
+    {
+       for(int i = 0; i < _splineComputer.pointCount; i++)
+       {
+            Waypoints.Add(_splineComputer.GetPoint(i).position);
+       }
     }
 
     private void OnTriggerStay(Collider other)
@@ -56,7 +66,7 @@ public class Clawmarcher : Creature
 
     private void OnTriggerExit(Collider other)
     {
-        SwitchState(StateFactory.Walk());
+        SwitchState(EnemyStateFactory.Walk());
     }
     
 }

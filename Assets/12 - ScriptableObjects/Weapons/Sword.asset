@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d2911339853d264486cf30a17fa891f, type: 3}
-  m_Name: Sword2
+  m_Name: Sword
   m_EditorClassIdentifier: 
   SwordImage: {fileID: 0}
-  Damage: 0
-  Range: 0
+  Damage: 0.5
+  Range: 3
   SwingTime: 0
   SwingCount: 0

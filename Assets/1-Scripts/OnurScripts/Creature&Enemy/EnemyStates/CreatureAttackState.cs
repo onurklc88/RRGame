@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class AttackState : IState
+public class CreatureAttackState : IState
 {
     private Tween _dash;
     private Vector3 _dashPoint;
@@ -12,16 +12,11 @@ public class AttackState : IState
     public void SetupState(Creature creature)
     {
         creature.NavMeshAgent.isStopped = true;
-        creature.transform.LookAt(creature.PlayerCharacter.transform.position);
         _dashPoint = creature.transform.position + (creature.transform.forward * 7f);
         PlayAttackTween(creature);
        
     }
-    public void ProcessState(Creature creature)
-    {
-       
-    }
-
+   
     private void PlayAttackTween(Creature creature)
     {
         _dash = creature.transform.DOMove(_dashPoint, creature.EnemyProperties.AttackTime);
@@ -46,8 +41,14 @@ public class AttackState : IState
         _alreadyAttacked = true;
 
         if (inSightRange[0].transform.GetComponent<IHealable>() != null)
-              inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
+        {
+            creature.CharacterStateFactory.GetKnockBackPosition(creature.transform.forward * 30f);
+            inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
+        }
+            
     }
+
+    
 
     private IEnumerator DelayState(Creature creature)
     {
@@ -55,7 +56,7 @@ public class AttackState : IState
         yield return new WaitForSeconds(1f);
         creature.NavMeshAgent.isStopped = false;
         _alreadyAttacked = false;
-        creature.SwitchState(creature.StateFactory.Chase());
+        creature.SwitchState(creature.EnemyStateFactory.Chase());
     }
 
 

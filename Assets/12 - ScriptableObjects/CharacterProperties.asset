@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WalkSpeed: 17
   AttackArea: 1.5
-  LightAttackDamage: 3
+  LightAttackDamage: 0.5
   HeavyAttackDamage: 0

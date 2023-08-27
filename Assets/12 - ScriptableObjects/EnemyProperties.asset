@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66db86f577b7aff40898917b672d6087, type: 3}
   m_Name: EnemyProperties
   m_EditorClassIdentifier: 
-  WalkSpeed: 0
-  AgressionRange: 0
+  WalkSpeed: 1
+  AgressionRange: 3
   AttackTime: 0
   LightAttackDamage: 0
   HeavyAttackDamage: 0

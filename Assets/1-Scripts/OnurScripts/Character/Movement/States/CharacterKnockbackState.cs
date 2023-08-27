@@ -9,12 +9,9 @@ public class CharacterKnockbackState : CharacterBaseState
     public override void EnterState(CharacterStateManager character)
     {
          character.StartCoroutine(DelayState(character));
+       
     }
-    public override void UpdateState(CharacterStateManager character)
-    {
-
-      
-    }
+   
     public override void ExitState(CharacterStateManager character)
     {
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
@@ -22,11 +19,13 @@ public class CharacterKnockbackState : CharacterBaseState
 
     public override IEnumerator DelayState(CharacterStateManager character)
     {
-        Vector3 knockbackPosition = character.transform.position + -character.transform.forward * 1f;
+        //Vector3 knockbackPosition = -character.transform.forward * 30f;
+        Debug.Log("Character knockback pos: " +character.CharacterStateFactory.KnockBackPosition);
+
         float startTime = Time.time;
         while (Time.time < startTime + 0.25)
         {
-           character.CharacterController.Move((knockbackPosition) * Time.deltaTime);
+           character.CharacterController.Move((character.CharacterStateFactory.KnockBackPosition) * Time.deltaTime);
            yield return null;
         }
 

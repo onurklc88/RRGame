@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.AI;
 
-public class IdleState : IState
+public class CreatureIdleState : IState
 {
     public void SetupState(Creature creature)
     {
@@ -22,6 +22,6 @@ public class IdleState : IState
    {
         //Debug.Log("IDLE DELAY");
         yield return new WaitForSeconds(creature.AnimationDelayTime);
-        creature.SwitchState(creature.StateFactory.Walk());
+        creature.SwitchState(creature.EnemyStateFactory.Walk());
    }
 }

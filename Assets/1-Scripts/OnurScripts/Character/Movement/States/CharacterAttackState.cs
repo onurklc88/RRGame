@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
-using DG.Tweening;
-
 
 public class CharacterAttackState : CharacterBaseState
 {
@@ -13,24 +10,19 @@ public class CharacterAttackState : CharacterBaseState
     Vector3 _spawnposition;
     Vector3 hitPosition;
     protected Vector3 _hitDirection;
-    
-  
-
-
+    #region StateProperties
     public override void EnterState(CharacterStateManager character)
     {
         _spawnposition = character.transform.position + character.transform.forward;
     }
-    public override void UpdateState(CharacterStateManager character)
-    {
-    
-    }
+  
     public override void ExitState(CharacterStateManager character)
     {
         character.CharacterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.None;
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
     public virtual void AttackBehaviour(CharacterStateManager character) { }
+    #endregion
     protected void AttackRange(CharacterStateManager character)
     {
         Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * SaveInfo.Player.SelectedWeapon.Range, character.CharacterProperties.AttackArea);
@@ -45,17 +37,15 @@ public class CharacterAttackState : CharacterBaseState
             }
         }
     }
-
-
     protected void AttackDash(CharacterStateManager character)
     {
-         Vector3 dashPoisiton = character.transform.position + character.transform.forward * 20f;
+         Vector3 dashPoisiton = character.transform.position + character.transform.forward * 12f;
         character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-        var direction = MouseTarget.GetMousePosition() - character.transform.position;
+        var direction = character.MouseTarget.GetMousePosition() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;
     }
@@ -77,8 +67,6 @@ public class CharacterAttackState : CharacterBaseState
             character.CharacterController.Move((dashPoint - character.transform.position) * Time.deltaTime);
             yield return null;
         }
-
-      
         ExitState(character);
     }
 

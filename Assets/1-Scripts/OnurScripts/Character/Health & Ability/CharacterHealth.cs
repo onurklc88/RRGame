@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 
 public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
 {
-    private CharacterStateFactory _characterStateFactory = new CharacterStateFactory();
+    [Inject]
+    CharacterStateFactory _characterStateFactory;
   
 
     public void TakeHeal(int healValue)

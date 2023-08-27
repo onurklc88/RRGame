@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
-public class DepencyInstaller : MonoBehaviour
+public class DepencyInstaller : MonoInstaller
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private MouseTarget _mouseTarget;
+    [SerializeField] private CharacterCollisions _characterCollisions;
+    [SerializeField] private EnemyStateFactory _enemyStateFactory;
+    public override void InstallBindings()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Container.Bind<MouseTarget>().FromComponentInHierarchy(_mouseTarget).AsSingle();
+        Container.Bind<CharacterCollisions>().FromComponentInHierarchy(_characterCollisions).AsSingle();
+        Container.Bind<EnemyStateFactory>().AsSingle();
+        Container.Bind<CharacterStateFactory>().AsSingle();
     }
 }

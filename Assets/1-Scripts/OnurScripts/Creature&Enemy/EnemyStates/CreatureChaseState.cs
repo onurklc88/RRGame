@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaseState : IState
+public class CreatureChaseState : IState
 {
 
     public void SetupState(Creature creature)
@@ -27,7 +27,7 @@ public class ChaseState : IState
         float distanceBetweenPlayer = Vector3.Distance(creature.PlayerCharacter.transform.position, creature.transform.position);
 
         if (distanceBetweenPlayer < 7f)
-            creature.SwitchState(creature.StateFactory.Attack());
+            creature.SwitchState(creature.EnemyStateFactory.Attack());
     }
 }
 

@@ -1,4 +1,4 @@
-
+using UnityEngine;
 
 public class CharacterStateFactory 
 {
@@ -21,4 +21,15 @@ public class CharacterStateFactory
     public HeavyAttack HeavyAttack = new HeavyAttack();
     public ThrowArrow ThrowArrow = new ThrowArrow();
     public ThrowBomb ThrowBomb = new ThrowBomb();
+
+    //variables
+    public Vector3 KnockBackPosition;
+
+    //methods
+    public void GetKnockBackPosition(Vector3 tempKnockBackPos)
+    {
+        KnockBackPosition = tempKnockBackPos;
+        Debug.Log("KnockBackPosIsReal: " + KnockBackPosition);
+    }
+    
 }

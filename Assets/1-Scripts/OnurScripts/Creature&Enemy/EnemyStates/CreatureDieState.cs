@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DieState : IState
+public class CreatureDieState : IState
 {
     public void SetupState(Creature state)
     {
