@@ -42,13 +42,5 @@ public abstract class Creature : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            Debug.Log("A");
-            CharacterStateFactory.GetKnockBackPosition(transform.forward * 100f);
-        }
-    }
 
 }

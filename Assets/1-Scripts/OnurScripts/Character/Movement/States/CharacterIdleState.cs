@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class CharacterIdleState : CharacterBaseState
 {
+    
     public override void EnterState(CharacterStateManager character) 
     {
        //Debug.Log("Welcome to IdleState");
+
     } 
     public override void UpdateState(CharacterStateManager character)
     {

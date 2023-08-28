@@ -62,6 +62,7 @@ public class LightAttack : CharacterAttackState
         TrackCursorPosition(character);
         if (_collidedObject != null)
         {
+            //buraya güncellenmiþ karakter strength giricez
             _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage);
         }
      

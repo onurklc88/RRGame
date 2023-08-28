@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using Zenject;
 public class CharacterAttackState : CharacterBaseState
 {
     protected IDamageable _collidedObject;
@@ -23,6 +23,7 @@ public class CharacterAttackState : CharacterBaseState
     }
     public virtual void AttackBehaviour(CharacterStateManager character) { }
     #endregion
+  
     protected void AttackRange(CharacterStateManager character)
     {
         Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * SaveInfo.Player.SelectedWeapon.Range, character.CharacterProperties.AttackArea);
@@ -45,6 +46,7 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
+       // _mouseTarget.Test(); //Null reference dönen satýr
         var direction = character.MouseTarget.GetMousePosition() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;

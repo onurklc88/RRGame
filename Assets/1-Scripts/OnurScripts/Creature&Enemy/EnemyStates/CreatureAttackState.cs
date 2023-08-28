@@ -42,7 +42,7 @@ public class CreatureAttackState : IState
 
         if (inSightRange[0].transform.GetComponent<IHealable>() != null)
         {
-            creature.CharacterStateFactory.GetKnockBackPosition(creature.transform.forward * 30f);
+            creature.CharacterStateFactory.KnockBackPosition = creature.transform.forward * 30f;
             inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
         }
             

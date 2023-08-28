@@ -25,11 +25,5 @@ public class CharacterStateFactory
     //variables
     public Vector3 KnockBackPosition;
 
-    //methods
-    public void GetKnockBackPosition(Vector3 tempKnockBackPos)
-    {
-        KnockBackPosition = tempKnockBackPos;
-        Debug.Log("KnockBackPosIsReal: " + KnockBackPosition);
-    }
-    
+   
 }

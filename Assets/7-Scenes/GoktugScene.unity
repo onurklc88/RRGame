@@ -6769,7 +6769,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5523014, y: -1.4620094, z: 81.73776}
+  m_LocalPosition: {x: 1.5522995, y: -1.4620094, z: 81.73777}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13133,6 +13133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd608f1c956b24498eaeef6cb9635d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _depthCamera: {fileID: 0}
+  _character: {fileID: 0}
+  _target: {fileID: 0}
 --- !u!114 &1572044724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14761,7 +14764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734461252}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5523453, y: -1.4620056, z: 81.73778}
+  m_LocalPosition: {x: 1.5523472, y: -1.4620018, z: 81.73778}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17081,9 +17084,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a2d86a455f9504084cf7394e3274a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _turnRot: {x: 0, y: 0, z: 0}
-  _enterPoint: {fileID: 470034703}
-  _exitPoint: {fileID: 24664106}
+  EnterPoint: {fileID: 0}
+  ExitPointDown: {fileID: 0}
+  ExitPointUp: {fileID: 0}
+  DownExitLimit: {fileID: 0}
+  UpExitLimit: {fileID: 0}
+  Rot: {x: 0, y: 0, z: 0}
 --- !u!1 &1993197394
 GameObject:
   m_ObjectHideFlags: 0
@@ -29986,7 +29992,7 @@ PrefabInstance:
     - target: {fileID: 6932050118924349048, guid: 78d44bc15143f2b40a48db9927a1af5e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -7.8011627
+      value: 129.5
       objectReference: {fileID: 0}
     - target: {fileID: 6932050118924349048, guid: 78d44bc15143f2b40a48db9927a1af5e,
         type: 3}
@@ -30027,6 +30033,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Map_Prototype
+      objectReference: {fileID: 0}
+    - target: {fileID: 6932050120418728979, guid: 78d44bc15143f2b40a48db9927a1af5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78d44bc15143f2b40a48db9927a1af5e, type: 3}
@@ -32717,7 +32728,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: 0.42079937, y: 0, z: -0.31196526}
+  velocity: {x: -0.9619323, y: 0, z: -0.2180715}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -32792,10 +32803,7 @@ MonoBehaviour:
   _navMeshAgent: {fileID: 8675915458348068288}
   _enemyProperties: {fileID: 11400000, guid: 584185d653a723e42a89728bec1f228d, type: 2}
   _idleDelayTime: 5
-  _waypoint:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _splineComputer: {fileID: 0}
 --- !u!135 &8675915458348068290
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -33028,7 +33036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ffef7486ce17d44938a74d489e8a05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ladder: {fileID: 0}
+  TemporaryObject: {fileID: 0}
 --- !u!4 &8794975312266183483
 Transform:
   m_ObjectHideFlags: 0

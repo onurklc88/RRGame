@@ -26,9 +26,9 @@ public class MouseTarget : MonoBehaviour
     }
 
 
-    public void Asd()
+    public void Test()
     {
-        Debug.Log("zaXD");
+        Debug.Log("Test");
     }
     public Vector3 GetMousePosition()
     {
