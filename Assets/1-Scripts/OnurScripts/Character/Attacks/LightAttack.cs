@@ -14,6 +14,7 @@ public class LightAttack : CharacterAttackState
     
     public override void EnterState(CharacterStateManager character)
     {
+        
         #region OldVersion
         /*
         if (_firstAttacktime == 0)
@@ -53,16 +54,17 @@ public class LightAttack : CharacterAttackState
        // Debug.Log("CurrentSwing: " + _currentSwings);
         */
         #endregion
-        AttackBehaviour(character);
+        DoAttackBehaviour(character);
     }
 
-    public override void AttackBehaviour(CharacterStateManager character)
+    public override void DoAttackBehaviour(CharacterStateManager character)
     {
-        AttackRange(character);
+        CheckAttackRange(character);
         TrackCursorPosition(character);
         if (_collidedObject != null)
         {
             //buraya güncellenmiþ karakter strength giricez
+            EventLibrary.OnWeaponChargeUpdated.Invoke(true);
             _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage);
         }
      
@@ -92,6 +94,8 @@ public class LightAttack : CharacterAttackState
 
   }
   */
+
+    
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         yield return new WaitForSeconds(_animationDelay);

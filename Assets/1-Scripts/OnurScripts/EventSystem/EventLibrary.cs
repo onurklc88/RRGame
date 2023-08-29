@@ -4,11 +4,10 @@ public static class EventLibrary
 {
     //CharacterEvents
     public static readonly GameEvent<CharacterBaseState> OnPlayerTakeDamage = new GameEvent<CharacterBaseState>();
-    
-    
-    //Weapon events
-    public static readonly GameEvent<ThrowableWeapon> OnWeaponChange = new GameEvent<ThrowableWeapon>();
 
+
+    //Weapon events
+    public static readonly GameEvent<bool> OnWeaponChargeUpdated = new GameEvent<bool>();
    
     
     //Camera events

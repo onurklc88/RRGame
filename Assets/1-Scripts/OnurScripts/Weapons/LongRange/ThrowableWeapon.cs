@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public abstract class ThrowableWeapon : MonoBehaviour
 {
-    [SerializeField] protected  CharacterStateFactory.CombatType _type;
+   
     [SerializeField] protected  Image _weaponImage;
     [SerializeField] protected float _damage;
     

@@ -18,13 +18,13 @@ public class CharacterAttackState : CharacterBaseState
   
     public override void ExitState(CharacterStateManager character)
     {
-        character.CharacterStateFactory.CurrentCombatType = CharacterStateFactory.CombatType.None;
-        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
+      character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
-    public virtual void AttackBehaviour(CharacterStateManager character) { }
+    public virtual void DoAttackBehaviour(CharacterStateManager character) { }
     #endregion
+    
   
-    protected void AttackRange(CharacterStateManager character)
+    protected void CheckAttackRange(CharacterStateManager character)
     {
         Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * SaveInfo.Player.SelectedWeapon.Range, character.CharacterProperties.AttackArea);
       
@@ -40,20 +40,16 @@ public class CharacterAttackState : CharacterBaseState
     }
     protected void AttackDash(CharacterStateManager character)
     {
-         Vector3 dashPoisiton = character.transform.position + character.transform.forward * 12f;
+        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 12f;
         character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-       // _mouseTarget.Test(); //Null reference dönen satýr
         var direction = character.MouseTarget.GetMousePosition() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;
     }
-
-  
-
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         yield return new WaitForSeconds(_attackDashDuration);

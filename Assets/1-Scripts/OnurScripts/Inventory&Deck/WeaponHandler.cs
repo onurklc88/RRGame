@@ -3,28 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using Zenject;
 
 
 public class WeaponHandler : MonoBehaviour
 {
     
     private PlayerInput _playerInput;
-    private Weapons _weapons = new Weapons();
-    
+    [Inject]
+    Weapons _weapons;
+    private ThrowableWeapon _currentWeapon;
+    private int _totalCharge = 0;
+    private int _currentChargeCount = 0;
     private Dictionary<string, ThrowableWeapon> _weaponDictionary = new Dictionary<string, ThrowableWeapon>();
 
     private void OnEnable()
     {
         _playerInput.CharacterControls.Enable();
+        EventLibrary.OnWeaponChargeUpdated.AddListener(OnWeaponChargeLoaded);
     }
     private void OnDisable()
     {
         _playerInput.CharacterControls.Disable();
+        EventLibrary.OnWeaponChargeUpdated.RemoveListener(OnWeaponChargeLoaded);
     }
 
     private void Start()
     {
-        EventLibrary.OnWeaponChange.Invoke(_weapons.Arrow);
+        _currentWeapon = _weapons.Arrow;
         _weaponDictionary.Add("Arrow", _weapons.Arrow);
         _weaponDictionary.Add("Bomb", _weapons.Bomb);
     }
@@ -37,7 +43,31 @@ public class WeaponHandler : MonoBehaviour
 
     private void OnWeaponInput(InputAction.CallbackContext context)
     {
-      EventLibrary.OnWeaponChange.Invoke(_weaponDictionary[context.action.name]);
+      _currentWeapon = _weaponDictionary[context.action.name];
+    }
+    private void OnWeaponChargeLoaded(bool isCharged)
+    {
+        if (isCharged && _currentChargeCount < _totalCharge)
+        {
+            _currentChargeCount++;
+        }
+        else if(_currentChargeCount >= 0)
+        {
+            _currentChargeCount--;
+        }
+    }
+
+    public ThrowableWeapon HandedWeapon()
+    {
+        return _currentWeapon;
+    }
+
+    public bool IsChargeReady()
+    {
+        if (_currentChargeCount > 0)
+            return true;
+        else
+            return false;
     }
 
 }

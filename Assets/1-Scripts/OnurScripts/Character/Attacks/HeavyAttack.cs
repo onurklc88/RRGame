@@ -6,14 +6,18 @@ public class HeavyAttack : CharacterAttackState
 {
     public override void EnterState(CharacterStateManager character)
     {
-        AttackBehaviour(character);
+        DoAttackBehaviour(character);
     }
-    public override void AttackBehaviour(CharacterStateManager character)
+    public override void DoAttackBehaviour(CharacterStateManager character)
     {
-        Debug.Log("Greetings from Heavy Attack");
-        AttackRange(character);
+        //Debug.Log("Greetings from Heavy Attack");
+        CheckAttackRange(character);
         TrackCursorPosition(character);
-        if (_collidedObject != null) { _collidedObject.TakeDamage(character.CharacterProperties.HeavyAttackDamage); }
+        if (_collidedObject != null) 
+        {
+            EventLibrary.OnWeaponChargeUpdated.Invoke(true);
+            _collidedObject.TakeDamage(character.CharacterProperties.HeavyAttackDamage); 
+        }
         AttackDash(character);
         character.StartCoroutine(DelayState(character));
     }

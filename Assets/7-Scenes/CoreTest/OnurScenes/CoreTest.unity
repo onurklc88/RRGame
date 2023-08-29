@@ -1033,7 +1033,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5522995, y: -1.4620094, z: 81.73777}
+  m_LocalPosition: {x: 1.5523014, y: -1.4620094, z: 81.73776}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2551,6 +2551,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mouseTarget: {fileID: 1572044723}
   _characterCollisions: {fileID: 8791236692560099172}
+  _weaponHandler: {fileID: 8791236692560099170}
 --- !u!1 &1572044719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3287,7 +3288,7 @@ Transform:
   m_GameObject: {fileID: 1891203620}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 7.85, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.48785, z: 0.35654}
+  m_LocalScale: {x: 1, y: -0.0020805865, z: 0.35654}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 992433314}
@@ -16980,7 +16981,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.90095943, y: 0, z: -0.41240588}
+  velocity: {x: -0.33939406, y: 0, z: -0.054791216}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -17055,10 +17056,7 @@ MonoBehaviour:
   _navMeshAgent: {fileID: 8675915458348068288}
   _enemyProperties: {fileID: 11400000, guid: 584185d653a723e42a89728bec1f228d, type: 2}
   _idleDelayTime: 5
-  _waypoint:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _splineComputer: {fileID: 0}
 --- !u!135 &8675915458348068290
 SphereCollider:
   m_ObjectHideFlags: 0
