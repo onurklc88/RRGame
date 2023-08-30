@@ -92,7 +92,7 @@ public class CharacterStateManager : MonoBehaviour
         _canCharacterSlide = false;
         IsSlidePressed = context.ReadValueAsButton();
         SwitchState(CharacterStateFactory.CharacterSlideState);
-        DOVirtual.DelayedCall(0.5f, () =>{ _canCharacterSlide = true;});
+        DOVirtual.DelayedCall(0.7f, () =>{ _canCharacterSlide = true;});
     }
 
     private void OnMovementInput(InputAction.CallbackContext context)
