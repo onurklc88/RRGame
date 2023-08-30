@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SwordImage: {fileID: 0}
   Damage: 0.5
-  Range: 3
+  Range: 2
   SwingTime: 0
   SwingCount: 0

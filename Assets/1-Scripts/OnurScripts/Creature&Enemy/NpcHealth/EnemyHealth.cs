@@ -36,6 +36,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         else
         {
             _currentHealth -= damageValue;
+           // Debug.Log("Current HEalth: " + _currentHealth);
             if (!_isDecalSet)
                  SetSplashDecal();
             else if(_currentHealth < 2f)

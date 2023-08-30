@@ -41,5 +41,7 @@ public class Bomb : ThrowableWeapon
         if(_damageableObject != null)
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
 
+        _damageableObject = null;
+
     }
 }

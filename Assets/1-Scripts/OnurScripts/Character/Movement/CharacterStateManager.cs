@@ -15,7 +15,7 @@ public class CharacterStateManager : MonoBehaviour
     public MouseTarget MouseTarget => _mouseTarget;
     public float CharacterSpeed => _characterProperties.WalkSpeed;
     public Vector3 CurrentMove => _currentMovement;
- 
+    public WeaponHandler WeaponHandler => _weaponHandler;
     public Vector3 PositionToLookAt => _positionToLookAt;
     #endregion
     [SerializeField] private CharacterProperties _characterProperties;
@@ -30,7 +30,7 @@ public class CharacterStateManager : MonoBehaviour
     [Inject]
     public CharacterStateFactory CharacterStateFactory;
     [Inject]
-    public WeaponHandler WeaponHandler;
+    WeaponHandler _weaponHandler;
     #endregion
     private CharacterBaseState _currentState = null;
     private Vector3 _currentMovement;
@@ -115,8 +115,7 @@ public class CharacterStateManager : MonoBehaviour
     {
        if (_currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.CharacterAttackState) return;
 
-      
-        if (context.duration < 0.5f)
+       if (context.duration < 0.5f)
             CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack;
         else
             CharacterStateFactory.CharacterAttackState = CharacterStateFactory.HeavyAttack;
@@ -145,7 +144,6 @@ public class CharacterStateManager : MonoBehaviour
     {
         if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null) return;
         EventLibrary.OnLongRangeAttack.Invoke(false);
-       
         CharacterStateFactory.CharacterAttackState.DoAttackBehaviour(this);
         CharacterStateFactory.CharacterAttackState = null;
     }
@@ -201,7 +199,7 @@ public class CharacterStateManager : MonoBehaviour
    private void OnDrawGizmos()
    {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 3f, 1.5f);
+        Gizmos.DrawWireSphere(transform.position + transform.forward * 2f, 2f);
    }
 }
 

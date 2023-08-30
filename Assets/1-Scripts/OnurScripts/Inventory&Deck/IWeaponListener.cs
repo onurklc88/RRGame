@@ -1,5 +1,6 @@
 
 public interface  IWeaponListener 
 {
-    void GetCurrentWeaponProperties(ThrowableWeapon weapon);
+    int CurrentChargeCount { get; set; }
+    void OnWeaponChargeLoaded(bool isCharged);
 }

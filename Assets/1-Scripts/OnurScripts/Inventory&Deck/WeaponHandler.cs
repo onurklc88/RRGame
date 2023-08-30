@@ -6,17 +6,17 @@ using System;
 using Zenject;
 
 
-public class WeaponHandler : MonoBehaviour
+public class WeaponHandler : MonoBehaviour, IWeaponListener
 {
     
     private PlayerInput _playerInput;
     [Inject]
     Weapons _weapons;
     private ThrowableWeapon _currentWeapon;
-    private int _totalCharge = 0;
+    private int _totalCharge = 4;
     private int _currentChargeCount = 0;
     private Dictionary<string, ThrowableWeapon> _weaponDictionary = new Dictionary<string, ThrowableWeapon>();
-
+    public int CurrentChargeCount { get; set; }
     private void OnEnable()
     {
         _playerInput.CharacterControls.Enable();
@@ -45,16 +45,15 @@ public class WeaponHandler : MonoBehaviour
     {
       _currentWeapon = _weaponDictionary[context.action.name];
     }
-    private void OnWeaponChargeLoaded(bool isCharged)
+    public void OnWeaponChargeLoaded(bool isCharged)
     {
-        if (isCharged && _currentChargeCount < _totalCharge)
-        {
-            _currentChargeCount++;
-        }
-        else if(_currentChargeCount >= 0)
-        {
-            _currentChargeCount--;
-        }
+       
+        if (isCharged && CurrentChargeCount < _totalCharge)
+            CurrentChargeCount++;
+        else if(CurrentChargeCount >= 0)
+            CurrentChargeCount--;
+
+       
     }
 
     public ThrowableWeapon HandedWeapon()
@@ -64,7 +63,7 @@ public class WeaponHandler : MonoBehaviour
 
     public bool IsChargeReady()
     {
-        if (_currentChargeCount > 0)
+        if (CurrentChargeCount > 0)
             return true;
         else
             return false;

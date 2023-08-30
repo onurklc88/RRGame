@@ -32,7 +32,7 @@ public class CharacterAttackState : CharacterBaseState
        
         for (int i = 0; i < inSightRange.Length; i++)
         {
-            if(inSightRange[i].transform.GetComponent<IDamageable>() != null)
+            if(inSightRange[i].transform.GetComponent<IDamageable>() != null && inSightRange[i].transform.GetComponent<IHealable>() == null)
             {
                _collidedObject = inSightRange[i].transform.GetComponent<IDamageable>();
             }
