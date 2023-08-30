@@ -2989,6 +2989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chargeUI:
+  - {fileID: 0}
   - {fileID: 1588066768300301}
   - {fileID: 1588067732762199}
   - {fileID: 1588067993404082}
@@ -18106,7 +18107,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.07319208, y: 0, z: -0.6314351}
+  velocity: {x: -0.7318592, y: 0, z: 0.39166296}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0

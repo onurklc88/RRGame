@@ -20,7 +20,7 @@ public class UIManager : MonoBehaviour, IWeaponListener
 
     private void Start()
     {
-        CurrentChargeCount = -1;
+       
     }
 
     public void OnWeaponChargeLoaded(bool isCharged)
@@ -30,12 +30,12 @@ public class UIManager : MonoBehaviour, IWeaponListener
             CurrentChargeCount++;
             _chargeUI[CurrentChargeCount].transform.DOScale(1f, 1f).SetEase(Ease.InBounce);
         }
-        else if(CurrentChargeCount >= 0 && !isCharged)
+        else if(CurrentChargeCount >= 1 && !isCharged)
         {
             _chargeUI[CurrentChargeCount].transform.DOScale(0f, 1f).SetEase(Ease.InBounce);
             CurrentChargeCount--;
         }
-    
+       
     }
 
 }

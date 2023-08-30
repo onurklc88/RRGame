@@ -22,7 +22,7 @@ public class MouseTarget : MonoBehaviour
     }
     private void Update()
     {
-        _target.transform.position = new Vector3(GetMousePosition().x, _character.transform.position.y, GetMousePosition().z);
+        _target.transform.position = new Vector3(GetMousePosition().x, 0f, GetMousePosition().z);
     }
 
 

@@ -11,8 +11,7 @@ public class ThrowArrow : CharacterAttackState
     }
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
-        Debug.Log("bool: " + character.WeaponHandler.IsChargeReady());
-       if (!character.WeaponHandler.IsChargeReady()) { ExitState(character); return; }
+      if (!character.WeaponHandler.IsChargeReady()) { ExitState(character); return; }
        
        GameObject arrow = ObjectPool.GetPooledObject(0);
        arrow.transform.position = character.transform.position + character.transform.forward;
