@@ -10,6 +10,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private float _currentHealth;
     private bool _isDecalSet;
     private GameObject _splashDecal;
+    private DamageFlash _damageFlash;
+
     private void OnEnable()
     {
         
@@ -22,10 +24,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private void Start()
     {
         _currentHealth = _enemyProperties.EnemyHealth;
+        _damageFlash = GetComponent<DamageFlash>();
     }
     public void TakeDamage(float damageValue)
     {
-        
+        _damageFlash.Flash();
+
         if(_currentHealth <= 0)
         {
             _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 1f);
