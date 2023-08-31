@@ -13,6 +13,7 @@ public class EnemyProperties : ScriptableObject
 
     public float AgressionRange;
     public float AttackTime;
+    public float AttackDistance;
     [Header("Damage Settings")]
 
 

@@ -195,7 +195,7 @@
                     "name": "",
                     "id": "62636f32-ea09-4a7a-b757-8fb56a1e9255",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "LongRangeAttack",

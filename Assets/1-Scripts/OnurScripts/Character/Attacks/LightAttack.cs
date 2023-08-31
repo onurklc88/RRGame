@@ -10,12 +10,11 @@ public class LightAttack : CharacterAttackState
   
     private int _currentSwings;
     public bool CanCharacterSwing = true;
-    private float _animationDelay = 1f;
+    private float _animationDelay = .2f;
     
     public override void EnterState(CharacterStateManager character)
     {
-        
-        #region OldVersion
+       #region OldVersion
         /*
         if (_firstAttacktime == 0)
             _firstAttacktime = Time.time;
@@ -99,6 +98,8 @@ public class LightAttack : CharacterAttackState
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         yield return new WaitForSeconds(_animationDelay);
+       
+        _collidedObject = null;
         ExitState(character);
 
     }

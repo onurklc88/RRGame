@@ -28,7 +28,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     }
     public void TakeDamage(float damageValue)
     {
-        _damageFlash.Flash();
+        //_damageFlash.Flash();
 
         if(_currentHealth <= 0)
         {

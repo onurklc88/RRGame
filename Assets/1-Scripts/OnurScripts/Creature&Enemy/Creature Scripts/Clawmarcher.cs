@@ -15,7 +15,7 @@ public class Clawmarcher : Creature
         _currentState = EnemyStateFactory.Walk();
      
     }
-    public override void SetCreatureProperties()
+    protected override void SetCreatureProperties()
     {
         gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.AgressionRange;
     }
@@ -25,7 +25,7 @@ public class Clawmarcher : Creature
     }
 
 
-    public override void ExecuteState()
+    protected override void ExecuteState()
     {
        _currentState.ProcessState(this);
     }
@@ -49,7 +49,7 @@ public class Clawmarcher : Creature
            
     }
 
-    private void LoadWayPoints()
+    protected override void LoadWayPoints()
     {
        for(int i = 0; i < _splineComputer.pointCount; i++)
        {

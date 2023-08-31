@@ -69,9 +69,7 @@ public class CharacterAnimation : MonoBehaviour
 
     private void PlaySlideAnimation(bool tempValue)
     {
-
-        _characterAnimator.SetBool("IsDashing", tempValue);
-
+       _characterAnimator.SetBool("IsDashing", tempValue);
     }
 
 

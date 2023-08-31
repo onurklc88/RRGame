@@ -18,6 +18,7 @@ public class CharacterAttackState : CharacterBaseState
   
     public override void ExitState(CharacterStateManager character)
     {
+        Debug.Log("B");
       character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
     public virtual void DoAttackBehaviour(CharacterStateManager character) { }
@@ -40,7 +41,7 @@ public class CharacterAttackState : CharacterBaseState
     }
     protected void AttackDash(CharacterStateManager character)
     {
-        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 12f;
+        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 15f;
         character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 
@@ -65,7 +66,6 @@ public class CharacterAttackState : CharacterBaseState
             character.CharacterController.Move((dashPoint - character.transform.position) * Time.deltaTime);
             yield return null;
         }
-        ExitState(character);
     }
 
 }

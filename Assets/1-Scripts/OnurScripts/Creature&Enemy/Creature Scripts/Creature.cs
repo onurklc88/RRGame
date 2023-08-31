@@ -4,20 +4,23 @@ using Dreamteck.Splines;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Creature : MonoBehaviour
 {
+    public IState CreatureAttackType { get; set; }
     [HideInInspector] public int CurrentWaypointIndex = 0;
     [HideInInspector] public GameObject PlayerCharacter;
     [SerializeField] private NavMeshAgent _navMeshAgent;
     [SerializeField] private EnemyProperties _enemyProperties;
     [SerializeField] private float _idleDelayTime;
-    private List<Vector3> _waypoints = new List<Vector3>();
+    [SerializeField] private CreatureAnimationController _creatureAnimationController;
     [SerializeField] protected SplineComputer _splineComputer;
-
-    private LayerMask _playerLayer;
-    
+  
+    private List<Vector3> _waypoints = new List<Vector3>();
+    [SerializeField] private LayerMask _playerLayer;
+   
    
     [Inject]
     public EnemyStateFactory EnemyStateFactory;
@@ -30,17 +33,16 @@ public abstract class Creature : MonoBehaviour
     public EnemyProperties EnemyProperties => _enemyProperties;
     public float AnimationDelayTime => _idleDelayTime;
     public LayerMask PlayerMask => _playerLayer;
-   
+    public CreatureAnimationController CreatureAnimationController => _creatureAnimationController;
     #endregion
-
-    public abstract void SetCreatureProperties();
-    public abstract void ExecuteState();
     public abstract void SwitchState(IState newState);
-    public virtual void SetPlayerLayer()
+    protected abstract void SetCreatureProperties();
+    protected abstract void LoadWayPoints();
+    protected abstract void ExecuteState();
+   
+    protected virtual void SetPlayerLayer()
     {
         _playerLayer = LayerMask.GetMask("Player");
     }
-
-
-
+    
 }

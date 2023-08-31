@@ -7,7 +7,7 @@ using Cinemachine;
 public class Bomb : ThrowableWeapon
 {
    [SerializeField] private CinemachineImpulseSource _impulseSource;
-   private IDamageable _damageableObject;
+   
   
     protected override void OnTriggerEnter(Collider other)
     {
@@ -32,16 +32,9 @@ public class Bomb : ThrowableWeapon
         for (int i = 0; i < inSightRange.Length; i++)
         {
             if (inSightRange[i].transform.GetComponent<IDamageable>() != null)
-            {
-                _damageableObject = inSightRange[i].transform.GetComponent<IDamageable>();
-                _damageableObject.TakeDamage(_damage);
-            }
+                 inSightRange[i].transform.GetComponent<IDamageable>().TakeDamage(_damage); 
         }
-
-        if(_damageableObject != null)
-            EventLibrary.OnWeaponChargeUpdated.Invoke(true);
-
-        _damageableObject = null;
+       
 
     }
 }

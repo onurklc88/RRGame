@@ -17,11 +17,13 @@ public class CharacterStateManager : MonoBehaviour
     public Vector3 CurrentMove => _currentMovement;
     public WeaponHandler WeaponHandler => _weaponHandler;
     public Vector3 PositionToLookAt => _positionToLookAt;
+    public GameObject ColorTube => _colorTube;
     #endregion
-    [SerializeField] private CharacterProperties _characterProperties;
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
+    [SerializeField] private CharacterProperties _characterProperties;
+    [SerializeField] private GameObject _colorTube;
     #region Depency Injections
     [Inject]
     MouseTarget _mouseTarget;
@@ -80,7 +82,7 @@ public class CharacterStateManager : MonoBehaviour
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Slide.started += OnSlideMovement;
         _playerInput.CharacterControls.MeleeAttack.started += OnMeleeAttackStarted;
-        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttack;
+        _playerInput.CharacterControls.MeleeAttack.canceled += OnMeleeAttackEnded;
         _playerInput.CharacterControls.LongRangeAttack.started += OnLongRangeAttackStarted;
         _playerInput.CharacterControls.LongRangeAttack.canceled += OnLongRangeAttackEnded;
         _playerInput.CharacterControls.Interaction.started += OnPlayerInteraction;
@@ -111,7 +113,7 @@ public class CharacterStateManager : MonoBehaviour
         if (CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterAttackState) return;
        CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
     }
-    private void OnMeleeAttack(InputAction.CallbackContext context)
+    private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
        if (_currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.CharacterAttackState) return;
 
@@ -144,7 +146,11 @@ public class CharacterStateManager : MonoBehaviour
     {
         if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null) return;
         EventLibrary.OnLongRangeAttack.Invoke(false);
-        CharacterStateFactory.CharacterAttackState.DoAttackBehaviour(this);
+        if (context.duration > 0.3)
+            CharacterStateFactory.CharacterAttackState.DoAttackBehaviour(this);
+        else
+            CharacterStateFactory.CharacterAttackState.ExitState(this);
+        
         CharacterStateFactory.CharacterAttackState = null;
     }
 
@@ -177,7 +183,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (_currentState == CharacterStateFactory.CharacterAttackState || _currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.CharacterClimbState) return;
+        if (_currentState == CharacterStateFactory.LightAttack || _currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.HeavyAttack || _currentState == CharacterStateFactory.CharacterClimbState) return;
         
         _positionToLookAt.x = _currentMovement.x;
         _positionToLookAt.y = 0f;

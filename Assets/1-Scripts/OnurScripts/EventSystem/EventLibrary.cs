@@ -18,6 +18,9 @@ public static class EventLibrary
     public static readonly GameEvent<bool> StartRunAnimation = new GameEvent<bool>();
     public static readonly GameEvent<bool> PlayDashAnimation = new GameEvent<bool>();
 
+    //VFX Events
+    public static readonly GameEvent OnCharacterDash = new GameEvent();
+
     //Object Pool
     public static readonly GameEvent<GameObject> ResetPooledObject = new GameEvent<GameObject>();
     

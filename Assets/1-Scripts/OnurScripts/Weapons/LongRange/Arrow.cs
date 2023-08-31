@@ -13,10 +13,8 @@ public class Arrow : ThrowableWeapon
     protected override void OnTriggerEnter(Collider other)
     {
         if(other.transform.GetComponent<IDamageable>() != null)
-        {
-            EventLibrary.OnWeaponChargeUpdated.Invoke(true);
             _collidedObject = other.transform.GetComponent<IDamageable>();
-        }
+        
            
 
         WeaponAction();

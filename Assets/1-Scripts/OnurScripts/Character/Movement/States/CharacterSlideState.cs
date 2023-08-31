@@ -12,6 +12,7 @@ public class CharacterSlideState : CharacterBaseState
     {
       
         EventLibrary.PlayDashAnimation.Invoke(true);
+        EventLibrary.OnCharacterDash.Invoke();
         _slideRotation.x = 0f;
         _slideRotation.y = 0f;
         _slideRotation.z = character.CurrentMove.z;
@@ -40,10 +41,10 @@ public class CharacterSlideState : CharacterBaseState
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         float startTime = Time.time;
-        while(Time.time < startTime + 0.25)
+        while(Time.time < startTime + 0.25f)
         {
             _dashPosition.y += -50f;
-            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime);
+            character.CharacterController.Move((_dashPosition - character.transform.position) * Time.deltaTime * 1.5f);
             yield return null;
         }
 

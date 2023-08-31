@@ -20,9 +20,14 @@ public class EnemyStateFactory
         return new CreatureChaseState();
     }
 
-    public CreatureAttackState Attack()
+    public CreatureDashAttackState DashAttack()
     {
-        return new CreatureAttackState();
+        return new CreatureDashAttackState();
+    }
+
+    public CreatureMeleeAttack MeleeAttack()
+    {
+        return new CreatureMeleeAttack();
     }
 }
    

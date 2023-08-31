@@ -10,18 +10,15 @@ public class CreatureIdleState : IState
     {
        // Debug.Log("IdleState");
         creature.NavMeshAgent.speed = 0;
+        creature.CreatureAnimationController.PlayCreatureAnimation("Idle", true);
         creature.StartCoroutine(DelayState(creature));
-       
     }
-    public void ProcessState(Creature creature)
-    {
-       // Debug.Log("IDLE PROCESS STATE");
-    }
+    
 
    private IEnumerator DelayState(Creature creature)
    {
-        //Debug.Log("IDLE DELAY");
         yield return new WaitForSeconds(creature.AnimationDelayTime);
+        creature.CreatureAnimationController.PlayCreatureAnimation("Idle", false);
         creature.SwitchState(creature.EnemyStateFactory.Walk());
    }
 }
