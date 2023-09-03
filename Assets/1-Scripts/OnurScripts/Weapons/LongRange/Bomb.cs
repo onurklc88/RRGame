@@ -46,7 +46,7 @@ public class Bomb : ThrowableWeapon
         float minRadius = 1.0f;
         float maxRadius = 5.0f;
 
-        int minNumberOfDecals = 2;
+        int minNumberOfDecals = 3;
         int maxNumberOfDecals = 6;
         int numOfDecals = Random.Range(minNumberOfDecals, maxNumberOfDecals);
 
