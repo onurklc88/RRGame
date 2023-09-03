@@ -28,6 +28,7 @@ public class DissolveHandler : MonoBehaviour
 
             var mat = _dissolveMaterials[i];
             mat.SetTexture("_MainTexture", mesh.material.GetTexture("_BaseMap"));
+            mat.SetColor("_BaseColor", mesh.material.GetColor("_AlbedoColor"));
             mat.SetColor("_DissolveColor", _dissolveColor);
         }
 
