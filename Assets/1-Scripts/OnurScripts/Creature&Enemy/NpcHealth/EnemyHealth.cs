@@ -29,7 +29,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         _damageFlash.Flash();
 
-        if(_currentHealth <= 0.5f)
+        if(_currentHealth <= 0.5)
         {
             //  _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 1f);
             // EventLibrary.ResetPooledObject.Invoke(_splashDecal);

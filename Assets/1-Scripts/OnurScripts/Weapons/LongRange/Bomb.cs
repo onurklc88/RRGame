@@ -18,7 +18,7 @@ public class Bomb : ThrowableWeapon
 
     protected override void WeaponAction()
     {
-        _impulseSource.GenerateImpulseWithForce(0.5f);
+        _impulseSource.GenerateImpulseWithForce(0.2f);
         gameObject.SetActive(false);
     }
 
