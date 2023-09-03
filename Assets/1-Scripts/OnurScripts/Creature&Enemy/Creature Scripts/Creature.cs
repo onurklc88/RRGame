@@ -10,6 +10,7 @@ using System;
 public abstract class Creature : MonoBehaviour
 {
     public IState CreatureAttackType { get; set; }
+    public IState CurrentCreatureState { get; set; }
     [HideInInspector] public int CurrentWaypointIndex = 0;
     [HideInInspector] public GameObject PlayerCharacter;
     [SerializeField] private NavMeshAgent _navMeshAgent;
@@ -17,7 +18,7 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] private float _idleDelayTime;
     [SerializeField] private CreatureAnimationController _creatureAnimationController;
     [SerializeField] protected SplineComputer _splineComputer;
-  
+    [SerializeField] private DissolveHandler _dissolveHandler;
     private List<Vector3> _waypoints = new List<Vector3>();
     [SerializeField] private LayerMask _playerLayer;
    
@@ -34,6 +35,7 @@ public abstract class Creature : MonoBehaviour
     public float AnimationDelayTime => _idleDelayTime;
     public LayerMask PlayerMask => _playerLayer;
     public CreatureAnimationController CreatureAnimationController => _creatureAnimationController;
+    public DissolveHandler DissolveHandler => _dissolveHandler;
     #endregion
     public abstract void SwitchState(IState newState);
     protected abstract void SetCreatureProperties();

@@ -8,18 +8,25 @@ public class CreatureWalkState : IState
     
     public void SetupState(Creature creature)
     {
-       
         creature.NavMeshAgent.speed = 2;
         creature.CreatureAnimationController.PlayBlendAnimations(true);
-        //creature.NavMeshAgent.SetDestination(creature.Waypoints[creature.CurrentWaypointIndex]);
     }
 
     public void ProcessState(Creature creature)
     {
+        PlayerDetection(creature);
         Patrol(creature);
     }
 
-    
+    public void PlayerDetection(Creature creature)
+    {
+        Collider[] inSightRange = Physics.OverlapSphere(creature.transform.position, creature.EnemyProperties.AgressionRange, creature.PlayerMask);
+
+        if (inSightRange.Length == 0) return;
+        creature.PlayerCharacter = inSightRange[0].gameObject;
+        creature.SwitchState(creature.EnemyStateFactory.Chase);
+    }
+
     private void Patrol(Creature creature)
     {
 

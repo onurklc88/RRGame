@@ -18,4 +18,4 @@ MonoBehaviour:
   AttackDistance: 4
   LightAttackDamage: 0
   HeavyAttackDamage: 0
-  EnemyHealth: 0
+  EnemyHealth: 2

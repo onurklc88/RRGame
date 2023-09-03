@@ -5012,6 +5012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f29d0bb6e67f99489a32ca631cb9c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WeaponID: 0
   _weaponImage: {fileID: 0}
   _damage: 0.5
   _impulseSource: {fileID: -6930078077161818098}
@@ -5028,33 +5029,87 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ImpulseDefinition:
-    m_ImpulseChannel: 1
-    m_ImpulseShape: 1
+    m_ImpulseChannel: -1
+    m_ImpulseShape: 0
     m_CustomImpulseShape:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
+        inSlope: -0.0031942446
+        outSlope: -0.0031942446
+        tangentMode: 34
         weightedMode: 0
         inWeight: 0
-        outWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.41381145
+        value: -0.001321815
+        inSlope: -0.021048896
+        outSlope: -0.021048896
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.5697334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5224882
+        value: -0.43824354
+        inSlope: 3.7405598
+        outSlope: 3.7405598
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.5975634
+        value: 0.4252339
+        inSlope: 0.7190876
+        outSlope: 0.7190876
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.7078319
+        value: -0.6844342
+        inSlope: 0.54175377
+        outSlope: 0.54175377
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.84472424
+        value: 0.84148145
+        inSlope: -3.5866385
+        outSlope: -3.5866385
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.9444301
+        value: -0.9851411
+        inSlope: 8.701608
+        outSlope: 8.701608
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       - serializedVersion: 3
         time: 1
-        value: -0.0235075
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        value: 1
+        inSlope: 35.723324
+        outSlope: 35.723324
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0
+        inWeight: 0.33333334
         outWeight: 0
       m_PreInfinity: 2
-      m_PostInfinity: 1
+      m_PostInfinity: 2
       m_RotationOrder: 4
-    m_ImpulseDuration: 1
+    m_ImpulseDuration: 0.3
     m_ImpulseType: 0
     m_DissipationRate: 0.25
     m_RawSignal: {fileID: 0}
@@ -5085,7 +5140,7 @@ MonoBehaviour:
     m_DissipationMode: 2
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
-  m_DefaultVelocity: {x: -0.2, y: 0, z: 0}
+  m_DefaultVelocity: {x: 1, y: 2, z: 1}
 --- !u!1 &7548038256152101673
 GameObject:
   m_ObjectHideFlags: 0

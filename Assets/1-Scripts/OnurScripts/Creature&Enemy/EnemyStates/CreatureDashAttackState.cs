@@ -55,7 +55,7 @@ public class CreatureDashAttackState : IState
         yield return new WaitForSeconds(1f);
         creature.NavMeshAgent.isStopped = false;
         _alreadyAttacked = false;
-        creature.SwitchState(creature.EnemyStateFactory.Chase());
+        creature.SwitchState(creature.EnemyStateFactory.Chase);
     }
 
 

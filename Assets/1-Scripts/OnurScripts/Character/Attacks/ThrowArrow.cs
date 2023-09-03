@@ -21,7 +21,7 @@ public class ThrowArrow : CharacterAttackState
        GameObject arrow = ObjectPool.GetPooledObject(0);
        arrow.transform.position = character.transform.position + character.transform.forward;
        arrow.SetActive(true);
-       Vector3 arrowMovePosition = arrow.transform.position + character.transform.forward * 80f;
+       Vector3 arrowMovePosition = arrow.transform.position + character.transform.forward * 20f;
        arrow.transform.DOMove(arrowMovePosition, 1f).OnComplete(() => EventLibrary.ResetPooledObject.Invoke(arrow));
        EventLibrary.OnWeaponChargeUpdated.Invoke(false);
         character.StartCoroutine(DelayState(character));

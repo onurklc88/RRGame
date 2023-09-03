@@ -7,12 +7,14 @@ public class CreatureMeleeAttack : IState
     private bool _alreadyAttacked = false;
     public void SetupState(Creature creature)
     {
-       
         creature.NavMeshAgent.isStopped = true;
         creature.CreatureAnimationController.PlayCreatureAnimation("Attack", true);
         PlayerDetection(creature);
     }
-
+    public void ProcessState(Creature creature)
+    {
+        PlayerDetection(creature);
+    }
     private void PlayerDetection(Creature creature)
     {
         Collider[] inSightRange = Physics.OverlapSphere(creature.transform.position + creature.transform.forward * 1f, 5f, creature.PlayerMask);
@@ -33,11 +35,13 @@ public class CreatureMeleeAttack : IState
     private IEnumerator DelayState(Creature creature)
     {
         yield return new WaitForSeconds(0.1f);
-        Debug.Log("ASd");
-        creature.CreatureAnimationController.PlayCreatureAnimation("Attack", false);
-        creature.NavMeshAgent.isStopped = false;
-        _alreadyAttacked = false;
-        creature.SwitchState(creature.EnemyStateFactory.Chase());
+        if(creature.CurrentCreatureState != creature.EnemyStateFactory.Death)
+        {
+            creature.CreatureAnimationController.PlayCreatureAnimation("Attack", false);
+            creature.NavMeshAgent.isStopped = false;
+            _alreadyAttacked = false;
+            creature.SwitchState(creature.EnemyStateFactory.Chase);
+        }
     }
 
 }

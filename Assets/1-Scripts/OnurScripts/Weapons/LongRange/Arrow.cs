@@ -7,9 +7,9 @@ using DG.Tweening;
 public class Arrow : ThrowableWeapon
 {
     [SerializeField] private CinemachineImpulseSource _impulseSource;
-    
+  
 
-   
+  
     protected override void OnTriggerEnter(Collider other)
     {
         if(other.transform.GetComponent<IDamageable>() != null)

@@ -8,6 +8,7 @@ public static class EventLibrary
 
     //Weapon events
     public static readonly GameEvent<bool> OnWeaponChargeUpdated = new GameEvent<bool>();
+    public static readonly GameEvent<ThrowableWeapon> OnWeaponSwitch = new GameEvent<ThrowableWeapon>();
    
     
     //Camera events

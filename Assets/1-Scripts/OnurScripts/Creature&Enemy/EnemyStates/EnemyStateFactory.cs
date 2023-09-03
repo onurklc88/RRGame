@@ -2,9 +2,11 @@
 
 public class EnemyStateFactory
 {
-    IState _context;
-   
+    
 
+    public CreatureChaseState Chase = new CreatureChaseState();
+    public CreatureDamageState Damage = new CreatureDamageState();
+    public CreatureDeathState Death = new CreatureDeathState();
     public CreatureIdleState Idle()
     {
         return new CreatureIdleState();
@@ -14,12 +16,7 @@ public class EnemyStateFactory
     {
         return new CreatureWalkState();
     }
-
-    public CreatureChaseState Chase()
-    {
-        return new CreatureChaseState();
-    }
-
+   
     public CreatureDashAttackState DashAttack()
     {
         return new CreatureDashAttackState();

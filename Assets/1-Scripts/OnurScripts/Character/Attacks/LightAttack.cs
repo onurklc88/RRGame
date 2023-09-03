@@ -10,11 +10,11 @@ public class LightAttack : CharacterAttackState
   
     private int _currentSwings;
     public bool CanCharacterSwing = true;
-    private float _animationDelay = .2f;
+    private float _animationDelay = .3f;
     
     public override void EnterState(CharacterStateManager character)
     {
-       #region OldVersion
+        #region OldVersion
         /*
         if (_firstAttacktime == 0)
             _firstAttacktime = Time.time;
@@ -58,16 +58,17 @@ public class LightAttack : CharacterAttackState
 
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
-        CheckAttackRange(character);
         TrackCursorPosition(character);
+         AttackDash(character);
         if (_collidedObject != null)
         {
             //buraya güncellenmiþ karakter strength giricez
+            character.ImpulseSource.GenerateImpulse(0.2f);
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
             _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage);
         }
-     
-        AttackDash(character);
+       
+      
         character.StartCoroutine(DelayState(character));
     }
     /*

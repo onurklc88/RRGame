@@ -7,8 +7,8 @@ using Cinemachine;
 public class Bomb : ThrowableWeapon
 {
    [SerializeField] private CinemachineImpulseSource _impulseSource;
+
    
-  
     protected override void OnTriggerEnter(Collider other)
     {
         CheckExplosionArea();

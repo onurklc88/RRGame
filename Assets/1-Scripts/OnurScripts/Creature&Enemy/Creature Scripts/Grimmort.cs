@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Grimmort : Creature
 {
-    private IState _currentState = null;
+   
 
     private void Start()
     {
         CreatureAttackType = EnemyStateFactory.MeleeAttack();
         LoadWayPoints();
-        //SetPlayerLayer();
+        SetPlayerLayer();
         SetCreatureProperties();
-        _currentState = EnemyStateFactory.Walk();
+        CurrentCreatureState = EnemyStateFactory.Walk();
     }
     private void Update()
     {
@@ -20,11 +20,11 @@ public class Grimmort : Creature
     }
     protected override void SetCreatureProperties()
     {
-        gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.AgressionRange;
+        //gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.AgressionRange;
     }
     protected override void ExecuteState()
     {
-        _currentState.ProcessState(this);
+        CurrentCreatureState.ProcessState(this);
     }
     protected override void LoadWayPoints()
     {
@@ -37,22 +37,13 @@ public class Grimmort : Creature
     public override void SwitchState(IState newState)
     {
         newState.SetupState(this);
-        _currentState = newState;
+        CurrentCreatureState = newState;
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == 6)
-        {
-            PlayerCharacter = other.gameObject;
-            SwitchState(EnemyStateFactory.Chase());
-        }
-
-    }
-
+   
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 1f, 5f);
+        Gizmos.DrawWireSphere(transform.position, EnemyProperties.AgressionRange);
     }
 }

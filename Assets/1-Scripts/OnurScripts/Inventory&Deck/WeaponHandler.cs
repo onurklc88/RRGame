@@ -12,9 +12,8 @@ public class WeaponHandler : MonoBehaviour, IWeaponListener
     private PlayerInput _playerInput;
     [Inject]
     Weapons _weapons;
-    private ThrowableWeapon _currentWeapon;
+    private ThrowableWeapon _selectedWeapon;
     private int _totalCharge = 4;
-    private int _currentChargeCount = 0;
     private Dictionary<string, ThrowableWeapon> _weaponDictionary = new Dictionary<string, ThrowableWeapon>();
     public int CurrentChargeCount { get; set; }
     private void OnEnable()
@@ -30,7 +29,7 @@ public class WeaponHandler : MonoBehaviour, IWeaponListener
 
     private void Start()
     {
-        _currentWeapon = _weapons.Arrow;
+        _selectedWeapon = _weapons.Arrow;
         _weaponDictionary.Add("Arrow", _weapons.Arrow);
         _weaponDictionary.Add("Bomb", _weapons.Bomb);
     }
@@ -43,7 +42,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponListener
 
     private void OnWeaponInput(InputAction.CallbackContext context)
     {
-      _currentWeapon = _weaponDictionary[context.action.name];
+      _selectedWeapon = _weaponDictionary[context.action.name];
+
+        //scriptable ile revize edilecek
+        EventLibrary.OnWeaponSwitch.Invoke(_selectedWeapon);
+     
     }
     public void OnWeaponChargeLoaded(bool isCharged)
     {
@@ -52,13 +55,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponListener
             CurrentChargeCount++;
         else if(CurrentChargeCount >= 0)
             CurrentChargeCount--;
-
-       
-    }
+     }
 
     public ThrowableWeapon HandedWeapon()
     {
-        return _currentWeapon;
+        return _selectedWeapon;
     }
 
     public bool IsChargeReady()

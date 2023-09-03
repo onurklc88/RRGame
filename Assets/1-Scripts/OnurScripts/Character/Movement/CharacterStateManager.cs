@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 using Zenject;
-
+using Cinemachine;
 
 
 [RequireComponent(typeof(CharacterController))]
@@ -18,12 +18,14 @@ public class CharacterStateManager : MonoBehaviour
     public WeaponHandler WeaponHandler => _weaponHandler;
     public Vector3 PositionToLookAt => _positionToLookAt;
     public GameObject ColorTube => _colorTube;
+    public CinemachineImpulseSource ImpulseSource => _impulseSource;
     #endregion
     [HideInInspector] public CharacterController CharacterController;
     [HideInInspector] public bool IsMovementPressed;
     [HideInInspector] public bool IsSlidePressed = false;
     [SerializeField] private CharacterProperties _characterProperties;
     [SerializeField] private GameObject _colorTube;
+    [SerializeField] private CinemachineImpulseSource _impulseSource;
     #region Depency Injections
     [Inject]
     MouseTarget _mouseTarget;

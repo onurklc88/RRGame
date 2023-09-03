@@ -7,13 +7,14 @@ public class CreatureChaseState : IState
 
     public void SetupState(Creature creature)
     {
-        Debug.Log("Chase State");
         creature.CreatureAnimationController.PlayBlendAnimations(true);
         creature.NavMeshAgent.speed = 2;
     }
     public void ProcessState(Creature creature)
     {
+       
         CheckDistanceBetweenPlayer(creature);
+      
         ChasePlayer(creature);
     }
 
@@ -23,7 +24,7 @@ public class CreatureChaseState : IState
     }
     private void CheckDistanceBetweenPlayer(Creature creature)
     {
-        if (creature.PlayerCharacter == null) return;
+        if (creature.CurrentCreatureState == creature.EnemyStateFactory.Death) return;
 
         float distanceBetweenPlayer = Vector3.Distance(creature.PlayerCharacter.transform.position, creature.transform.position);
 

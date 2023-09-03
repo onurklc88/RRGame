@@ -13,7 +13,7 @@ public class DamageFlash : MonoBehaviour
 
     private void Start()
     {
-        _flashMat = GetComponent<Renderer>().materials[^1];
+        _flashMat = GetComponentInChildren<Renderer>().materials[^1];
     }
 
     private void Update()

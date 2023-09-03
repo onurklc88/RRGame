@@ -18,8 +18,7 @@ public class CharacterAttackState : CharacterBaseState
   
     public override void ExitState(CharacterStateManager character)
     {
-        Debug.Log("B");
-      character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
+        character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
     public virtual void DoAttackBehaviour(CharacterStateManager character) { }
     #endregion
@@ -30,7 +29,7 @@ public class CharacterAttackState : CharacterBaseState
         Collider[] inSightRange = Physics.OverlapSphere(character.transform.position + character.transform.forward * SaveInfo.Player.SelectedWeapon.Range, character.CharacterProperties.AttackArea);
       
         if (inSightRange.Length <= 0) return;
-       
+     
         for (int i = 0; i < inSightRange.Length; i++)
         {
             if(inSightRange[i].transform.GetComponent<IDamageable>() != null && inSightRange[i].transform.GetComponent<IHealable>() == null)
@@ -64,8 +63,10 @@ public class CharacterAttackState : CharacterBaseState
         {
             dashPoint.y += -50f;
             character.CharacterController.Move((dashPoint - character.transform.position) * Time.deltaTime);
+            CheckAttackRange(character);
             yield return null;
         }
+        
     }
 
 }
