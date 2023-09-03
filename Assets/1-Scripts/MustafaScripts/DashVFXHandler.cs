@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.VFX;
 
 public class DashVFXHandler : MonoBehaviour
 {
     [SerializeField] private TrailRenderer[] _dashVfx;
+   
 
     // Update is called once per frame
     void Update()
@@ -30,5 +33,6 @@ public class DashVFXHandler : MonoBehaviour
             vfx.Clear();
             vfx.enabled = false;
         }
+
     }
 }
