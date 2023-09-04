@@ -39,7 +39,7 @@ public class BreakObject : MonoBehaviour
 
     private void BreakIt()
     {
-        var dir = transform.position - Player.transform.position;
+        var dir = (transform.position - Player.transform.position).normalized;
 
         for (int i = 0; i < _childRB.Count; i++)
         {
@@ -53,8 +53,8 @@ public class BreakObject : MonoBehaviour
         for (int i = 0; i < _childRB.Count; i++)
         {
             _childRB[i].isKinematic = true;
-            _childRB[i].DOMove(_childPos[i],2f).SetEase(Ease.InBack);
-            _childRB[i].DORotate(_childRot[i],2f);
+            _childRB[i].DOMove(_childPos[i], 1f).SetEase(Ease.InBack);
+            _childRB[i].DORotate(_childRot[i], 1f);
         }
     }
 

@@ -7,6 +7,7 @@ public class CreatureDeathState : IState
    public void SetupState(Creature creature)
    {
         //Debug.Log("DeathState");
+        creature.GetComponent<Animator>().speed = 1;
         creature.NavMeshAgent.speed = 0;
         creature.CreatureAnimationController.PlayCreatureAnimation("Death", false);
         creature.StartCoroutine(DelayState(creature));

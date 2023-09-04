@@ -19,6 +19,7 @@ public class CharacterAnimation : MonoBehaviour
         _playerInput.CharacterControls.Enable();
         EventLibrary.StartRunAnimation.AddListener(PlayRunAnimation);
         EventLibrary.PlayDashAnimation.AddListener(PlaySlideAnimation);
+        EventLibrary.PlayAttackAnimation.AddListener(PlayAttackAnimation);
         
        
     }
@@ -27,6 +28,7 @@ public class CharacterAnimation : MonoBehaviour
         _playerInput.CharacterControls.Disable();
         EventLibrary.StartRunAnimation.RemoveListener(PlayRunAnimation);
         EventLibrary.PlayDashAnimation.RemoveListener(PlaySlideAnimation);
+        EventLibrary.PlayAttackAnimation.RemoveListener(PlayAttackAnimation);
     }
     private void Awake()
     {
@@ -70,6 +72,11 @@ public class CharacterAnimation : MonoBehaviour
     private void PlaySlideAnimation(bool tempValue)
     {
        _characterAnimator.SetBool("IsDashing", tempValue);
+    }
+
+    private void PlayAttackAnimation(bool tempValue)
+    {
+        _characterAnimator.SetBool("IsAttacking", tempValue);
     }
 
 

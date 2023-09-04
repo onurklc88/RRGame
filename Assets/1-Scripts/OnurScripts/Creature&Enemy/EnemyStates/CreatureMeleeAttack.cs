@@ -7,6 +7,7 @@ public class CreatureMeleeAttack : IState
     private bool _alreadyAttacked = false;
     public void SetupState(Creature creature)
     {
+        creature.GetComponent<Animator>().speed = 1;
         creature.NavMeshAgent.isStopped = true;
         creature.CreatureAnimationController.PlayCreatureAnimation("Attack", true);
         PlayerDetection(creature);

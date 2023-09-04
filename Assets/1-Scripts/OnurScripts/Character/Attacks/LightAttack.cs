@@ -54,6 +54,7 @@ public class LightAttack : CharacterAttackState
         */
         #endregion
         DoAttackBehaviour(character);
+        EventLibrary.PlayAttackAnimation.Invoke(true);
     }
 
     public override void DoAttackBehaviour(CharacterStateManager character)
@@ -63,7 +64,7 @@ public class LightAttack : CharacterAttackState
         if (_collidedObject != null)
         {
             //buraya güncellenmiþ karakter strength giricez
-            character.ImpulseSource.GenerateImpulse(0.2f);
+            character.ImpulseSource.GenerateImpulse(0.07f);
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
             _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage);
         }
@@ -99,7 +100,7 @@ public class LightAttack : CharacterAttackState
     public override IEnumerator DelayState(CharacterStateManager character)
     {
         yield return new WaitForSeconds(_animationDelay);
-       
+        EventLibrary.PlayAttackAnimation.Invoke(false);
         _collidedObject = null;
         ExitState(character);
 
