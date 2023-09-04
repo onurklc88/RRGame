@@ -1548,7 +1548,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 828297622}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.5522995, y: -1.4620094, z: 81.73777}
+  m_LocalPosition: {x: 1.5523014, y: -1.4620094, z: 81.73776}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2101,8 +2101,8 @@ Transform:
   m_GameObject: {fileID: 1032098779}
   m_LocalRotation: {x: -0.0315463, y: 0.7064028, z: -0.7064028, w: -0.0315463}
   m_LocalPosition: {x: -7.6999936, y: -8.199994, z: 16.900005}
-  m_LocalScale: {x: 9.6533, y: 9.6533, z: 7.367302}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 20, y: 20, z: 15.263799}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 708454704}
   m_RootOrder: 0
@@ -4669,7 +4669,7 @@ MonoBehaviour:
   - Name: Decal
     ObjectPrefab: {fileID: 4679065350311619093, guid: 5b38312e93ca5aa41945f34264e8759d,
       type: 3}
-    PoolSize: 30
+    PoolSize: 100
   - Name: ArrowSubParticle
     ObjectPrefab: {fileID: 350092730845064442, guid: 581022a99ce47d447abab61475534b8e,
       type: 3}
@@ -22622,7 +22622,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: 0.63848346, y: 0, z: -0.61678964}
+  velocity: {x: -0.1407748, y: 0, z: -0.09433207}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0

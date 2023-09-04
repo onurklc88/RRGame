@@ -44,10 +44,10 @@ public class Bomb : ThrowableWeapon
     private void DropDecalOnGround()
     {
         float minRadius = 1.0f;
-        float maxRadius = 5.0f;
+        float maxRadius = 8.0f;
 
-        int minNumberOfDecals = 3;
-        int maxNumberOfDecals = 6;
+        int minNumberOfDecals = 6;
+        int maxNumberOfDecals = 15;
         int numOfDecals = Random.Range(minNumberOfDecals, maxNumberOfDecals);
 
 
@@ -62,7 +62,7 @@ public class Bomb : ThrowableWeapon
             var newPos = transform.position + new Vector3(posOffset.x, 0, posOffset.y);
             newPos.y = 0;
             decal.transform.position = newPos;
-            decal.transform.DOScale(Random.Range(3.0f, 5.0f), 0.5f);
+            decal.transform.DOScale(Random.Range(2.0f, 5.0f), 0.5f);
         }
     }
 }
