@@ -120,7 +120,7 @@ MonoBehaviour:
   active: 0
   mode:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 2
   gaussianStart:
     m_OverrideState: 1
     m_Value: 10
@@ -137,11 +137,11 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 10
   aperture:
-    m_OverrideState: 0
-    m_Value: 5.6
+    m_OverrideState: 1
+    m_Value: 2
   focalLength:
     m_OverrideState: 1
-    m_Value: 50
+    m_Value: 51
   bladeCount:
     m_OverrideState: 0
     m_Value: 5
@@ -149,7 +149,7 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 1
   bladeRotation:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
 --- !u!114 &6713887583112690092
 MonoBehaviour:
