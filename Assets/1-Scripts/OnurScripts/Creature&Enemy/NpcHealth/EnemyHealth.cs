@@ -34,7 +34,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             //  _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 1f);
             // EventLibrary.ResetPooledObject.Invoke(_splashDecal);
             _creature.SwitchState(_enemyStateFactory.Death);
-            Debug.Log("A");
+          
             //Vfx Sound and Pool
         }
         else
