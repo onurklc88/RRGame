@@ -50,8 +50,6 @@ public class MouseTarget : MonoBehaviour
     private void CursorMovement()
     {
         _target.transform.position = GetCursorPosition();
-        //_target.transform.Rotate(new Vector3(0f, _character.transform.forward.z, 0f));
-    
     }
 
     private void OnDrawGizmos()
