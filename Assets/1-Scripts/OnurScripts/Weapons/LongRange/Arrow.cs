@@ -40,8 +40,8 @@ public class Arrow : ThrowableWeapon
                 _decalCounter++;
                 var currentPos = transform.position;
                 var negativeMoveDirection = (_prevPos - currentPos).normalized;
-                var particle = ObjectPool.GetPooledObject(3);
-                currentPos.y = 0.2f;
+                var particle = ObjectPool.GetPooledObject(2);
+                currentPos.y = -6.787f;
                 //particle.transform.position = currentPos + negativeMoveDirection + new Vector3(0, -0.5f, 0);
                 particle.transform.position = currentPos + negativeMoveDirection;
                 particle.SetActive(true);

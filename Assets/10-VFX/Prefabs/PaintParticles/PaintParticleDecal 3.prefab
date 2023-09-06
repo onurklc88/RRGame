@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2614394784206966186}
   - component: {fileID: 5526715649648357867}
   m_Layer: 0
-  m_Name: ArrowParticleDecal
+  m_Name: PaintParticleDecal 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4679065350311619093}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -3.67, y: 2.13, z: 3.5278}
-  m_LocalScale: {x: 6.01, y: 6.01, z: 6.01}
+  m_LocalScale: {x: 0.10000001, y: 0.10000001, z: 0.10000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2161f200dfdccbc40b6cf70a4972499e, type: 2}
+  - {fileID: 2100000, guid: c5960e49355a8fd4c9d4d7ed38291cef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

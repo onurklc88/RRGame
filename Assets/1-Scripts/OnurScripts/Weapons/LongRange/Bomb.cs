@@ -53,16 +53,17 @@ public class Bomb : ThrowableWeapon
 
         for (int i = 0; i < numOfDecals; i++)
         {
-            var decal = ObjectPool.GetPooledObject(2);
+            int randDecal = Random.Range(3, 7);
+            var decal = ObjectPool.GetPooledObject(randDecal);
             float spreadRadius = Random.Range(minRadius, maxRadius);
             var posOffset = spreadRadius * Random.insideUnitCircle;
 
             decal.SetActive(true);
 
             var newPos = transform.position + new Vector3(posOffset.x, 0, posOffset.y);
-            newPos.y = -6.787f;
+            newPos.y = -6.925f;
             decal.transform.position = newPos;
-            decal.transform.DOScale(Random.Range(2.0f, 5.0f), 0.5f);
+            decal.transform.DOScale(Random.Range(1.0f, 3.0f), 0.5f);
         }
     }
 }
