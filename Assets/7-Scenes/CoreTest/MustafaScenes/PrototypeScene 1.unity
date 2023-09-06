@@ -3901,7 +3901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd608f1c956b24498eaeef6cb9635d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _depthCamera: {fileID: 5883483806362291815}
+  _depthCamera: {fileID: 5883483806362291814}
+  _mainCamera: {fileID: 5883483807965159633}
   _character: {fileID: 9096235868023267303}
   _target: {fileID: 2555685344758294987}
   _targetLayer:
@@ -22050,14 +22051,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883483806501074064}
-  m_LocalRotation: {x: -0.0315463, y: 0.7064028, z: -0.7064028, w: -0.0315463}
-  m_LocalPosition: {x: -7.6999936, y: -8.199994, z: 16.900005}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 16.900005}
   m_LocalScale: {x: 15.625797, y: 15.625797, z: 11.925452}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5883483806362291835}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 273.263, z: 88.149}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!4 &5883483807965159632
 Transform:
   m_ObjectHideFlags: 0
