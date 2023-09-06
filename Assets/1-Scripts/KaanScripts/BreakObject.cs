@@ -23,6 +23,8 @@ public class BreakObject : MonoBehaviour
             _childPos.Add(_childRB[i].transform.position); 
             _childRot.Add(_childRB[i].transform.eulerAngles); 
         }
+
+        gameObject.SetActive(false);
     }
 
     

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ToolHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float _health;
-
+    private float _startHealth;
     public float Health
     {
         get
@@ -14,8 +14,12 @@ public class ToolHealth : MonoBehaviour, IDamageable
         }
         set
         {
-            _health += value;
+            _health = value;
         }
+    }
+    private void Start()
+    {
+        _startHealth = Health;
     }
     public void TakeDamage(float damageValue)
     {
@@ -24,13 +28,14 @@ public class ToolHealth : MonoBehaviour, IDamageable
 
         if( _health <= 0)
         {
+
             GetComponent<Collider>().enabled = false;
             transform.GetChild(0).gameObject.SetActive(false);
             transform.GetChild(1).gameObject.SetActive(true);
 
             transform.GetChild(1).GetComponent<BreakObject>().BreakIt();
 
-            Health = 1;
+            Health = _startHealth;
         }
         
     }
