@@ -28,7 +28,7 @@ public class BreakObject : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.K))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             BreakIt();
         }

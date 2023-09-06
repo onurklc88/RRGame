@@ -53,6 +53,7 @@ public class LightAttack : CharacterAttackState
        // Debug.Log("CurrentSwing: " + _currentSwings);
         */
         #endregion
+        character.Sword.SetActive(true);
         DoAttackBehaviour(character);
         EventLibrary.PlayAttackAnimation.Invoke(true);
     }
@@ -101,6 +102,7 @@ public class LightAttack : CharacterAttackState
     {
         yield return new WaitForSeconds(_animationDelay);
         EventLibrary.PlayAttackAnimation.Invoke(false);
+        character.Sword.SetActive(false);
         _collidedObject = null;
         ExitState(character);
 

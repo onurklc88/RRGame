@@ -60,7 +60,7 @@ public class Bomb : ThrowableWeapon
             decal.SetActive(true);
 
             var newPos = transform.position + new Vector3(posOffset.x, 0, posOffset.y);
-            newPos.y = 0;
+            newPos.y = -6.787f;
             decal.transform.position = newPos;
             decal.transform.DOScale(Random.Range(2.0f, 5.0f), 0.5f);
         }

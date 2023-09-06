@@ -19,6 +19,7 @@ public static class EventLibrary
     public static readonly GameEvent<bool> StartRunAnimation = new GameEvent<bool>();
     public static readonly GameEvent<bool> PlayDashAnimation = new GameEvent<bool>();
     public static readonly GameEvent<bool> PlayAttackAnimation = new GameEvent<bool>();
+    public static readonly GameEvent<bool> OnPlayerThrowBomb = new GameEvent<bool>();
 
     //VFX Events
     public static readonly GameEvent OnCharacterDash = new GameEvent();

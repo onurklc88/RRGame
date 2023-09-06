@@ -20,7 +20,7 @@ public class ToolHealth : MonoBehaviour, IDamageable
     public void TakeDamage(float damageValue)
     {
         _health -= damageValue;
-        //GetComponent<DamageFlash>().Flash();
+        GetComponent<DamageFlash>().Flash();
 
         if( _health <= 0)
         {

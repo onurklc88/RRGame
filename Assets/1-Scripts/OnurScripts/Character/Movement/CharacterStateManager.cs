@@ -19,6 +19,7 @@ public class CharacterStateManager : MonoBehaviour
     public Vector3 PositionToLookAt => _positionToLookAt;
     public GameObject ColorTube => _colorTube;
     public GameObject Sword => _sword;
+    public GameObject ColorBottle => _colorBottle;
     public CinemachineImpulseSource ImpulseSource => _impulseSource;
     #endregion
     [HideInInspector] public CharacterController CharacterController;
@@ -29,6 +30,8 @@ public class CharacterStateManager : MonoBehaviour
     [SerializeField] private GameObject _colorTube;
     [SerializeField] private CinemachineImpulseSource _impulseSource;
     [SerializeField] private GameObject _sword;
+    [SerializeField] private GameObject _colorBottle;
+    //Revize edilecek
     #region Depency Injections
     [Inject]
     MouseTarget _mouseTarget;

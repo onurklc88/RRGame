@@ -615,6 +615,18 @@ MonoBehaviour:
   height: 0.8
   speed: 5
   velocityLerpCoef: 4
+--- !u!114 &400296208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1107270203324439178, guid: 539d10564dca6bd4d9a2a1f2d34cebfd,
+    type: 3}
+  m_PrefabInstance: {fileID: 1197328952}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &432357568
 GameObject:
   m_ObjectHideFlags: 3
@@ -773,7 +785,7 @@ Transform:
   - {fileID: 1231773221}
   - {fileID: 227848848}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &526604161
 GameObject:
@@ -850,7 +862,7 @@ PrefabInstance:
     - target: {fileID: 1015854787567311264, guid: b56052771b23f0e40815242c120f3fbd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1015854787567311264, guid: b56052771b23f0e40815242c120f3fbd,
         type: 3}
@@ -2109,7 +2121,7 @@ PrefabInstance:
     - target: {fileID: 1107270204544131431, guid: 539d10564dca6bd4d9a2a1f2d34cebfd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1107270204544131431, guid: 539d10564dca6bd4d9a2a1f2d34cebfd,
         type: 3}
@@ -3097,7 +3109,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1458197452
 GameObject:
@@ -3543,7 +3555,7 @@ MonoBehaviour:
   - {fileID: 3958808994579753586}
   - {fileID: 227738591315687043}
   - {fileID: 7716885795309058250}
-  _postFxVolume: {fileID: 0}
+  _postFxVolume: {fileID: 400296208}
 --- !u!1 &1637091352
 GameObject:
   m_ObjectHideFlags: 0
@@ -4410,6 +4422,7 @@ MonoBehaviour:
   _colorTube: {fileID: 0}
   _impulseSource: {fileID: 0}
   _sword: {fileID: 0}
+  _colorBottle: {fileID: 0}
 --- !u!114 &1808218071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19476,7 +19489,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.405089, y: 0, z: -0.46819866}
+  velocity: {x: -0.3973759, y: 0, z: -0.9084628}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -19738,6 +19751,7 @@ MonoBehaviour:
   _colorTube: {fileID: 3615889879359554565}
   _impulseSource: {fileID: 0}
   _sword: {fileID: 0}
+  _colorBottle: {fileID: 0}
 --- !u!143 &8791236692560099169
 CharacterController:
   m_ObjectHideFlags: 0

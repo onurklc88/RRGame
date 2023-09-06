@@ -20,6 +20,7 @@ public class CharacterAnimation : MonoBehaviour
         EventLibrary.StartRunAnimation.AddListener(PlayRunAnimation);
         EventLibrary.PlayDashAnimation.AddListener(PlaySlideAnimation);
         EventLibrary.PlayAttackAnimation.AddListener(PlayAttackAnimation);
+        EventLibrary.OnPlayerThrowBomb.AddListener(PlayThrowBombAnimation);
         
        
     }
@@ -29,6 +30,7 @@ public class CharacterAnimation : MonoBehaviour
         EventLibrary.StartRunAnimation.RemoveListener(PlayRunAnimation);
         EventLibrary.PlayDashAnimation.RemoveListener(PlaySlideAnimation);
         EventLibrary.PlayAttackAnimation.RemoveListener(PlayAttackAnimation);
+        EventLibrary.OnPlayerThrowBomb.RemoveListener(PlayThrowBombAnimation);
     }
     private void Awake()
     {
@@ -77,6 +79,15 @@ public class CharacterAnimation : MonoBehaviour
     private void PlayAttackAnimation(bool tempValue)
     {
         _characterAnimator.SetBool("IsAttacking", tempValue);
+    }
+
+    private void PlayThrowBombAnimation(bool tempValue)
+    {
+      
+       
+            _characterAnimator.SetBool("IsThrowStart", tempValue);
+       
+         
     }
 
 

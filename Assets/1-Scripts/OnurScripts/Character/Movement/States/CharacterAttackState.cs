@@ -13,7 +13,6 @@ public class CharacterAttackState : CharacterBaseState
     #region StateProperties
     public override void EnterState(CharacterStateManager character)
     {
-        Debug.Log("A");
         _spawnposition = character.transform.position + character.transform.forward;
     }
   

@@ -43,7 +43,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             _currentHealth -= damageValue;
             _creature.PlayerCharacter = _character;
            _creature.SwitchState(_enemyStateFactory.Damage);
-            Debug.Log("B");
+           
             /*
              if (!_isDecalSet)
                  SetSplashDecal();

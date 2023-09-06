@@ -20,8 +20,7 @@ public class CreatureDamageState : IState
         yield return new WaitForSeconds(1f);
         if (creature.CurrentCreatureState != creature.EnemyStateFactory.Death)
         {
-            Debug.Log("girdi");
-            creature.SwitchState(creature.EnemyStateFactory.Chase);
+           creature.SwitchState(creature.EnemyStateFactory.Chase);
         }
           
     }

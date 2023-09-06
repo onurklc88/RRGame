@@ -14168,6 +14168,7 @@ MonoBehaviour:
     type: 2}
   _colorTube: {fileID: 0}
   _impulseSource: {fileID: 0}
+  _sword: {fileID: 0}
 --- !u!114 &1808218071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31048,7 +31049,7 @@ MonoBehaviour:
   minGrowCoef: 4.5
   maxGrowCoef: 6.5
   newLegCooldown: 0.3
-  velocity: {x: -0.29517582, y: 0, z: 0.20027004}
+  velocity: {x: -0.9594272, y: 0, z: -0.18156666}
 --- !u!1 &8675915458348068284
 GameObject:
   m_ObjectHideFlags: 0
@@ -31309,6 +31310,7 @@ MonoBehaviour:
     type: 2}
   _colorTube: {fileID: 0}
   _impulseSource: {fileID: 0}
+  _sword: {fileID: 0}
 --- !u!143 &8791236692560099169
 CharacterController:
   m_ObjectHideFlags: 0

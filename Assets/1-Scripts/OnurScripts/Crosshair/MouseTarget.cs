@@ -19,11 +19,12 @@ public class MouseTarget : MonoBehaviour
     private void Awake()
     {
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
         _layerMask = (1 << _groundLayer);
     }
     private void Update()
     {
-        _target.transform.position = GetPos();
+        CursorMovement();
     }
 
 
@@ -38,12 +39,19 @@ public class MouseTarget : MonoBehaviour
         return hitPositionIngoredHeight;
     }
 
-    private Vector3 GetPos()
+    private Vector3 GetCursorPosition()
     {
         var ray = _depthCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _targetLayer)) return Vector3.zero;
         var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z);
         return hitPositionIngoredHeight;
+    }
+
+    private void CursorMovement()
+    {
+        _target.transform.position = GetCursorPosition();
+        //_target.transform.Rotate(new Vector3(0f, _character.transform.forward.z, 0f));
+    
     }
 
     private void OnDrawGizmos()
