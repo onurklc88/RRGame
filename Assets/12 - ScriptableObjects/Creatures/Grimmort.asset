@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Grimmort
   m_EditorClassIdentifier: 
   WalkSpeed: 0
-  AgressionRange: 20
+  AgressionRange: 15
   AttackTime: 1
   AttackDistance: 4
   LightAttackDamage: 0
   HeavyAttackDamage: 0
-  EnemyHealth: 2
+  EnemyHealth: 3

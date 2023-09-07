@@ -21,7 +21,7 @@ public class MouseTarget : MonoBehaviour
     private void Awake()
     {
         Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.lockState = CursorLockMode.Confined;
         _layerMask = (1 << _groundLayer);
     }
     private void Update()
