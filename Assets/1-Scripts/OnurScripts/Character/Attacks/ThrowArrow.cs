@@ -7,8 +7,9 @@ public class ThrowArrow : CharacterAttackState
 {
     public override void EnterState(CharacterStateManager character)
     {
-        character.ColorTube.SetActive(true);
-        character.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), 1f);
+      
+        character.CharacterContainer.ColorTube.SetActive(true);
+        character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), 1f);
     }
     public override void UpdateState(CharacterStateManager character)
     {
@@ -30,7 +31,7 @@ public class ThrowArrow : CharacterAttackState
 
     public override void ExitState(CharacterStateManager character)
     {
-        character.ColorTube.SetActive(false);
+        character.CharacterContainer.ColorTube.SetActive(false);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
 
@@ -40,7 +41,7 @@ public class ThrowArrow : CharacterAttackState
         while (Time.time < startTime + 0.25)
         {
             float targetValue = Mathf.Lerp(0f, 100.0f, 1f * 4);
-            character.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), targetValue);
+            character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), targetValue);
             yield return null;
         }
         ExitState(character);

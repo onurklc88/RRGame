@@ -17,21 +17,16 @@ public class CharacterStateManager : MonoBehaviour
     public Vector3 CurrentMove => _currentMovement;
     public WeaponHandler WeaponHandler => _weaponHandler;
     public Vector3 PositionToLookAt => _positionToLookAt;
-    public GameObject ColorTube => _colorTube;
-    public GameObject Sword => _sword;
-    public GameObject ColorBottle => _colorBottle;
+    public CharacterContainer CharacterContainer => _characterContainer;
     public CinemachineImpulseSource ImpulseSource => _impulseSource;
     #endregion
     [HideInInspector] public CharacterController CharacterController;
-    [HideInInspector] public bool IsMovementPressed;
-    [HideInInspector] public bool IsSlidePressed = false;
+    public bool IsMovementPressed { get; set; }
+    public bool IsSlidePressed { get; set; }
     [SerializeField] private CharacterProperties _characterProperties;
-    //Revize Edilecek
-    [SerializeField] private GameObject _colorTube;
+    private CharacterContainer _characterContainer;
     [SerializeField] private CinemachineImpulseSource _impulseSource;
-    [SerializeField] private GameObject _sword;
-    [SerializeField] private GameObject _colorBottle;
-    //Revize edilecek
+  
     #region Depency Injections
     [Inject]
     MouseTarget _mouseTarget;
@@ -64,6 +59,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void Awake()
     {
+        _characterContainer = GetComponent<CharacterContainer>();
         CharacterController = GetComponent<CharacterController>();
         CharacterStateFactory.CharacterAttackState = null;
         ReadInputs();

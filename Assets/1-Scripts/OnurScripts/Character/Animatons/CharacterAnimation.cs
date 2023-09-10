@@ -6,6 +6,7 @@ using DG.Tweening;
 
 public class CharacterAnimation : MonoBehaviour
 {
+  
     private PlayerInput _playerInput;
     private Animator _characterAnimator;
     private float _velocity = 0f;
@@ -59,8 +60,8 @@ public class CharacterAnimation : MonoBehaviour
     {
         if (isMovementStart)
         {
-            _lerpA = 0;
-            _lerpB = 1;
+           _lerpA = 0;
+           _lerpB = 1;
         }
         else
         {

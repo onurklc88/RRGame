@@ -29,12 +29,10 @@ public class CreatureWalkState : IState
 
     private void Patrol(Creature creature)
     {
-
-        
-        if (((int)creature.transform.position.x) != ((int)creature.Waypoints[creature.CurrentWaypointIndex].x))
-        {
+       if (((int)creature.transform.position.x) != ((int)creature.Waypoints[creature.CurrentWaypointIndex].x))
+       {
            creature.NavMeshAgent.SetDestination(creature.Waypoints[creature.CurrentWaypointIndex]);
-        }
+       }
         else
         {
             creature.CreatureAnimationController.PlayBlendAnimations(false);
@@ -45,5 +43,4 @@ public class CreatureWalkState : IState
 
        
     }
-   
 }

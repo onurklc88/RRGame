@@ -16,14 +16,7 @@ public class DamageFlash : MonoBehaviour
         _flashMat = GetComponentInChildren<Renderer>().materials[^1];
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            StartCoroutine(FlashRoutine(0.1f));
-        }   
-    }
-
+   
     public void Flash()
     {
         StartCoroutine(FlashRoutine(0.1f));

@@ -5,6 +5,7 @@ using UnityEngine.Animations;
 
 public class CreatureAnimationController : MonoBehaviour
 {
+    public bool AlreadyWalked { get; set; }
    [SerializeField] private Animator _creatureAnimation;
    private int _lerpA;
    private int _lerpB;
@@ -23,11 +24,13 @@ public class CreatureAnimationController : MonoBehaviour
         {
             _lerpA = 0;
             _lerpB = 1;
+            AlreadyWalked = true;
         }
         else
         {
             _lerpA = 1;
             _lerpB = 0;
+            AlreadyWalked = false;
         }
         StartCoroutine(HandleAnimatonTreshold(_lerpA, _lerpB));
     }

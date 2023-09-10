@@ -5,10 +5,12 @@ using Zenject;
 
 public class DepencyInstaller : MonoInstaller
 {
+    [SerializeField] private CharacterStateManager _character;
     [SerializeField] private MouseTarget _mouseTarget;
     [SerializeField] private CharacterCollisions _characterCollisions;
     [SerializeField] private EnemyStateFactory _enemyStateFactory;
     [SerializeField] private WeaponHandler _weaponHandler;
+   
     public override void InstallBindings()
     {
         Container.Bind<MouseTarget>().FromComponentInHierarchy(_mouseTarget).AsSingle();
@@ -16,6 +18,8 @@ public class DepencyInstaller : MonoInstaller
         Container.Bind<EnemyStateFactory>().AsSingle();
         Container.Bind<CharacterStateFactory>().AsSingle();
         Container.Bind<WeaponHandler>().FromComponentInHierarchy(_weaponHandler).AsSingle();
+        //Container.Bind<GameObject>().FromComponentInHierarchy(_character).AsSingle();
+       
         Container.Bind<Weapons>().AsSingle();
     }
 }
