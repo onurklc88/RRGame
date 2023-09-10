@@ -2,10 +2,12 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class EconomyManager : MonoBehaviour
 {
     public static EconomyManager instance;
+
+    [SerializeField] private Text MoneyText; //Temporary
 
     private int _money;
 
@@ -21,6 +23,7 @@ public class EconomyManager : MonoBehaviour
         set
         {
             _money = value;
+            MoneyText.text = _money.ToString();
             //PlayerPrefs.SetInt("Money", money);
         }
     }
