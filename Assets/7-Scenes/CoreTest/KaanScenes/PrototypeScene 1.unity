@@ -4427,6 +4427,24 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1595217618, guid: 7df13de1b94f5e645a406d0fe77f32f7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102589964, guid: 7df13de1b94f5e645a406d0fe77f32f7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 769209538936125690, guid: 7df13de1b94f5e645a406d0fe77f32f7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 769209539444003876, guid: 7df13de1b94f5e645a406d0fe77f32f7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2608505942893573152, guid: 7df13de1b94f5e645a406d0fe77f32f7,
         type: 3}
       propertyPath: m_Name
@@ -4486,6 +4504,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536992226563791351, guid: 7df13de1b94f5e645a406d0fe77f32f7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536992227129619753, guid: 7df13de1b94f5e645a406d0fe77f32f7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7df13de1b94f5e645a406d0fe77f32f7, type: 3}
@@ -17887,7 +17915,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &3741504594568835038
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -28703,7 +28731,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyProperties: {fileID: 11400000, guid: 584185d653a723e42a89728bec1f228d, type: 2}
-  _character: {fileID: 0}
+  _character: {fileID: 9096235868023267303}
 --- !u!114 &6430753360452164765
 MonoBehaviour:
   m_ObjectHideFlags: 0

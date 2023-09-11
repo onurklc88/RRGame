@@ -15,6 +15,7 @@ public class CharacterClimbState : CharacterBaseState
 
     public override void EnterState(CharacterStateManager character)
     {
+        character.transform.GetChild(0).GetComponent<Animator>().SetBool("IsClimb", true);
         _ladder = character.GetComponent<CharacterCollisions>().TemporaryObject.transform.parent.GetComponent<Ladder>();
         _openUpdate = false;
 
@@ -31,21 +32,29 @@ public class CharacterClimbState : CharacterBaseState
         if (Input.GetKey(KeyCode.W))
         {
             character.transform.Translate(Vector3.up * 6 * Time.deltaTime);
+            character.transform.GetChild(0).GetComponent<Animator>().SetFloat("ClimbFloat", 1);
         }
         else if (Input.GetKey(KeyCode.S))
         {
             character.transform.Translate(Vector3.up * -6 * Time.deltaTime);
+            character.transform.GetChild(0).GetComponent<Animator>().SetFloat("ClimbFloat", 1);
+        }
+        else
+        {
+            character.transform.GetChild(0).GetComponent<Animator>().SetFloat("ClimbFloat", 0);
+
         }
 
         if (character.transform.position.y > _ladder.UpExitLimit.position.y)
             UpExit(character);
-        else if(character.transform.position.y < _ladder.DownExitLimit.position.y)
+        else if (character.transform.position.y < _ladder.DownExitLimit.position.y)
             DownExit(character);
 
     }
     public override void ExitState(CharacterStateManager character)
     {
         Debug.Log("Quit climb state");
+        character.transform.GetChild(0).GetComponent<Animator>().SetBool("IsClimb", false);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
 
     }
@@ -67,9 +76,11 @@ public class CharacterClimbState : CharacterBaseState
 
     private void UpExit(CharacterStateManager character)
     {
-        character.transform.DOMove(_ladder.ExitPointUp.position, .2f);
+        //character.transform.DOMove(_ladder.ExitPointUp.position, .2f);
+        character.transform.GetChild(0).GetComponent<Animator>().SetTrigger("ClimbEnd");
+        //character.transform.GetChild(0).GetComponent<Animator>().SetBool("IsClimb",false);
+        DOVirtual.DelayedCall(2.1f, () => { ExitState(character); });
 
-        ExitState(character);
     }
 
     private void DownExit(CharacterStateManager character)
