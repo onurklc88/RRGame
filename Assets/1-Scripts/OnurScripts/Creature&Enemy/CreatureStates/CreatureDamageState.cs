@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class CreatureDamageState : IState
 {
+
     public void SetupState(Creature creature)
     {
       creature.CreatureAnimationController.PlayCreatureAnimation("Damage", true);

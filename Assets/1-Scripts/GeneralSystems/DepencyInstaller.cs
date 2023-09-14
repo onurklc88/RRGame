@@ -18,7 +18,7 @@ public class DepencyInstaller : MonoInstaller
         Container.Bind<EnemyStateFactory>().AsSingle();
         Container.Bind<CharacterStateFactory>().AsSingle();
         Container.Bind<WeaponHandler>().FromComponentInHierarchy(_weaponHandler).AsSingle();
-        //Container.Bind<GameObject>().FromComponentInHierarchy(_character).AsSingle();
+        Container.Bind<CharacterStateManager>().FromComponentInHierarchy(_character).AsSingle();
        
         Container.Bind<Weapons>().AsSingle();
     }

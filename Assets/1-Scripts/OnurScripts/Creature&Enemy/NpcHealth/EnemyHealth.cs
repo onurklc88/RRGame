@@ -7,7 +7,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 {
    // public static event Action OnEnemyDie;
     [SerializeField] private EnemyProperties _enemyProperties;
-    [SerializeField] private GameObject _character;
+    //[SerializeField] private GameObject _character;
     private float _currentHealth;
     private bool _isDecalSet;
    
@@ -16,7 +16,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private Creature _creature;
     [Inject]
     EnemyStateFactory _enemyStateFactory;
-
+    [Inject]
+    CharacterStateManager _character;
     private void Awake()
     {
         _currentHealth = _enemyProperties.EnemyHealth;
@@ -41,7 +42,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             
             _currentHealth -= damageValue;
-            _creature.PlayerCharacter = _character;
+            _creature.PlayerCharacter = _character.transform.gameObject;
            _creature.SwitchState(_enemyStateFactory.Damage);
            
             /*
