@@ -1,24 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class ExperiencePoint : MonoBehaviour
 {
-    private Transform _player;
-    [SerializeField] private float _speed;
+    public GameObject _character;
 
+
+    [SerializeField] private float _speed;
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _character = GameObject.Find("Character");
     }
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position,_player.position, Time.deltaTime * _speed);  
+        transform.position = Vector3.MoveTowards(transform.position, _character.transform.position, Time.deltaTime * _speed);
 
-        if(Vector3.Distance(transform.position, _player.position) < .5f)
+        if (Vector3.Distance(transform.position, _character.transform.position) < .5f)
         {
-            XPFunction();  
+            XPFunction();
         }
     }
 
@@ -26,7 +28,7 @@ public class ExperiencePoint : MonoBehaviour
     {
         Debug.Log("xp alindi");
         //xp alinca neler olcagi
-        EconomyManager.instance.Money++;
-        Destroy(gameObject);
+        EconomyManager.instance.Money+=10;
+        EventLibrary.ResetPooledObject?.Invoke(gameObject);
     }
 }
