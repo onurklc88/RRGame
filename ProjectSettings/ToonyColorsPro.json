@@ -1,16 +1,18 @@
 {
-    "AutoNames": true,
+    "AutoNames": false,
     "SubFolders": true,
     "OverwriteConfig": false,
     "LoadAllShaders": false,
-    "CustomOutputPath": "/JMO Assets/Toony Colors Pro/Shaders Generated/",
+    "CustomOutputPath": "4-Materials/Mob",
     "LastImplementationExportImportPath": "E:/Projects/RRGame/Assets",
     "OpenedFoldouts": [
-        "SURFACE",
         "SHADER STATES",
         "THIRD PARTY PLUGINS",
         "OPTIONS",
-        "STYLIZATION"
+        "STYLIZATION",
+        "SPECIAL EFFECTS",
+        "TRANSPARENCY/BLENDING",
+        "LIGHTING"
     ],
     "UseCustomFont": true,
     "CustomFont": {
