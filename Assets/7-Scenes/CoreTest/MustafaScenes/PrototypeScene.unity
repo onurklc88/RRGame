@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2042286, g: 0.036994457, b: 0.11615913, a: 1}
+  m_IndirectSpecularColor: {r: 0.20422967, g: 0.036994904, b: 0.11615913, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1146,7 +1146,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyProperties: {fileID: 11400000, guid: 584185d653a723e42a89728bec1f228d, type: 2}
-  _character: {fileID: 9096235868023267303}
 --- !u!114 &451322812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4460,6 +4459,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 585786839, guid: 7df13de1b94f5e645a406d0fe77f32f7, type: 3}
+      propertyPath: m_RootOrder
+      value: 28
+      objectReference: {fileID: 0}
     - target: {fileID: 687962408, guid: 7df13de1b94f5e645a406d0fe77f32f7, type: 3}
       propertyPath: m_NavMeshLayer
       value: 1
@@ -24198,7 +24201,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyProperties: {fileID: 11400000, guid: 584185d653a723e42a89728bec1f228d, type: 2}
-  _character: {fileID: 0}
 --- !u!114 &6430753360452164765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27268,7 +27270,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 92fc3cab0a1f1dd42bdd46a803eba9d3, type: 2}
+  - {fileID: 2100000, guid: 3bc539086086c464da400fe215a6518b, type: 2}
   - {fileID: 2100000, guid: d40f141e8f52aee44a7beb370de5ad0a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

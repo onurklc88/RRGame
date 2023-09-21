@@ -23,6 +23,8 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 		[TCP2ColorNoAlpha] [HDR] _Emission ("Emission Color", Color) = (0,0,0,1)
 		_DamageTexture("Damage Texture", 2D) = "white" {}
 		_PulseSpeed("Pulse Speed", Range(0,10)) = 0
+		_MinPulseEmission("Min Emission", Range(0, 1)) = 0
+		_MaxPulseEmission("Max Emission", Range(0.1, 1)) = 1
 		[TCP2Separator]
 		
 		[TCP2HeaderHelp(Vertex Displacement)]
@@ -82,7 +84,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-
+			#include "SimpleNoise.hlsl"
 			// Uniforms
 
 			// Shader Properties
@@ -105,6 +107,8 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			half4 _Emission;
 			float4 _DamageTexture_ST;
 			float _PulseSpeed;
+			float _MinPulseEmission;
+			float _MaxPulseEmission;
 			float _RampThreshold;
 			float _RampSmoothing;
 			fixed4 _SColor;
@@ -257,6 +261,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				float __cutoff = ( _Cutoff );
 				float __ambientIntensity = ( 1.0 );
 				float3 __emission = ( _Emission.rgb );
+				float4 __damageSample = ( TCP2_TEX2D_SAMPLE(_DamageTexture, _DamageTexture, input.pack2.xy) );
 				float __rampThreshold = ( _RampThreshold );
 				float __rampSmoothing = ( _RampSmoothing );
 				float3 __shadowColor = ( _SColor.rgb );
@@ -274,7 +279,6 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				half3 albedo = __albedo.rgb;
 				half alpha = __alpha;
 
-				half3 emission = half3(0,0,0);
 				
 				//Dissolve
 				#if defined(TCP2_DISSOLVE)
@@ -288,7 +292,17 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				clip(alpha - cutoffValue);
 				
 				albedo *= __mainColor.rgb;
-
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				
+				float pulseValue = sin(_Time.y * _PulseSpeed);
+				float remappedPulseValue = Unity_Remap_float(pulseValue, float2(-1, 1), float2(_MinPulseEmission, _MaxPulseEmission));
+				half3 emission = (__emission * remappedPulseValue * __damageSample.a);
+				float noiseVal = Unity_SimpleNoise_float(input.pack2.xy, 1.0f);
+				
+				
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 				// main light: direction, color, distanceAttenuation, shadowAttenuation
 			#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
 				float4 shadowCoord = input.shadowCoord;
@@ -320,7 +334,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 
 				half3 indirectDiffuse = bakedGI;
 				indirectDiffuse *= occlusion * albedo * __ambientIntensity;
-				emission += __emission;
+				//emission += __emission;
 
 				half3 lightDir = mainLight.direction;
 				half3 lightColor = mainLight.color.rgb;
@@ -599,6 +613,3 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 	FallBack "Hidden/InternalErrorShader"
 	CustomEditor "ToonyColorsPro.ShaderGenerator.MaterialInspector_SG2"
 }
-
-/* TCP_DATA u config(ver:"2.9.6";unity:"2021.3.26f1";tmplt:"SG2_Template_URP";features:list["UNITY_5_4","UNITY_5_5","UNITY_5_6","UNITY_2017_1","UNITY_2018_1","UNITY_2018_2","UNITY_2018_3","UNITY_2019_1","UNITY_2019_2","UNITY_2019_3","UNITY_2019_4","UNITY_2020_1","UNITY_2021_1","UNITY_2021_2","VERTEX_DISPLACEMENT","VERTEX_DISP_SHADER_FEATURE","BUMP","BUMP_SCALE","BUMP_SHADER_FEATURE","DISSOLVE","DISSOLVE_CLIP","DISSOLVE_SHADER_FEATURE","ALPHA_TESTING","EMISSION","TEMPLATE_LWRP"];flags:list[];flags_extra:dict[];keywords:dict[RENDER_TYPE="TransparentCutout",RampTextureDrawer="[TCP2Gradient]",RampTextureLabel="Ramp Texture",SHADER_TARGET="3.0"];shaderProperties:list[];customTextures:list[ct(cimp:imp_mp_float(def:1;prop:"_PulseSpeed";md:"";gbv:False;custom:True;refs:"";pnlock:False;guid:"5047578a-030d-4b18-8cec-9f86c1810d58";op:Multiply;lbl:"PulseSpeed";gpu_inst:False;locked:False;impl_index:-1);exp:False;uv_exp:False;imp_lbl:"Float"),ct(cimp:imp_mp_texture(uto:True;tov:"";tov_lbl:"";gto:False;sbt:False;scr:False;scv:"";scv_lbl:"";gsc:False;roff:False;goff:False;sin_anm:False;sin_anmv:"";sin_anmv_lbl:"";gsin:False;notile:False;triplanar_local:False;def:"white";locked_uv:False;uv:0;cc:4;chan:"RGBA";mip:0;mipprop:False;ssuv_vert:False;ssuv_obj:False;uv_type:Texcoord;uv_chan:"XZ";tpln_scale:1;uv_shaderproperty:__NULL__;uv_cmp:__NULL__;sep_sampler:__NULL__;prop:"_DamageTexture";md:"";gbv:False;custom:True;refs:"";pnlock:False;guid:"b2f6f646-0ebd-4745-b9e6-57cf6d9d026c";op:Multiply;lbl:"DamageTexture";gpu_inst:False;locked:False;impl_index:-1);exp:False;uv_exp:False;imp_lbl:"Texture"),ct(cimp:imp_mp_color(def:RGBA(1, 1, 1, 1);hdr:True;cc:4;chan:"RGBA";prop:"_DamageColor";md:"";gbv:False;custom:True;refs:"";pnlock:False;guid:"b8d4149b-1ccb-417e-b6a1-84a4fa4a3bfb";op:Multiply;lbl:"DamageColor";gpu_inst:False;locked:False;impl_index:-1);exp:False;uv_exp:False;imp_lbl:"Color")];codeInjection:codeInjection(injectedFiles:list[];mark:False);matLayers:list[]) */
-/* TCP_HASH 3983326942a7157ac8ea2c43a71ef62e */
