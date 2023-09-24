@@ -11,7 +11,9 @@ public class LightAttack : CharacterAttackState
     private int _currentSwings;
     public bool CanCharacterSwing = true;
     private float _animationDelay = .3f;
-    
+
+    private float _lastDamage;
+
     public override void EnterState(CharacterStateManager character)
     {
         #region OldVersion
@@ -65,9 +67,12 @@ public class LightAttack : CharacterAttackState
         if (_collidedObject != null)
         {
             //buraya güncellenmiþ karakter strength giricez
+            _lastDamage = character.CharacterProperties.LightAttackDamage + SaveInfo.UpgradeSave.StrengthDamage;
+
             character.ImpulseSource.GenerateImpulse(0.07f);
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
-            _collidedObject.TakeDamage(character.CharacterProperties.LightAttackDamage);
+            _collidedObject.TakeDamage(_lastDamage);
+            Debug.Log(_lastDamage);
         }
        
       

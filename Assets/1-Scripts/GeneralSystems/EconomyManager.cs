@@ -43,11 +43,13 @@ public class EconomyManager : MonoBehaviour
 
     private void AddMoney()
     {
+        MoneyText.DOComplete();
+
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(MoneyText.DOFade(1, 1));
+        //seq.Append(MoneyText.DOFade(1, 1));
         seq.Append(MoneyText.transform.DOScale(.2f, .3f).SetRelative().SetLoops(2, LoopType.Yoyo));
-        seq.Append(MoneyText.DOFade(0, 1));
+        //seq.Append(MoneyText.DOFade(0, 1));
     }
 
 }

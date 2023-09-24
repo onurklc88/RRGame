@@ -27,7 +27,11 @@ public class HasteUpgrade : Upgrade
 
     public override bool Check()
     {
-        _isActive = CheckCost() && CheckLevel();
+        _isActive = false;
+        if (CheckLevel())
+        {
+            _isActive = CheckCost();
+        }
         return _isActive;
     }
 }
