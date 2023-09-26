@@ -35,7 +35,7 @@ public class Bomb : ThrowableWeapon
         for (int i = 0; i < inSightRange.Length; i++)
         {
             if (inSightRange[i].transform.GetComponent<IDamageable>() != null)
-                 inSightRange[i].transform.GetComponent<IDamageable>().TakeDamage(_damage); 
+                 inSightRange[i].transform.GetComponent<IDamageable>().TakeDamage(_damage, DamageType.Damage.Bomb); 
         }
        
 

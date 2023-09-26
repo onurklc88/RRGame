@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MeleeWeapons : ScriptableObject
 {
     public Image SwordImage;
+    public DamageType.Damage DamageType;
     public float Damage;
     public float Range;
     public float SwingTime;

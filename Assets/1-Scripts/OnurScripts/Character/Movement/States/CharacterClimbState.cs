@@ -76,10 +76,11 @@ public class CharacterClimbState : CharacterBaseState
 
     private void UpExit(CharacterStateManager character)
     {
-        //character.transform.DOMove(_ladder.ExitPointUp.position, .2f);
-        character.transform.GetChild(0).GetComponent<Animator>().SetTrigger("ClimbEnd");
-        //character.transform.GetChild(0).GetComponent<Animator>().SetBool("IsClimb",false);
-        DOVirtual.DelayedCall(2.1f, () => { ExitState(character); });
+        character.transform.DOMove(_ladder.ExitPointUp.position, .2f);
+        //character.transform.GetChild(0).GetComponent<Animator>().SetTrigger("ClimbEnd");
+        character.transform.GetChild(0).GetComponent<Animator>().SetBool("IsClimb",false);
+        //DOVirtual.DelayedCall(2.1f, () => { ExitState(character); });
+        ExitState(character);
 
     }
 

@@ -21,7 +21,7 @@ public class CharacterCollisions : MonoBehaviour
                 Debug.Log("SLope");
                 break;
             case 12:
-                Debug.Log("Market");
+                //Debug.Log("Market");
                 UpgradeManager.instance.Market.SetActive(true);
                 //Oyuncunun tuslari kitlenecek.
                 break;

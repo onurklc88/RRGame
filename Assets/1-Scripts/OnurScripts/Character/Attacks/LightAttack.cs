@@ -12,7 +12,7 @@ public class LightAttack : CharacterAttackState
     public bool CanCharacterSwing = true;
     private float _animationDelay = .3f;
 
-    private float _lastDamage;
+  
 
     public override void EnterState(CharacterStateManager character)
     {
@@ -66,13 +66,14 @@ public class LightAttack : CharacterAttackState
          AttackDash(character);
         if (_collidedObject != null)
         {
-            //buraya güncellenmiþ karakter strength giricez
-            _lastDamage = character.CharacterProperties.LightAttackDamage + SaveInfo.UpgradeSave.StrengthDamage;
+           
+            _totalDamage = SaveInfo.Player.SelectedWeapon.Damage + SaveInfo.UpgradeSave.StrengthDamage;
 
             character.ImpulseSource.GenerateImpulse(0.07f);
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
-            _collidedObject.TakeDamage(_lastDamage);
-            Debug.Log(_lastDamage);
+            _collidedObject.TakeDamage(_totalDamage, SaveInfo.Player.SelectedWeapon.DamageType);
+            Debug.Log("Total Damage: " + _totalDamage);
+            
         }
        
       

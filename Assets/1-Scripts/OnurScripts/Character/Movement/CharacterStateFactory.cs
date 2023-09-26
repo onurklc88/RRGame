@@ -18,6 +18,7 @@ public class CharacterStateFactory
 
     //variables
     public Vector3 KnockBackPosition;
+    public DamageType.Damage CurrentDamageType;
 
    
 }

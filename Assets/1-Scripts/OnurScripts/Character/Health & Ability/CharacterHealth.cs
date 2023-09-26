@@ -25,9 +25,10 @@ public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
    
 
 
-    public void TakeDamage(float damageValue)
+    public void TakeDamage(float damageValue, DamageType.Damage currentDamageType)
     {
         _damageFlash.Flash();
+        _characterStateFactory.CurrentDamageType = currentDamageType;
         EventLibrary.OnPlayerTakeDamage.Invoke(_characterStateFactory.CharacterKnockbackState);
     }
 }

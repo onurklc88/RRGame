@@ -21,7 +21,7 @@ public class ToolHealth : MonoBehaviour, IDamageable
     {
         _startHealth = Health;
     }
-    public void TakeDamage(float damageValue)
+    public void TakeDamage(float damageValue, DamageType.Damage damageType)
     {
         _health -= damageValue;
         GetComponent<DamageFlash>().Flash();

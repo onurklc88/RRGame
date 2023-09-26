@@ -25,9 +25,5 @@ public class GameManager : MonoBehaviour
         SaveInfo.Player.SelectedWeapon = currentWeapon;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

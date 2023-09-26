@@ -83,7 +83,7 @@ public class Arrow : ThrowableWeapon
         
         if(_collidedObject != null)
         {
-            _collidedObject.TakeDamage(_damage);
+            _collidedObject.TakeDamage(_damage, DamageType.Damage.Arrow);
             _collidedObject = null;
         }
             

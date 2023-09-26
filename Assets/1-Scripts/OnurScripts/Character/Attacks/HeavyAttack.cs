@@ -11,12 +11,13 @@ public class HeavyAttack : CharacterAttackState
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
         //Debug.Log("Greetings from Heavy Attack");
+        _totalDamage = SaveInfo.Player.SelectedWeapon.Damage + SaveInfo.UpgradeSave.StrengthDamage + 0.2f;
         CheckAttackRange(character);
         TrackCursorPosition(character);
         if (_collidedObject != null) 
         {
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
-            _collidedObject.TakeDamage(character.CharacterProperties.HeavyAttackDamage); 
+            _collidedObject.TakeDamage(_totalDamage, SaveInfo.Player.SelectedWeapon.DamageType); 
         }
         AttackDash(character);
         character.StartCoroutine(DelayState(character));

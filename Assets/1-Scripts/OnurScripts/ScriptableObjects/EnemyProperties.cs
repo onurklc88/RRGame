@@ -16,7 +16,7 @@ public class EnemyProperties : ScriptableObject
     public float AttackDistance;
     [Header("Damage Settings")]
 
-
+    public DamageType.Damage AttackType; 
     public int LightAttackDamage;
     public int HeavyAttackDamage;
     [Header("Health Settings")]

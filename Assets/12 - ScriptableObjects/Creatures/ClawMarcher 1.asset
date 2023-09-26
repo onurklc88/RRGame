@@ -15,6 +15,8 @@ MonoBehaviour:
   WalkSpeed: 0
   AgressionRange: 20
   AttackTime: 1
+  AttackDistance: 0
+  AttackType: 3
   LightAttackDamage: 0
   HeavyAttackDamage: 0
   EnemyHealth: 0

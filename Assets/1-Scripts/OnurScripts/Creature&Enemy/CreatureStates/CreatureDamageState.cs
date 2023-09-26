@@ -5,15 +5,11 @@ using DG.Tweening;
 
 public class CreatureDamageState : IState
 {
-
+    public DamageType.Damage CurrentDamageType;
     public void SetupState(Creature creature)
     {
       creature.CreatureAnimationController.PlayCreatureAnimation("Damage", true);
-        
-      creature.transform.DOJump(creature.transform.position + -creature.transform.forward * 7f, 1f, 1, 0.5f).OnComplete(() =>
-      {
-          creature.StartCoroutine(DelayState(creature));
-       });
+      HandleDamage(creature);
     }
 
     private IEnumerator DelayState(Creature creature)
@@ -24,6 +20,27 @@ public class CreatureDamageState : IState
            creature.SwitchState(creature.EnemyStateFactory.Chase);
         }
           
+    }
+
+    private void HandleDamage(Creature creature)
+    {
+        if(CurrentDamageType == DamageType.Damage.Bomb)
+        {
+            Debug.Log("bomb");
+            creature.transform.DOJump(creature.transform.position + -creature.transform.forward * 0.5f, 0.5f, 1, 0.5f).OnComplete(() =>
+            {
+                creature.StartCoroutine(DelayState(creature));
+            });
+        }
+        else
+        {
+           creature.transform.DOJump(creature.transform.position + -creature.transform.forward * 7f, 1f, 1, 0.5f).OnComplete(() =>
+            {
+                creature.StartCoroutine(DelayState(creature));
+            });
+        }
+
+       
     }
 
 

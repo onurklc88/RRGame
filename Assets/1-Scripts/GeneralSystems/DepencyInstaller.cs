@@ -10,6 +10,7 @@ public class DepencyInstaller : MonoInstaller
     [SerializeField] private CharacterCollisions _characterCollisions;
     [SerializeField] private EnemyStateFactory _enemyStateFactory;
     [SerializeField] private WeaponHandler _weaponHandler;
+    //[SerializeField] private GameObject _grimMort;
    
     public override void InstallBindings()
     {
@@ -19,7 +20,7 @@ public class DepencyInstaller : MonoInstaller
         Container.Bind<CharacterStateFactory>().AsSingle();
         Container.Bind<WeaponHandler>().FromComponentInHierarchy(_weaponHandler).AsSingle();
         Container.Bind<CharacterStateManager>().FromComponentInHierarchy(_character).AsSingle();
-       
         Container.Bind<Weapons>().AsSingle();
+        //Container.BindFactory<Creature, EnemyFactory>().FromComponentInNewPrefab(_grimMort);
     }
 }

@@ -26,44 +26,28 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     }
 
    
-    public void TakeDamage(float damageValue)
+    public void TakeDamage(float damageValue, DamageType.Damage currentDamage)
     {
         _damageFlash.Flash();
 
         if(_currentHealth <= 0.5)
         {
-            //  _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 1f);
-            // EventLibrary.ResetPooledObject.Invoke(_splashDecal);
+            
             _creature.SwitchState(_enemyStateFactory.Death);
-          
-            //Vfx Sound and Pool
+           //Vfx Sound and Pool
         }
         else
         {
             
             _currentHealth -= damageValue;
             _creature.PlayerCharacter = _character.transform.gameObject;
-           _creature.SwitchState(_enemyStateFactory.Damage);
+            _enemyStateFactory.Damage.CurrentDamageType = currentDamage;
+            _creature.SwitchState(_enemyStateFactory.Damage);
            
-            /*
-             if (!_isDecalSet)
-                 SetSplashDecal();
-            else if(_currentHealth < 2f)
-                _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 10f);
-            */
+           
         }
-       // Debug.Log("current health: " + _currentHealth);
+     
     }
 
-    private void SetSplashDecal()
-    {
-        _isDecalSet = true;
-        _splashDecal = ObjectPool.GetPooledObject(2);
-        _splashDecal.transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        _splashDecal.transform.SetParent(transform);
-        _splashDecal.transform.position = transform.position;
-        _splashDecal.SetActive(true);
-        _splashDecal.GetComponent<MeshRenderer>().materials[0].SetFloat("_PulseSpeed", 5f);
-    }
-
+   
 }

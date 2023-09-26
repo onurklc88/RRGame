@@ -27,7 +27,7 @@ public class CreatureMeleeAttack : IState
         if (inSightRange[0].transform.GetComponent<IHealable>() != null)
         {
             creature.CharacterStateFactory.KnockBackPosition = creature.transform.forward * 15f;
-            inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage);
+            inSightRange[0].transform.GetComponent<IDamageable>().TakeDamage(creature.EnemyProperties.LightAttackDamage, creature.EnemyProperties.AttackType);
         }
         creature.StartCoroutine(DelayState(creature));
     }

@@ -10,6 +10,7 @@ public class CharacterAttackState : CharacterBaseState
     Vector3 _spawnposition;
     Vector3 hitPosition;
     protected Vector3 _hitDirection;
+    protected float _totalDamage;
     #region StateProperties
     public override void EnterState(CharacterStateManager character)
     {
@@ -46,7 +47,7 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-        var direction = character.MouseTarget.GetMousePosition() - character.transform.position;
+        var direction = (character.MouseTarget.GetMousePosition() - character.transform.position).normalized;
         direction.y = 0f;
         character.transform.forward = direction;
     }

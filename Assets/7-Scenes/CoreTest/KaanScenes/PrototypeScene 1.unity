@@ -657,7 +657,7 @@ MonoBehaviour:
     Health: 0
     SelectedWeapon: {fileID: 0}
   UpgradeSave:
-    StrengthDamage: 5
+    StrengthDamage: 0
     DexterityChargeSpeed: 1.5
     HasteRunSpeed: 10
     HasteDodgeDelay: 2
@@ -18211,7 +18211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &3741504594568835038
 CanvasRenderer:
   m_ObjectHideFlags: 0

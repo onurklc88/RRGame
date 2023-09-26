@@ -16,6 +16,7 @@ MonoBehaviour:
   AgressionRange: 15
   AttackTime: 1
   AttackDistance: 4
+  AttackType: 0
   LightAttackDamage: 0
   HeavyAttackDamage: 0
   EnemyHealth: 3

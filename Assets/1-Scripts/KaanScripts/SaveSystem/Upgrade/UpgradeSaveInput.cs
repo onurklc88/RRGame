@@ -17,7 +17,7 @@ public class UpgradeSaveInput : SaveSystem
     {
         //If play firts time, set these values
 
-        StrengthDamage = 5;
+        StrengthDamage = 0;
 
         DexterityChargeSpeed = 1.5f;
 

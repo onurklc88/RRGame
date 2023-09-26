@@ -94,7 +94,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnSlideMovement(InputAction.CallbackContext context)
     {
-        if (!_canCharacterSlide) return;
+        if (!_canCharacterSlide || _currentState == CharacterStateFactory.CharacterClimbState) return;
         _canCharacterSlide = false;
         IsSlidePressed = context.ReadValueAsButton();
         SwitchState(CharacterStateFactory.CharacterSlideState);
@@ -114,12 +114,12 @@ public class CharacterStateManager : MonoBehaviour
     }
     private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
-        if (CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterAttackState) return;
-       CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
+        if (CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterAttackState || _currentState == CharacterStateFactory.CharacterClimbState) return;
+      CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
     }
     private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
-       if (_currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.CharacterAttackState) return;
+       if (_currentState == CharacterStateFactory.CharacterSlideState || _currentState == CharacterStateFactory.CharacterAttackState || _currentState == CharacterStateFactory.CharacterClimbState) return;
 
        if (context.duration < 0.5f)
             CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack;
@@ -132,7 +132,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
     {
-       if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState != null) return;
+       if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterClimbState) return;
         
         EventLibrary.OnLongRangeAttack.Invoke(true);
         switch (WeaponHandler.HandedWeapon())
