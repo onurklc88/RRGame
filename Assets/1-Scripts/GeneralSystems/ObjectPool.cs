@@ -8,7 +8,7 @@ public class ObjectPool : MonoBehaviour
 {
     [Serializable]
     
-    public struct Pool
+    public class Pool
     {
         public string Name;
         public Queue<GameObject> PooledObjects;

@@ -26,5 +26,6 @@ public static class EventLibrary
 
     //Object Pool
     public static readonly GameEvent<GameObject> ResetPooledObject = new GameEvent<GameObject>();
+    public static readonly GameEvent<GameObject> ResetDecalObject = new GameEvent<GameObject>();
     
 }

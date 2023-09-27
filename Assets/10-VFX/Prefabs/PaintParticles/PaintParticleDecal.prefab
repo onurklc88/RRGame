@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 356614646244150970}
   - component: {fileID: 2614394784206966186}
   - component: {fileID: 5526715649648357867}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PaintParticleDecal
   m_TagString: Untagged
   m_Icon: {fileID: 0}

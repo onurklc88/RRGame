@@ -12,7 +12,8 @@
         "STYLIZATION",
         "SPECIAL EFFECTS",
         "TRANSPARENCY/BLENDING",
-        "LIGHTING"
+        "LIGHTING",
+        "SURFACE"
     ],
     "UseCustomFont": true,
     "CustomFont": {

@@ -20,11 +20,12 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 		[TCP2Separator]
 
 		[TCP2HeaderHelp(Emission)]
+		[Toggle(DAMAGE_PULSE)] _DamagePulse("Enable Damage Pulse", Float) = 0
 		[TCP2ColorNoAlpha] [HDR] _Emission ("Emission Color", Color) = (0,0,0,1)
 		_DamageTexture("Damage Texture", 2D) = "white" {}
 		_PulseSpeed("Pulse Speed", Range(0,10)) = 0
 		_MinPulseEmission("Min Emission", Range(0, 1)) = 0
-		_MaxPulseEmission("Max Emission", Range(0.1, 1)) = 1
+		_MaxPulseEmission("Max Emission", Range(0, 1)) = 0
 		[TCP2Separator]
 		
 		[TCP2HeaderHelp(Vertex Displacement)]
@@ -42,7 +43,8 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 		[TCP2HeaderHelp(Dissolve)]
 		[Toggle(TCP2_DISSOLVE)] _UseDissolve ("Enable Dissolve", Float) = 0
 		[NoScaleOffset] _DissolveMap ("Map", 2D) = "gray" {}
-		_DissolveValue ("Value", Range(0,1)) = 0.5
+		_DissolveAmount ("Amount", Range(0,1)) = 0.5
+		_DissolveWidth ("Width", Range(0, 0.2)) = 0.05
 		[TCP2Separator]
 		
 		[ToggleOff(_RECEIVE_SHADOWS_OFF)] _ReceiveShadowsOff("Receive Shadows", Float) = 1
@@ -101,7 +103,8 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			float _DisplacementStrength;
 			float _BumpScale;
 			float4 _BaseMap_ST;
-			float _DissolveValue;
+			float _DissolveAmount;
+			float _DissolveWidth;
 			float _Cutoff;
 			fixed4 _BaseColor;
 			half4 _Emission;
@@ -148,6 +151,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			#pragma multi_compile_fragment _ _SHADOWS_SOFT
 			#pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
 			#pragma multi_compile _ SHADOWS_SHADOWMASK
+			#pragma multi_compile _ TCP2_DISSOLVE DAMAGE_PULSE
 
 			// -------------------------------------
 
@@ -163,6 +167,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			#pragma shader_feature_local_vertex TCP2_VERTEX_DISPLACEMENT
 			#pragma shader_feature_local _NORMALMAP
 			#pragma shader_feature_local_fragment TCP2_DISSOLVE
+			#pragma shader_feature_local_fragment DAMAGE_PULSE
 
 			// vertex input
 			struct Attributes
@@ -203,6 +208,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 
 				// Texture Coordinates
 				output.pack2.xy.xy = input.texcoord0.xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
+				
 				// Shader Properties Sampling
 				float3 __vertexDisplacement = ( input.normal.xyz * TCP2_TEX2D_SAMPLE_LOD(_DisplacementTex, _DisplacementTex, output.pack2.xy * _DisplacementTex_ST.xy + _DisplacementTex_ST.zw, 0).rgb * _DisplacementStrength );
 
@@ -256,12 +262,12 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				float4 __albedo = ( TCP2_TEX2D_SAMPLE(_BaseMap, _BaseMap, input.pack2.xy).rgba );
 				float4 __mainColor = ( _BaseColor.rgba );
 				float __alpha = ( __albedo.a * __mainColor.a );
-				float __dissolveMap = ( TCP2_TEX2D_SAMPLE(_DissolveMap, _DissolveMap, input.pack2.xy).r );
-				float __dissolveValue = ( _DissolveValue );
+				float __dissolveValue = ( _DissolveAmount );
 				float __cutoff = ( _Cutoff );
 				float __ambientIntensity = ( 1.0 );
 				float3 __emission = ( _Emission.rgb );
-				float4 __damageSample = ( TCP2_TEX2D_SAMPLE(_DamageTexture, _DamageTexture, input.pack2.xy) );
+				float4 __damageSample = ( TCP2_TEX2D_SAMPLE(_DamageTexture, _DamageTexture, input.pack2.xy * _DamageTexture_ST.xy + _DamageTexture_ST.zw) );
+				float __dissolveMap = ( TCP2_TEX2D_SAMPLE(_DamageTexture, _DamageTexture, input.pack2.xy * _DamageTexture_ST.xy + _DamageTexture_ST.zw).a );
 				float __rampThreshold = ( _RampThreshold );
 				float __rampSmoothing = ( _RampSmoothing );
 				float3 __shadowColor = ( _SColor.rgb );
@@ -279,28 +285,29 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				half3 albedo = __albedo.rgb;
 				half alpha = __alpha;
 
-				
+				half3 emission = half3(0, 0, 0);
+
 				//Dissolve
-				#if defined(TCP2_DISSOLVE)
-				half dissolveMap = __dissolveMap;
-				half dissolveValue = __dissolveValue;
-				float dissValue = dissolveValue;
-				clip(dissolveMap - dissValue * 1.001);
-				#endif
-				// Alpha Testing
-				half cutoffValue = __cutoff;
-				clip(alpha - cutoffValue);
+#if defined(TCP2_DISSOLVE)
+					float noiseVal = Unity_SimpleNoise_float(input.pack2.xy, 35.0f);
+					half stepIn = _DissolveAmount + _DissolveWidth;
+					half stepOut = step(noiseVal, stepIn);
+					emission = stepOut * __emission;
+					alpha = noiseVal;
+					clip(alpha - _DissolveAmount * 1.001);
+#elif defined(DAMAGE_PULSE)
+#pragma region Damage_Pulse
+					float pulseValue = sin(_Time.y * _PulseSpeed);
+					float remappedPulseValue = Unity_Remap_float(pulseValue, float2(-1, 1), float2(_MinPulseEmission, _MaxPulseEmission));
+					emission = (__emission * remappedPulseValue * __damageSample.a);
+#pragma endregion Damage_Pulse
+#endif
+				//// Alpha Testing
+				//half cutoffValue = __cutoff;
+				//clip(alpha - cutoffValue);
 				
 				albedo *= __mainColor.rgb;
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				
-				
-				float pulseValue = sin(_Time.y * _PulseSpeed);
-				float remappedPulseValue = Unity_Remap_float(pulseValue, float2(-1, 1), float2(_MinPulseEmission, _MaxPulseEmission));
-				half3 emission = (__emission * remappedPulseValue * __damageSample.a);
-				float noiseVal = Unity_SimpleNoise_float(input.pack2.xy, 1.0f);
-				
-				
+
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				// main light: direction, color, distanceAttenuation, shadowAttenuation
@@ -509,7 +516,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 				float4 __mainColor = ( _BaseColor.rgba );
 				float __alpha = ( __albedo.a * __mainColor.a );
 				float __dissolveMap = ( TCP2_TEX2D_SAMPLE(_DissolveMap, _DissolveMap, input.pack0.xy).r );
-				float __dissolveValue = ( _DissolveValue );
+				float __dissolveValue = ( _DissolveAmount );
 				float __cutoff = ( _Cutoff );
 
 				half3 albedo = half3(1,1,1);
@@ -564,6 +571,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			//--------------------------------------
 			// Toony Colors Pro 2 keywords
 			#pragma shader_feature_local_fragment TCP2_DISSOLVE
+			#pragma shader_feature_local_fragment DAMAGE_PULSE
 			#pragma shader_feature_local_vertex TCP2_VERTEX_DISPLACEMENT
 
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -603,6 +611,7 @@ Shader "Toony Colors Pro 2/User/Shader_MobWPulseNDissolve"
 			//--------------------------------------
 			// Toony Colors Pro 2 keywords
 			#pragma shader_feature_local_fragment TCP2_DISSOLVE
+			#pragma shader_feature_local_fragment DAMAGE_PULSE
 			#pragma shader_feature_local_vertex TCP2_VERTEX_DISPLACEMENT
 
 			ENDHLSL

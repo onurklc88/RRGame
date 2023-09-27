@@ -68,10 +68,10 @@ public class Arrow : ThrowableWeapon
     //    }
     //}
 
-    protected override void OnTriggerEnter(Collider other)
+    protected override void OnCollisionEnter(Collision collision)
     {
-        if(other.transform.GetComponent<IDamageable>() != null)
-            _collidedObject = other.transform.GetComponent<IDamageable>();
+        if(collision.transform.GetComponent<IDamageable>() != null)
+            _collidedObject = collision.transform.GetComponent<IDamageable>();
         
            
 

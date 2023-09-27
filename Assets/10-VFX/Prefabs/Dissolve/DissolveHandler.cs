@@ -6,8 +6,7 @@ public class DissolveHandler : MonoBehaviour
 {
     private const float MaxDissolveAmount = 1;
     private const float DissolveSpeedMultiplier = 0.05f;
-    [SerializeField] private Material _dissolveMaterial;
-    private List<Material> _dissolveMaterials;
+    private List<Material> _materials;
     [SerializeField] [ColorUsage(true, true)] private Color _dissolveColor;
     [SerializeField] [Range(0.1f, 1)] private float _dissolveSpeed;
     [SerializeField] [Range(0.01f, 0.1f)] private float _dissolveRefreshRate;
@@ -19,17 +18,15 @@ public class DissolveHandler : MonoBehaviour
 
     private void Start()
     {
-        _dissolveMaterials = new();
+        _materials = new();
         _skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
         for (int i = 0; i < _skinnedMeshes.Length; i++)
         {
             var mesh = _skinnedMeshes[i];
-            _dissolveMaterials.Add(Instantiate(_dissolveMaterial));
+            _materials.Add(mesh.materials[0]);
 
-            var mat = _dissolveMaterials[i];
-            mat.SetTexture("_MainTexture", mesh.material.GetTexture("_BaseMap"));
-            mat.SetColor("_BaseColor", mesh.material.GetColor("_AlbedoColor"));
-            mat.SetColor("_DissolveColor", _dissolveColor);
+            var mat = _materials[i];
+            mat.SetColor("_Emission", _dissolveColor);
         }
 
     }
@@ -64,10 +61,9 @@ public class DissolveHandler : MonoBehaviour
         for (int i = 0; i < _skinnedMeshes.Length; i++)
         {
             // set color for debug
-            var mat = _dissolveMaterials[i];
+            var mat = _materials[i];
+            mat.EnableKeyword("TCP2_DISSOLVE");
             mat.SetColor("_DissolveColor", _dissolveColor);
-
-            _skinnedMeshes[i].material = _dissolveMaterials[i];
         }
 
         while (_dissolveAmount < MaxDissolveAmount)
@@ -76,7 +72,7 @@ public class DissolveHandler : MonoBehaviour
             _dissolveAmount += dissolveSpeed;
             for (int i = 0; i < _skinnedMeshes.Length; i++)
             {
-                _skinnedMeshes[i].material.SetFloat("_DissolveAmount", _dissolveAmount);
+                _materials[i].SetFloat("_DissolveAmount", _dissolveAmount);
             }
 
             yield return new WaitForSeconds(_dissolveRefreshRate);
@@ -88,7 +84,7 @@ public class DissolveHandler : MonoBehaviour
         for (int i = 0; i < _skinnedMeshes.Length; i++)
         {
             // set color for debug
-            var mat = _dissolveMaterials[i];
+            var mat = _materials[i];
             mat.SetColor("_DissolveColor", _dissolveColor);
         }
 
@@ -102,6 +98,14 @@ public class DissolveHandler : MonoBehaviour
             }
 
             yield return new WaitForSeconds(_dissolveRefreshRate);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        foreach (var mat in _materials)
+        {
+            Destroy(mat);
         }
     }
 }

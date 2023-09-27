@@ -49,21 +49,13 @@ public class MouseTarget : MonoBehaviour
         return hitPositionIngoredHeight;
     }
 
-    private Vector3 GetCharacterPosition()
-    {
-        var charScreenPos = _mainCamera.WorldToScreenPoint(_character.transform.position);
-        var ray = _depthCamera.ScreenPointToRay(charScreenPos);
-        if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _targetLayer)) return Vector3.zero;
-        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, hitInfo.point.y, hitInfo.point.z);
-        return hitPositionIngoredHeight;
-    }
-
     private void CursorMovement()
     {
-       _target.transform.position = GetMousePosition();
-       var charPos = GetCharacterPosition();
-       var lookAtVector = _target.transform.position - charPos;
-      //  _target.transform.LookAt(_target.transform.position + lookAtVector);
+        _target.transform.position = GetMousePosition();
+        var charPos = _character.transform.position;
+        charPos.y = _target.transform.position.y;
+        var lookAtVector = _target.transform.position - charPos;
+        _target.transform.LookAt(_target.transform.position + lookAtVector);
     }
 
     private void OnDrawGizmos()
