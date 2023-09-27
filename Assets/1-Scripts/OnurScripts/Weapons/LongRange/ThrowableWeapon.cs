@@ -25,6 +25,13 @@ public abstract class ThrowableWeapon : MonoBehaviour
         
     }
 
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
+    
+
 
 
 }

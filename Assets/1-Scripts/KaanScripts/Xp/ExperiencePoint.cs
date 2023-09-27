@@ -36,8 +36,6 @@ public class ExperiencePoint : MonoBehaviour
 
     private void XPFunction()
     {
-        Debug.Log("xp alindi");
-        //xp alinca neler olcagi
         EconomyManager.instance.Money+=10;
         EventLibrary.ResetPooledObject?.Invoke(gameObject);
     }

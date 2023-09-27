@@ -3,8 +3,13 @@ using DG.Tweening;
 
 public class ThrowBomb : CharacterAttackState
 {
-    private float _minJumpPower = 15f; 
-    private float _maxJumpPower = 20f; 
+    private float _distance;
+    float maxDistance = 10f;
+    private float _normalizedDistance;
+
+    // _distance'ý maksimum uzaklýkla normalleþtirin
+
+
 
     public override void EnterState(CharacterStateManager character)
     {
@@ -15,21 +20,22 @@ public class ThrowBomb : CharacterAttackState
     public override void UpdateState(CharacterStateManager character)
     {
         TrackCursorPosition(character);
+       _distance = Vector3.Distance(character.transform.position, character.MouseTarget.GetMousePosition());
+       _distance = Mathf.Clamp(_distance, 0f, 60f);
+
     }
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
         if (!character.WeaponHandler.IsChargeReady()) { ExitState(character); return; }
         GameObject bomb = ObjectPool.GetPooledObject(1);
-        //bomb.transform.position = character.transform.position + character.transform.forward;
         bomb.transform.position = character.CharacterContainer.ColorBottle.transform.position;
         character.CharacterContainer.ColorBottle.SetActive(false);
         bomb.SetActive(true);
-        Vector3 bombMovePosition = new Vector3(bomb.transform.position.x, character.transform.position.y - 5f, bomb.transform.position.z) + character.transform.forward * 15f;
-       
-      
-        float bombJumpPower = Mathf.Lerp(_minJumpPower, _maxJumpPower, character.transform.position.y / character.transform.position.y + 5f);
-
-        bomb.transform.DOJump(bombMovePosition, bombJumpPower, 1, 0.7f, false).SetEase(Ease.Linear).OnUpdate(() => bomb.transform.DORotate(new Vector3(180f, 0f, 0f), 0.5f));
+        Rigidbody bombRigidbody = bomb.transform.GetComponent<Rigidbody>();
+        bombRigidbody.isKinematic = false;
+        float bombJumpPower = Mathf.Lerp(4f, 9f, _distance / 100f);
+        bombRigidbody.AddForce((character.transform.forward + character.transform.up * 2.5f).normalized * bombJumpPower, ForceMode.Impulse);
+        
         EventLibrary.OnPlayerThrowBomb.Invoke(false);
         EventLibrary.OnWeaponChargeUpdated.Invoke(false);
         ExitState(character);
@@ -37,6 +43,7 @@ public class ThrowBomb : CharacterAttackState
 
     public override void ExitState(CharacterStateManager character)
     {
+        _distance = 0;
         character.CharacterContainer.ColorBottle.SetActive(false);
         EventLibrary.OnPlayerThrowBomb.Invoke(false);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);

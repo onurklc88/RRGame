@@ -7,7 +7,6 @@ public class ThrowArrow : CharacterAttackState
 {
     public override void EnterState(CharacterStateManager character)
     {
-      
         character.CharacterContainer.ColorTube.SetActive(true);
         character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), 1f);
     }

@@ -7,22 +7,28 @@ using DG.Tweening;
 public class Bomb : ThrowableWeapon
 {
    [SerializeField] private CinemachineImpulseSource _impulseSource;
-   
-    protected override void OnTriggerEnter(Collider other)
+   [SerializeField] private Rigidbody _rigidbody;
+  
+  
+
+    protected override void OnCollisionEnter(Collision collision)
     {
+       
         CheckExplosionArea();
-        WeaponAction();
-        if (other.gameObject.layer == 3)
-        {
+
+        if (collision.gameObject.layer == 3)
             DropDecalOnGround();
-        }
+
+        WeaponAction();
     }
+
 
 
     protected override void WeaponAction()
     {
         _impulseSource.GenerateImpulseWithForce(0.2f);
-        gameObject.SetActive(false);
+        _rigidbody.isKinematic = true;
+        EventLibrary.ResetPooledObject.Invoke(gameObject);
     }
 
     private void CheckExplosionArea()

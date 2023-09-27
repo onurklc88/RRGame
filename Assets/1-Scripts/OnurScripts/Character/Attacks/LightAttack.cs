@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
+
 
 public class LightAttack : CharacterAttackState
 {
@@ -72,8 +71,6 @@ public class LightAttack : CharacterAttackState
             character.ImpulseSource.GenerateImpulse(0.07f);
             EventLibrary.OnWeaponChargeUpdated.Invoke(true);
             _collidedObject.TakeDamage(_totalDamage, SaveInfo.Player.SelectedWeapon.DamageType);
-            Debug.Log("Total Damage: " + _totalDamage);
-            
         }
        
       

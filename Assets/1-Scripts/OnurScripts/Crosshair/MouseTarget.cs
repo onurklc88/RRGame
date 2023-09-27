@@ -28,16 +28,16 @@ public class MouseTarget : MonoBehaviour
     {
         CursorMovement();
     }
+   
+   
 
-  
-  
     public Vector3 GetMousePosition()
     {
         if (_depthCamera == null) return Vector3.zero;
         
         var ray = _depthCamera.ScreenPointToRay(Input.mousePosition);
         if (!Physics.Raycast(ray, out var hitInfo, float.MaxValue, _layerMask)) return Vector3.zero;
-        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, -2.158f, hitInfo.point.z);
+        var hitPositionIngoredHeight = new Vector3(hitInfo.point.x, _character.transform.position.y, hitInfo.point.z);
         return hitPositionIngoredHeight;
     }
 
@@ -60,9 +60,9 @@ public class MouseTarget : MonoBehaviour
 
     private void CursorMovement()
     {
-        _target.transform.position = GetMousePosition();
-        var charPos = GetCharacterPosition();
-        var lookAtVector = _target.transform.position - charPos;
+       _target.transform.position = GetMousePosition();
+       var charPos = GetCharacterPosition();
+       var lookAtVector = _target.transform.position - charPos;
       //  _target.transform.LookAt(_target.transform.position + lookAtVector);
     }
 

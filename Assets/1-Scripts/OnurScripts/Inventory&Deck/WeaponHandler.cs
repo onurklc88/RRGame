@@ -53,9 +53,11 @@ public class WeaponHandler : MonoBehaviour, IWeaponListener
        
         if (isCharged && CurrentChargeCount < _totalCharge)
             CurrentChargeCount++;
-        else if(CurrentChargeCount >= 0)
+        else if(CurrentChargeCount >= 0 && !isCharged)
             CurrentChargeCount--;
-     }
+
+       
+    }
 
     public ThrowableWeapon HandedWeapon()
     {
