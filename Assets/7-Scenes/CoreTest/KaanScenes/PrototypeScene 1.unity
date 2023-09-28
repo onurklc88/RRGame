@@ -1296,7 +1296,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656bbbf3e45bc944da87d9da2cd51fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dissolveMaterial: {fileID: 2100000, guid: 4211cbfb05e507045bb5bc6f018080c0, type: 2}
   _dissolveColor: {r: 56.630177, g: 45.370377, b: 0, a: 0.89411765}
   _dissolveSpeed: 0.2
   _dissolveRefreshRate: 0.01
@@ -18211,7 +18210,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &3741504594568835038
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29081,7 +29080,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656bbbf3e45bc944da87d9da2cd51fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dissolveMaterial: {fileID: 2100000, guid: 4211cbfb05e507045bb5bc6f018080c0, type: 2}
   _dissolveColor: {r: 56.630177, g: 45.370377, b: 0, a: 0.89411765}
   _dissolveSpeed: 0.2
   _dissolveRefreshRate: 0.01

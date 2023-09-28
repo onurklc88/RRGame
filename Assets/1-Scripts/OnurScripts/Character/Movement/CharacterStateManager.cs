@@ -75,6 +75,7 @@ public class CharacterStateManager : MonoBehaviour
         HandleRotation();
         HandleGravity();
         _currentState.UpdateState(this);
+       
     }
 
     #region Inputs and movements

@@ -5,7 +5,7 @@ using UnityEngine;
 public class CharacterCollisions : MonoBehaviour
 {
     [HideInInspector] public GameObject TemporaryObject;
-
+  
 
     private void OnTriggerEnter(Collider interactableObject)
     {
@@ -18,12 +18,14 @@ public class CharacterCollisions : MonoBehaviour
                 TemporaryObject = interactableObject.gameObject;
                 break;
             case 9:
-                Debug.Log("SLope");
+              
                 break;
             case 12:
-                //Debug.Log("Market");
+                Debug.Log("ASD");
+                //PanelOpened = true;
+                //_playerInput.Disable();
                 UpgradeManager.instance.Market.SetActive(true);
-                //Oyuncunun tuslari kitlenecek.
+             
                 break;
         }
 

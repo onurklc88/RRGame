@@ -7,6 +7,7 @@ public class CreatureChaseState : IState
 
     public void SetupState(Creature creature)
     {
+        
         if(!creature.CreatureAnimationController.AlreadyWalked)
             creature.CreatureAnimationController.PlayBlendAnimations(true);
      
@@ -28,8 +29,9 @@ public class CreatureChaseState : IState
         if (creature.CurrentCreatureState == creature.EnemyStateFactory.Death) return;
       
         float distanceBetweenPlayer = Vector3.Distance(creature.PlayerCharacter.transform.position, creature.transform.position);
+       
         RotateCreature(creature);
-        if (distanceBetweenPlayer < creature.EnemyProperties.AttackDistance)
+        if (distanceBetweenPlayer <= creature.EnemyProperties.AttackDistance)
         {
             creature.GetComponent<Animator>().speed = 1;
             creature.CreatureAnimationController.PlayBlendAnimations(false);

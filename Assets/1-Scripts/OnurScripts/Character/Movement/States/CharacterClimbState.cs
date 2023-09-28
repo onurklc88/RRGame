@@ -12,6 +12,7 @@ public class CharacterClimbState : CharacterBaseState
 
     private Ladder _ladder;
     private bool _openUpdate;
+   
 
     public override void EnterState(CharacterStateManager character)
     {

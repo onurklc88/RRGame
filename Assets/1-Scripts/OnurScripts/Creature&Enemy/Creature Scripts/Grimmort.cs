@@ -1,26 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Grimmort : Creature
 {
-   
 
-    private void Start()
+    private void Awake()
     {
         CreatureAttackType = EnemyStateFactory.MeleeAttack();
         LoadWayPoints();
         SetPlayerLayer();
-        SetCreatureProperties();
+        //SetCreatureProperties();
         CurrentCreatureState = EnemyStateFactory.Walk();
     }
+
+  
     private void Update()
     {
         ExecuteState();
     }
     protected override void SetCreatureProperties()
     {
-        //gameObject.GetComponent<SphereCollider>().radius = EnemyProperties.AgressionRange;
+        //DamageTween = transform.DOJump(transform.position + -transform.forward * 7f, 1f, 1, 0.5f);
     }
     protected override void ExecuteState()
     {
@@ -36,8 +38,8 @@ public class Grimmort : Creature
 
     public override void SwitchState(IState newState)
     {
-        newState.SetupState(this);
         CurrentCreatureState = newState;
+        newState.SetupState(this);
     }
 
    
@@ -45,5 +47,12 @@ public class Grimmort : Creature
     {
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, EnemyProperties.AgressionRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z), new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z) + -transform.forward * 5f);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        
     }
 }

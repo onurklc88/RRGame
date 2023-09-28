@@ -47,7 +47,7 @@ public class CharacterAttackState : CharacterBaseState
 
     protected void TrackCursorPosition(CharacterStateManager character)
     {
-        var direction = (character.MouseTarget.GetMousePosition() - character.transform.position).normalized;
+        var direction = character.MouseTarget.GetMousePosition() - character.transform.position;
         direction.y = 0f;
         character.transform.forward = direction;
     }

@@ -4,13 +4,14 @@ using Dreamteck.Splines;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
-using System;
+using DG.Tweening;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class Creature : MonoBehaviour
 {
     public IState CreatureAttackType { get; set; }
     public IState CurrentCreatureState { get; set; }
+    
     [HideInInspector] public int CurrentWaypointIndex = 0;
     [HideInInspector] public GameObject PlayerCharacter;
     [SerializeField] private NavMeshAgent _navMeshAgent;
