@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2042286, g: 0.036994457, b: 0.11615913, a: 1}
+  m_IndirectSpecularColor: {r: 0.20422967, g: 0.036994904, b: 0.11615913, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6573,7 +6573,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656bbbf3e45bc944da87d9da2cd51fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dissolveMaterial: {fileID: 2100000, guid: 4211cbfb05e507045bb5bc6f018080c0, type: 2}
   _dissolveColor: {r: 56.630177, g: 45.370377, b: 0, a: 0.89411765}
   _dissolveSpeed: 0.2
   _dissolveRefreshRate: 0.01
@@ -7724,7 +7723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &921290453
 Transform:
   m_ObjectHideFlags: 0
@@ -14623,7 +14622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed39b4d057a4834a8fb98d51f3b085b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _virtualCamera: {fileID: 815372960}
+  _virtualCamera: {fileID: 3558031885053661634}
 --- !u!114 &1572044723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14639,7 +14638,7 @@ MonoBehaviour:
   _depthCamera: {fileID: 5883483806362291814}
   _mainCamera: {fileID: 5883483807965159633}
   _character: {fileID: 9096235868023267303}
-  _target: {fileID: 921290452}
+  _target: {fileID: 2555685344758294987}
   _targetLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -26476,7 +26475,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &2562074796074264811
 GameObject:
   m_ObjectHideFlags: 0
@@ -28319,7 +28318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3558031883840998438}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.80083656, y: -0.4829979, z: 79.79904}
+  m_LocalPosition: {x: -0.80083466, y: -0.48299408, z: 79.79905}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -47655,7 +47654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5883483806501074064}
   m_LocalRotation: {x: -0.03154625, y: 0.7064028, z: -0.7064028, w: -0.031546324}
-  m_LocalPosition: {x: -7.6999936, y: -8.199994, z: 16.900005}
+  m_LocalPosition: {x: 0, y: 0, z: 16.900005}
   m_LocalScale: {x: 15.625813, y: 15.625801, z: 11.925462}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -49423,7 +49422,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656bbbf3e45bc944da87d9da2cd51fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dissolveMaterial: {fileID: 2100000, guid: 4211cbfb05e507045bb5bc6f018080c0, type: 2}
   _dissolveColor: {r: 56.630177, g: 45.370377, b: 0, a: 0.89411765}
   _dissolveSpeed: 0.2
   _dissolveRefreshRate: 0.01

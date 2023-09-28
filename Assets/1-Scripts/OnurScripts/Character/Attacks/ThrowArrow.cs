@@ -7,6 +7,7 @@ public class ThrowArrow : CharacterAttackState
 {
     public override void EnterState(CharacterStateManager character)
     {
+        character.MouseTarget.AnimateCharging(true);
         character.CharacterContainer.ColorTube.SetActive(true);
         character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().SetBlendShapeWeight(character.CharacterContainer.ColorTube.GetComponent<SkinnedMeshRenderer>().sharedMesh.GetBlendShapeIndex("Squezed"), 1f);
     }
@@ -30,6 +31,7 @@ public class ThrowArrow : CharacterAttackState
 
     public override void ExitState(CharacterStateManager character)
     {
+        character.MouseTarget.AnimateCharging(false);
         character.CharacterContainer.ColorTube.SetActive(false);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }

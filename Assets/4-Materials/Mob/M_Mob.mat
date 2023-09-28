@@ -22,8 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Mob
   m_Shader: {fileID: 4800000, guid: e0359ce0751e62a44bb0368502470659, type: 3}
-  m_ValidKeywords:
-  - DAMAGE_PULSE
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
@@ -44,7 +43,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DamageTexture:
         m_Texture: {fileID: 2800000, guid: d49ac18f3c549a24bb8646982fd6cd17, type: 3}
-        m_Scale: {x: 0.5, y: 0.02}
+        m_Scale: {x: 1, y: 0.2}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
@@ -111,7 +110,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DamagePulse: 1
+    - _DamagePulse: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DisplacementStrength: 0.01
@@ -146,9 +145,9 @@ Material:
     - _ZWrite: 1
     - __dummy__: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.9716981, g: 0.8960235, b: 0.61113083, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Emission: {r: 55.715244, g: 50.68995, b: 0, a: 1}
+    - _Emission: {r: 59.017693, g: 56.23675, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
     - _SColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}

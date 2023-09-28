@@ -7,7 +7,7 @@ public class DissolveHandler : MonoBehaviour
     private const float MaxDissolveAmount = 1;
     private const float DissolveSpeedMultiplier = 0.05f;
     private List<Material> _materials;
-    [SerializeField] [ColorUsage(true, true)] private Color _dissolveColor;
+    [SerializeField] [ColorUsage(true, true)] private Color _damageColor;
     [SerializeField] [Range(0.1f, 1)] private float _dissolveSpeed;
     [SerializeField] [Range(0.01f, 0.1f)] private float _dissolveRefreshRate;
 
@@ -15,6 +15,7 @@ public class DissolveHandler : MonoBehaviour
     [SerializeField] private bool _debugAcceptInput;
 
     private float _dissolveAmount = 0;
+    private bool _pulsing;
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class DissolveHandler : MonoBehaviour
             _materials.Add(mesh.materials[0]);
 
             var mat = _materials[i];
-            mat.SetColor("_Emission", _dissolveColor);
+            mat.SetColor("_Emission", _damageColor);
         }
 
     }
@@ -51,6 +52,29 @@ public class DissolveHandler : MonoBehaviour
         StartCoroutine(DissolveRoutine());
     }
 
+    public void Pulse(float speed)
+    {
+        if (!_pulsing)
+        {
+            for (int i = 0; i < _skinnedMeshes.Length; i++)
+            {
+                // set color for debug
+                var mat = _materials[i];
+                mat.EnableKeyword("DAMAGE_PULSE");
+                mat.SetFloat("_PulseSpeed", speed);
+            }
+
+            return;
+        }
+
+        for (int i = 0; i < _skinnedMeshes.Length; i++)
+        {
+            // set color for debug
+            var mat = _materials[i];
+            mat.SetFloat("_PulseSpeed", speed);
+        }
+    }
+
     public void ReverseDissolve()
     {
         StartCoroutine(ReverseDissolveRoutine());
@@ -63,7 +87,7 @@ public class DissolveHandler : MonoBehaviour
             // set color for debug
             var mat = _materials[i];
             mat.EnableKeyword("TCP2_DISSOLVE");
-            mat.SetColor("_DissolveColor", _dissolveColor);
+            mat.SetColor("_Emission", _damageColor);
         }
 
         while (_dissolveAmount < MaxDissolveAmount)
@@ -85,7 +109,7 @@ public class DissolveHandler : MonoBehaviour
         {
             // set color for debug
             var mat = _materials[i];
-            mat.SetColor("_DissolveColor", _dissolveColor);
+            mat.SetColor("_DissolveColor", _damageColor);
         }
 
         while (_dissolveAmount > 0)

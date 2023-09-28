@@ -9,9 +9,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField] private EnemyProperties _enemyProperties;
     //[SerializeField] private GameObject _character;
     private float _currentHealth;
-    private bool _isDecalSet;
    
-    private GameObject _splashDecal;
     private DamageFlash _damageFlash;
     private Creature _creature;
     [Inject]
@@ -32,13 +30,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
         if(_currentHealth <= 0.5)
         {
-            
+            _creature.DissolveHandler.Pulse(1.0f);
             _creature.SwitchState(_enemyStateFactory.Death);
            //Vfx Sound and Pool
         }
         else
         {
-            
+            _creature.DissolveHandler.Pulse(5.0f);
             _currentHealth -= damageValue;
             _creature.PlayerCharacter = _character.transform.gameObject;
             _enemyStateFactory.Damage.CurrentDamageType = currentDamage;
