@@ -15,9 +15,11 @@ public class MouseTarget : MonoBehaviour
     private LayerMask _groundLayer = 3;
     private int _layerMask;
     private bool _isChargingThrowable = false;
+    private bool _isStartingToCharge = false;
     private bool _isAnimating = false;
-   
 
+    private const float ANIMATION_TIME = 0.1f;
+    private float _animationTimeElapsed = 0;
 
     private void Awake()
     {
@@ -62,67 +64,55 @@ public class MouseTarget : MonoBehaviour
     private void CursorMovement()
     {
         if (_isAnimating)
-            return;
+        {
+            _isAnimating = AnimationRoutine();
+            if (_isAnimating)
+            {
+                return;
+            }
+        }
 
-        Vector3 charPos;
         if (_isChargingThrowable)
         {
             _target.transform.position = GetMousePosition();
-            charPos = _character.transform.position;
         }
         else
         {
             _target.transform.position = GetCursorPosition();
-            charPos = GetCharacterPosition();
         }
-
-        _target.transform.LookAt(charPos + GetTargetForward(charPos, _target.transform.position) * 100);
-        //RotateTarget(charPos, _target.transform);
+    }
+  
+    // returns true if animation should continue
+    private bool AnimationRoutine()
+    {
+        if (_animationTimeElapsed < ANIMATION_TIME)
+        {
+            _animationTimeElapsed += Time.deltaTime;
+            AnimateCharging(_isChargingThrowable, _animationTimeElapsed);
+            return true;
+        }
+        else
+        {
+            _animationTimeElapsed = 0;
+            return false;
+        }
     }
 
-    private void RotateTarget(Vector3 charPos, Transform targetTransform)
+    private void AnimateCharging(bool isStartingToCharge, float timeElapsed)
     {
-        var targetPos = targetTransform.position;
-        var targetForward = GetTargetForward(charPos, targetPos);
-        targetTransform.LookAt(charPos + targetForward * 100);
-    }
+        var mousePos = GetMousePosition();
+        var cursorPos = GetCursorPosition();
+        float lerpValue = isStartingToCharge ? timeElapsed : ANIMATION_TIME - timeElapsed;
+        lerpValue /= ANIMATION_TIME;
 
-    private Vector3 GetTargetForward(Vector3 charPos, Vector3 targetPos)
-    {
-        charPos.y = targetPos.y;
-        return targetPos - charPos;
-    }
-    private Vector3 GetTargetForward(Vector3 charPos, Transform targetTransform)
-    {
-        var targetPos = targetTransform.position;
-        var targetForward = GetTargetForward(charPos, targetPos);
-        return Quaternion.LookRotation(targetForward).eulerAngles;
+        var targetPos = Vector3.Lerp(cursorPos, mousePos, lerpValue);
+        _target.transform.position = targetPos;
     }
 
     public void AnimateCharging(bool isStartingToCharge)
     {
         _isAnimating = true;
-        var targetTransform = _target.transform;
-        if (isStartingToCharge)
-        {
-            _isChargingThrowable = true;
-            var newTargetPos = GetMousePosition();
-            var charPos = _character.transform.position;
-
-            targetTransform.DOMove(newTargetPos, 0.1f, false);
-            targetTransform.DOLookAt(charPos + GetTargetForward(charPos, newTargetPos) * 100, 0.1f).
-                OnComplete(() => _isAnimating = false);
-        }
-        else
-        {
-            _isChargingThrowable = false;
-            var newTargetPos = GetCursorPosition();
-            var charPos = GetCharacterPosition();
-
-            targetTransform.DOMove(newTargetPos, 0.1f, false);
-            targetTransform.DOLookAt(charPos + GetTargetForward(charPos, newTargetPos) * 100, 0.1f).
-                OnComplete(() => _isAnimating = false);
-        }
+        _isChargingThrowable = isStartingToCharge;
     }
 
     private void OnDrawGizmos()
