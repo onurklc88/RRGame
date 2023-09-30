@@ -20,13 +20,6 @@ public class CharacterStateManager : MonoBehaviour
     public CharacterContainer CharacterContainer => _characterContainer;
     public CinemachineImpulseSource ImpulseSource => _impulseSource;
     #endregion
-    [HideInInspector] public CharacterController CharacterController;
-    public bool IsMovementPressed { get; set; }
-    public bool IsSlidePressed { get; set; }
-    [SerializeField] private CharacterProperties _characterProperties;
-    private CharacterContainer _characterContainer;
-    [SerializeField] private CinemachineImpulseSource _impulseSource;
-  
     #region Depency Injections
     [Inject]
     MouseTarget _mouseTarget;
@@ -36,7 +29,14 @@ public class CharacterStateManager : MonoBehaviour
     public CharacterStateFactory CharacterStateFactory;
     [Inject]
     WeaponHandler _weaponHandler;
+
     #endregion
+    [HideInInspector] public CharacterController CharacterController;
+    public bool IsMovementPressed { get; set; }
+    public bool IsSlidePressed { get; set; }
+    [SerializeField] private CharacterProperties _characterProperties;
+    private CharacterContainer _characterContainer;
+    [SerializeField] private CinemachineImpulseSource _impulseSource;
     private CharacterBaseState _currentState = null;
     private Vector3 _currentMovement;
     private Vector3 _positionToLookAt;
@@ -116,6 +116,7 @@ public class CharacterStateManager : MonoBehaviour
     private void OnMeleeAttackStarted(InputAction.CallbackContext context)
     {
         if (CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterAttackState || _currentState == CharacterStateFactory.CharacterClimbState) return;
+      
       CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
     }
     private void OnMeleeAttackEnded(InputAction.CallbackContext context)
@@ -128,13 +129,14 @@ public class CharacterStateManager : MonoBehaviour
             CharacterStateFactory.CharacterAttackState = CharacterStateFactory.HeavyAttack;
         
         SwitchState(CharacterStateFactory.CharacterAttackState);
-        CharacterStateFactory.CharacterAttackState = null;
+     
     }
 
     private void OnLongRangeAttackStarted(InputAction.CallbackContext context)
     {
-       if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterClimbState) return;
-        
+       if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState != null  || _currentState == CharacterStateFactory.CharacterClimbState) return;
+       
+    
         EventLibrary.OnLongRangeAttack.Invoke(true);
         switch (WeaponHandler.HandedWeapon())
         {
@@ -161,7 +163,16 @@ public class CharacterStateManager : MonoBehaviour
 
     private void OnPlayerInteraction(InputAction.CallbackContext context)
     {
-        if(_characterCollisions.TemporaryObject != null) { SwitchState(CharacterStateFactory.CharacterClimbState); }
+       
+        if(_characterCollisions.TemporaryObject != null) 
+        {
+            
+            if (_characterCollisions.TemporaryObject.gameObject.layer == 12)
+                _playerInput.Disable();
+            
+            SwitchState(CharacterStateFactory.CharacterClimbState); 
+        }
+       
     }
    
     private Vector3 IsoVectorToConvert(Vector3 vector)

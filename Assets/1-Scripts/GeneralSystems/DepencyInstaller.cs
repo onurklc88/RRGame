@@ -21,6 +21,7 @@ public class DepencyInstaller : MonoInstaller
         Container.Bind<WeaponHandler>().FromComponentInHierarchy(_weaponHandler).AsSingle();
         Container.Bind<CharacterStateManager>().FromComponentInHierarchy(_character).AsSingle();
         Container.Bind<Weapons>().AsSingle();
+        Container.Bind<PlayerInput>().AsSingle();
         //Container.BindFactory<Creature, EnemyFactory>().FromComponentInNewPrefab(_grimMort);
     }
 }

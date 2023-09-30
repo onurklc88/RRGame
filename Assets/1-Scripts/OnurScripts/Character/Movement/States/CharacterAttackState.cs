@@ -19,6 +19,7 @@ public class CharacterAttackState : CharacterBaseState
   
     public override void ExitState(CharacterStateManager character)
     {
+        character.CharacterStateFactory.CharacterAttackState = null;
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
     }
     public virtual void DoAttackBehaviour(CharacterStateManager character) { }

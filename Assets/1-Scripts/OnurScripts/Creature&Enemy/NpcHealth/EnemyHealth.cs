@@ -32,7 +32,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             _creature.DissolveHandler.Pulse(1.0f);
             _creature.SwitchState(_enemyStateFactory.Death);
-           //Vfx Sound and Pool
+          
         }
         else
         {

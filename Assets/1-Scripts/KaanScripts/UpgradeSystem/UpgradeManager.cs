@@ -15,15 +15,12 @@ public class UpgradeManager : MonoBehaviour
         else Destroy(gameObject);
     }
 
-    void Start()
-    {
-        
-    }
-
+ 
     void Update()
     {
-        if(Input.GetKeyUp(KeyCode.Escape) && Market.activeInHierarchy)
+        if(Input.GetKeyDown(KeyCode.Escape) && Market.activeInHierarchy)
         {
+
             Market.SetActive(false);
         }
     }

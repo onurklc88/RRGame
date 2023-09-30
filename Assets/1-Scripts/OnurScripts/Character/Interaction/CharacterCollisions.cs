@@ -21,7 +21,7 @@ public class CharacterCollisions : MonoBehaviour
               
                 break;
             case 12:
-                Debug.Log("ASD");
+                
                 //PanelOpened = true;
                 //_playerInput.Disable();
                 UpgradeManager.instance.Market.SetActive(true);
