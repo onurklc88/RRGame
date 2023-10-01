@@ -25,18 +25,18 @@ public class TrajectoryDrawer : MonoBehaviour
         float timeStep = 0.1f; // Adjust the time step as needed
         if (!_drawing)
         {
-            int pointCount = predictionSteps;
+            int pointCount = predictionSteps / 2;
             _points = new Vector3[pointCount];
             _lineRenderer.positionCount = pointCount;
             _drawing = true;
         }
 
-        Vector3[] positions = new Vector3[predictionSteps];
+        Vector3[] positions = new Vector3[predictionSteps / 2];
         Vector3 velocity = impulseForce;
         Vector3 currentPosition = startPos;
 
          
-        for (int i = 0; i < predictionSteps; i++)
+        for (int i = 0; i < predictionSteps / 2; i++)
         {
             positions[i] = currentPosition;
 
@@ -52,7 +52,7 @@ public class TrajectoryDrawer : MonoBehaviour
             }
         }
 
-        _lineRenderer.positionCount = predictionSteps;
+        _lineRenderer.positionCount = predictionSteps / 2;
         _lineRenderer.SetPositions(positions);
     }
 
