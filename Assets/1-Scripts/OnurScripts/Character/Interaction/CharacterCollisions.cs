@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class CharacterCollisions : MonoBehaviour
 {
     [HideInInspector] public GameObject TemporaryObject;
-  
+
+    [Inject]
+    PlayerInput _playerInput;
 
     private void OnTriggerEnter(Collider interactableObject)
     {
         
-
+        
         switch (interactableObject.gameObject.layer)
         {
             case 8:
@@ -22,8 +25,7 @@ public class CharacterCollisions : MonoBehaviour
                 break;
             case 12:
                 
-                //PanelOpened = true;
-                //_playerInput.Disable();
+                _playerInput.Disable();
                 UpgradeManager.instance.Market.SetActive(true);
              
                 break;

@@ -29,7 +29,8 @@ public class CharacterStateManager : MonoBehaviour
     public CharacterStateFactory CharacterStateFactory;
     [Inject]
     WeaponHandler _weaponHandler;
-
+    [Inject]
+    PlayerInput _playerInput;
     #endregion
     [HideInInspector] public CharacterController CharacterController;
     public bool IsMovementPressed { get; set; }
@@ -40,7 +41,7 @@ public class CharacterStateManager : MonoBehaviour
     private CharacterBaseState _currentState = null;
     private Vector3 _currentMovement;
     private Vector3 _positionToLookAt;
-    private PlayerInput _playerInput;
+    //private PlayerInput _playerInput;
     private Vector2 _readVector;
     private float _rotationFactorPerFrame = 15f;
     private bool _canCharacterSlide = true;
@@ -84,7 +85,7 @@ public class CharacterStateManager : MonoBehaviour
     #region Inputs and movements
     private void ReadInputs()
     {
-        _playerInput = new PlayerInput();
+        //_playerInput = new PlayerInput();
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
@@ -154,7 +155,7 @@ public class CharacterStateManager : MonoBehaviour
     }
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
-        if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null) return;
+        if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null || _currentState == CharacterStateFactory.CharacterKnockbackState) return;
         EventLibrary.OnLongRangeAttack.Invoke(false);
         if (context.duration > 0.3)
             CharacterStateFactory.CharacterAttackState.DoAttackBehaviour(this);
@@ -169,10 +170,6 @@ public class CharacterStateManager : MonoBehaviour
        
         if(_characterCollisions.TemporaryObject != null) 
         {
-            
-            if (_characterCollisions.TemporaryObject.gameObject.layer == 12)
-                _playerInput.Disable();
-            
             SwitchState(CharacterStateFactory.CharacterClimbState); 
         }
        

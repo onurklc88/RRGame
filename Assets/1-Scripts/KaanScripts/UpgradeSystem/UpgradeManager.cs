@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Zenject;
 
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager instance;
+    [Inject]
+    PlayerInput _playerInput;
 
     public GameObject Market;
 
@@ -20,8 +23,9 @@ public class UpgradeManager : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape) && Market.activeInHierarchy)
         {
-
+            _playerInput.Enable();
             Market.SetActive(false);
         }
+       
     }
 }

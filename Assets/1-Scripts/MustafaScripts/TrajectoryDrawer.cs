@@ -10,6 +10,10 @@ public class TrajectoryDrawer : MonoBehaviour
     private MouseTarget _mouseTarget;
     private float _angleRadians;
     private bool _drawing = false;
+    public float TimeStep;
+    public float mass;
+    [Range(0,200)]
+    public int predictionSteps;
 
     void Start()
     {
@@ -21,22 +25,23 @@ public class TrajectoryDrawer : MonoBehaviour
 
     public void Draw(Vector3 startPos, Vector3 impulseForce)
     {
-        int predictionSteps = 50;
-        float timeStep = 0.1f; // Adjust the time step as needed
+        //int predictionSteps = 50;
+        //float timeStep = TimeStep; // Adjust the time step as needed
+        int pointCount = predictionSteps;
         if (!_drawing)
         {
-            int pointCount = predictionSteps / 2;
+            //int pointCount = predictionSteps / 2;
             _points = new Vector3[pointCount];
             _lineRenderer.positionCount = pointCount;
             _drawing = true;
         }
 
-        Vector3[] positions = new Vector3[predictionSteps / 2];
-        Vector3 velocity = impulseForce;
+        Vector3[] positions = new Vector3[pointCount];
+        Vector3 velocity = impulseForce / mass;
         Vector3 currentPosition = startPos;
 
-         
-        for (int i = 0; i < predictionSteps / 2; i++)
+        float timeStep = (impulseForce.magnitude) * TimeStep / predictionSteps;
+        for (int i = 0; i < pointCount; i++)
         {
             positions[i] = currentPosition;
 
@@ -45,14 +50,16 @@ public class TrajectoryDrawer : MonoBehaviour
             velocity += new Vector3(0, -100, 0) * timeStep; // Apply gravity
 
             // If the trajectory goes below the ground, stop drawing
+            /*
             if (currentPosition.y < startPos.y - 5.0f)
             {
                 predictionSteps = i + 1;
                 break;
             }
+            */
         }
 
-        _lineRenderer.positionCount = predictionSteps / 2;
+        _lineRenderer.positionCount = pointCount;
         _lineRenderer.SetPositions(positions);
     }
 
