@@ -19,7 +19,7 @@ public class TrajectoryDrawer : MonoBehaviour
         _angleRadians = Mathf.Atan2(2.5f, 1.0f);
     }
 
-    public void Draw(Vector3 startPos, Vector3 forward, Vector3 impulseForce)
+    public void Draw(Vector3 startPos, Vector3 impulseForce)
     {
         int predictionSteps = 50;
         float timeStep = 0.1f; // Adjust the time step as needed

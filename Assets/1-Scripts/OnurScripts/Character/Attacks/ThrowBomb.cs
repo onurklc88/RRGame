@@ -23,7 +23,7 @@ public class ThrowBomb : CharacterAttackState
         _distance = Mathf.Clamp(_distance, 8f, 30f);
         //float bombJumpPower = Mathf.Lerp(4f, 30f, _distance / 100f) * 10;
         float bombJumpPower = _distance * 2;
-        character.TrajectoryDrawer.Draw(character.transform.position, character.transform.forward,
+        character.TrajectoryDrawer.Draw(character.transform.position,
             (character.transform.forward + character.transform.up * 2.5f).normalized * bombJumpPower);
 
     }
