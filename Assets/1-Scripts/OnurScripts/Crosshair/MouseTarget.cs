@@ -21,6 +21,8 @@ public class MouseTarget : MonoBehaviour
     private const float ANIMATION_TIME = 0.1f;
     private float _animationTimeElapsed = 0;
 
+    public Vector3 MousePosition { get; private set; }
+
     private void Awake()
     {
         Cursor.visible = false;
@@ -63,6 +65,8 @@ public class MouseTarget : MonoBehaviour
 
     private void CursorMovement()
     {
+        MousePosition = GetMousePosition();
+
         if (_isAnimating)
         {
             _isAnimating = AnimationRoutine();
@@ -74,7 +78,7 @@ public class MouseTarget : MonoBehaviour
 
         if (_isChargingThrowable)
         {
-            _target.transform.position = GetMousePosition();
+            _target.transform.position = MousePosition;
         }
         else
         {
@@ -100,12 +104,11 @@ public class MouseTarget : MonoBehaviour
 
     private void AnimateCharging(bool isStartingToCharge, float timeElapsed)
     {
-        var mousePos = GetMousePosition();
         var cursorPos = GetCursorPosition();
         float lerpValue = isStartingToCharge ? timeElapsed : ANIMATION_TIME - timeElapsed;
         lerpValue /= ANIMATION_TIME;
 
-        var targetPos = Vector3.Lerp(cursorPos, mousePos, lerpValue);
+        var targetPos = Vector3.Lerp(cursorPos, MousePosition, lerpValue);
         _target.transform.position = targetPos;
     }
 
@@ -118,7 +121,7 @@ public class MouseTarget : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(GetMousePosition(), 0.5f);
-        Gizmos.DrawLine(Camera.main.transform.position, GetMousePosition());
+        Gizmos.DrawWireSphere(MousePosition, 0.5f);
+        Gizmos.DrawLine(Camera.main.transform.position, MousePosition);
     }
 }

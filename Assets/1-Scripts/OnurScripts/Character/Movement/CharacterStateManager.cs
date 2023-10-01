@@ -46,6 +46,8 @@ public class CharacterStateManager : MonoBehaviour
     private bool _canCharacterSlide = true;
     private float _gravity = -0.5f;
    
+    public TrajectoryDrawer TrajectoryDrawer { get; private set; }
+
     private void OnEnable()
     {
         EventLibrary.OnPlayerTakeDamage.AddListener(SwitchState);
@@ -59,6 +61,7 @@ public class CharacterStateManager : MonoBehaviour
 
     private void Awake()
     {
+        TrajectoryDrawer = GetComponent<TrajectoryDrawer>();
         _characterContainer = GetComponent<CharacterContainer>();
         CharacterController = GetComponent<CharacterController>();
         CharacterStateFactory.CharacterAttackState = null;

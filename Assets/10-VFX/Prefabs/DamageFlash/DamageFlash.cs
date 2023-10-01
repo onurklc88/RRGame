@@ -11,6 +11,16 @@ public class DamageFlash : MonoBehaviour
 
     private Material _flashMat;
 
+    private void OnDisable()
+    {
+        var color = new Color();
+        color.a = 0;
+        if (_flashMat != null)
+        {
+            _flashMat.SetColor("_BaseColor", color);
+        }
+    }
+
     private void Start()
     {
         _flashMat = GetComponentInChildren<Renderer>().materials[^1];
