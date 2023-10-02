@@ -4,11 +4,6 @@ using DG.Tweening;
 public class ThrowBomb : CharacterAttackState
 {
     private float _distance;
-    float maxDistance = 10f;
-    private float _normalizedDistance;
-    
-
-
 
     public override void EnterState(CharacterStateManager character)
     {
@@ -37,10 +32,7 @@ public class ThrowBomb : CharacterAttackState
         bomb.SetActive(true);
         Rigidbody bombRigidbody = bomb.transform.GetComponent<Rigidbody>();
         bombRigidbody.isKinematic = false;
-        //Debug.Log("Distance: " + _distance);
         float bombJumpPower = Mathf.Lerp(4f, 9f, _distance / 100f);
-        //Debug.Log("bombJumpPower: " + bombJumpPower);
-        //float bombJumpPower = _distance * 2.2f;
 
         bombRigidbody.AddForce((character.transform.forward + character.transform.up * 2.5f).normalized * bombJumpPower, ForceMode.Impulse);
         
@@ -52,7 +44,7 @@ public class ThrowBomb : CharacterAttackState
     public override void ExitState(CharacterStateManager character)
     {
         _distance = 0;
-       // character.TrajectoryDrawer.Clear();
+        character.TrajectoryDrawer.Clear();
         character.CharacterContainer.ColorBottle.SetActive(false);
         EventLibrary.OnPlayerThrowBomb.Invoke(false);
         character.SwitchState(character.CharacterStateFactory.CharacterIdleState);
