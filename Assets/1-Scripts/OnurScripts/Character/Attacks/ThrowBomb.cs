@@ -16,12 +16,7 @@ public class ThrowBomb : CharacterAttackState
         TrackCursorPosition(character);
         _distance = Vector3.Distance(character.transform.position, character.MouseTarget.MousePosition);
         _distance = Mathf.Clamp(_distance, 0f, 60f);
-       
-        float trajectoryClamp = Mathf.Clamp(_distance, 8f, 30f);
-       character.TrajectoryDrawer.Draw(character.CharacterContainer.ColorBottle.transform.position,
-            (character.transform.forward + character.transform.up * 2.5f).normalized * trajectoryClamp * 2f);
-        
-
+        DrawTrajectory(character);
     }
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
@@ -33,12 +28,18 @@ public class ThrowBomb : CharacterAttackState
         Rigidbody bombRigidbody = bomb.transform.GetComponent<Rigidbody>();
         bombRigidbody.isKinematic = false;
         float bombJumpPower = Mathf.Lerp(4f, 9f, _distance / 100f);
-
         bombRigidbody.AddForce((character.transform.forward + character.transform.up * 2.5f).normalized * bombJumpPower, ForceMode.Impulse);
-        
         EventLibrary.OnPlayerThrowBomb.Invoke(false);
         EventLibrary.OnWeaponChargeUpdated.Invoke(false);
         ExitState(character);
+    }
+
+    private void DrawTrajectory(CharacterStateManager character)
+    {
+        float trajectoryClamp = Mathf.Clamp(_distance, 8f, 30f);
+        character.TrajectoryDrawer.Draw(character.CharacterContainer.ColorBottle.transform.position,
+             (character.transform.forward + character.transform.up * 2.5f).normalized * trajectoryClamp * 2f);
+
     }
 
     public override void ExitState(CharacterStateManager character)

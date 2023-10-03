@@ -4,28 +4,14 @@ using UnityEngine;
 
 public class BombTest : MonoBehaviour
 {
-    Rigidbody _rb;
-    public float power;
-    void Start()
-    {
-        _rb = GetComponent<Rigidbody>();
-        
-     
-    }
+    [SerializeField] private GameObject _grim;
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y))
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            _rb.isKinematic = false;
-            // Vector3 test = transform.forward + Vector3.up * 2f;
-            Quaternion firlatmaRotasyonu = Quaternion.Euler(new Vector3(43f, -52f, 28f));
-            _rb.rotation = firlatmaRotasyonu;
-
-            _rb.AddForce(transform.forward * power, ForceMode.Impulse);
+            _grim.SetActive(false);
         }
     }
-
-    // Update is called once per frame
 
 }

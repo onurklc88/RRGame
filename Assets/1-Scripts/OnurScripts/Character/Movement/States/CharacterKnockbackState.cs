@@ -9,7 +9,6 @@ public class CharacterKnockbackState : CharacterBaseState
     public override void EnterState(CharacterStateManager character)
     {
          character.StartCoroutine(DelayState(character));
-       
     }
    
     public override void ExitState(CharacterStateManager character)

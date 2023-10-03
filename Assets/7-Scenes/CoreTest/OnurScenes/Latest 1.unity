@@ -5448,7 +5448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a79974d182f6ed4bbda8f96f445784e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 3
+  _grim: {fileID: 0}
 --- !u!135 &146697733
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6091,7 +6091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a79974d182f6ed4bbda8f96f445784e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 3
+  _grim: {fileID: 0}
 --- !u!135 &375179715
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6825,7 +6825,7 @@ PrefabInstance:
     - target: {fileID: 2602855610979595057, guid: d6cc8f1885782bd44bb6bbaa7eb6b1b0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 69.78
+      value: 52.64
       objectReference: {fileID: 0}
     - target: {fileID: 2602855610979595057, guid: d6cc8f1885782bd44bb6bbaa7eb6b1b0,
         type: 3}
@@ -14884,6 +14884,7 @@ GameObject:
   - component: {fileID: 1572044726}
   - component: {fileID: 1572044727}
   - component: {fileID: 1572044728}
+  - component: {fileID: 1572044729}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -15017,6 +15018,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoneyText: {fileID: 1134103257}
   SetMoney: 99999
+--- !u!114 &1572044729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572044719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a79974d182f6ed4bbda8f96f445784e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _grim: {fileID: 1724188844}
 --- !u!1001 &1601340477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15538,7 +15552,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1724188845
 Transform:
   m_ObjectHideFlags: 0
@@ -22105,7 +22119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a79974d182f6ed4bbda8f96f445784e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 3
+  _grim: {fileID: 0}
 --- !u!135 &2098032462
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -54614,7 +54628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a79974d182f6ed4bbda8f96f445784e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  power: 3
+  _grim: {fileID: 0}
 --- !u!75 &8681257179623880014
 ConstantForce:
   m_ObjectHideFlags: 0
@@ -56044,8 +56058,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _points: []
   TimeStep: 0.015
-  mass: 0.1
-  predictionSteps: 99
+  mass: 1
+  _pointCount: 100
 --- !u!4 &9103592510843569938
 Transform:
   m_ObjectHideFlags: 0

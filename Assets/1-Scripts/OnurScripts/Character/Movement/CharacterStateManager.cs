@@ -41,12 +41,11 @@ public class CharacterStateManager : MonoBehaviour
     private CharacterBaseState _currentState = null;
     private Vector3 _currentMovement;
     private Vector3 _positionToLookAt;
-    //private PlayerInput _playerInput;
     private Vector2 _readVector;
     private float _rotationFactorPerFrame = 15f;
     private bool _canCharacterSlide = true;
     private float _gravity = -0.5f;
-   
+    
     public TrajectoryDrawer TrajectoryDrawer { get; private set; }
 
     private void OnEnable()
@@ -79,13 +78,14 @@ public class CharacterStateManager : MonoBehaviour
         HandleRotation();
         HandleGravity();
         _currentState.UpdateState(this);
-       
+        OnLongRangeAttackDisrupt();
+
+
     }
 
     #region Inputs and movements
     private void ReadInputs()
     {
-        //_playerInput = new PlayerInput();
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
@@ -121,7 +121,7 @@ public class CharacterStateManager : MonoBehaviour
     {
         if (CharacterStateFactory.CharacterAttackState != null || _currentState == CharacterStateFactory.CharacterAttackState || _currentState == CharacterStateFactory.CharacterClimbState) return;
       
-      CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
+        CharacterStateFactory.CharacterAttackState = CharacterStateFactory.LightAttack; 
     }
     private void OnMeleeAttackEnded(InputAction.CallbackContext context)
     {
@@ -153,9 +153,19 @@ public class CharacterStateManager : MonoBehaviour
         }
         SwitchState(CharacterStateFactory.CharacterAttackState);
     }
+    private void OnLongRangeAttackDisrupt()
+    {
+        if (_playerInput.CharacterControls.LongRangeAttack.IsPressed() && _currentState == CharacterStateFactory.CharacterKnockbackState && CharacterStateFactory.CharacterAttackState != null)
+        {
+            CharacterStateFactory.CharacterAttackState.ExitState(this);
+            CharacterStateFactory.CharacterAttackState = null;
+        }
+    }
+
     private void OnLongRangeAttackEnded(InputAction.CallbackContext context)
     {
-        if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null || _currentState == CharacterStateFactory.CharacterKnockbackState) return;
+        if (_currentState == CharacterStateFactory.CharacterSlideState || CharacterStateFactory.CharacterAttackState == CharacterStateFactory.LightAttack || CharacterStateFactory.CharacterAttackState == null) return;
+      
         EventLibrary.OnLongRangeAttack.Invoke(false);
         if (context.duration > 0.3)
             CharacterStateFactory.CharacterAttackState.DoAttackBehaviour(this);
@@ -174,6 +184,8 @@ public class CharacterStateManager : MonoBehaviour
         }
        
     }
+
+   
    
     private Vector3 IsoVectorToConvert(Vector3 vector)
     {

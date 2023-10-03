@@ -11,12 +11,4 @@ public abstract class CharacterBaseState
     {
         yield return null;
     }
-
-    public virtual void ApplyDashGravity(CharacterStateManager character)
-    {
-
-    }
-
-
-
 }
