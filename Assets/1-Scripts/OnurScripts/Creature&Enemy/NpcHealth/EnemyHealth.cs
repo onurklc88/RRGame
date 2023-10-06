@@ -38,8 +38,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             _creature.DissolveHandler.Pulse(5.0f);
             _currentHealth -= damageValue;
-            _creature.PlayerCharacter = _character.transform.gameObject;
-            _enemyStateFactory.Damage.CurrentDamageType = currentDamage;
+            if (_creature.CurrentCreatureState != _creature.EnemyStateFactory.Chase || _creature.CurrentCreatureState != _creature.EnemyStateFactory.MeleeAttack())
+            {
+                _creature.PlayerCharacter = _character.transform.gameObject;
+                _enemyStateFactory.Damage.CurrentDamageType = currentDamage;
+            }
+           
             _creature.SwitchState(_enemyStateFactory.Damage);
            
            

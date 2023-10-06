@@ -16,7 +16,7 @@ public class CreatureDamageState : IState
     private IEnumerator DelayState(Creature creature)
     {
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.2f);
         if (creature.CurrentCreatureState != creature.EnemyStateFactory.Death)
         {
            creature.SwitchState(creature.EnemyStateFactory.Chase);
@@ -26,9 +26,16 @@ public class CreatureDamageState : IState
 
     private void HandleDamage(Creature creature)
     {
-      
+
+       
+
+        creature.transform.DOJump(creature.transform.position + -creature.transform.forward * 3f, 0.5f, 1, 0.5f).OnComplete(() =>
+        {
+            creature.StartCoroutine(DelayState(creature));
+        });
+        /*
         //revize edilecek
-        if(CurrentDamageType == DamageType.Damage.Bomb)
+        if (CurrentDamageType == DamageType.Damage.Bomb)
         {
             Debug.Log("bomb");
            
@@ -54,6 +61,7 @@ public class CreatureDamageState : IState
             }
           
         }
+        */
     }
 
     private bool CheckKnockbackPosition(Creature creature)

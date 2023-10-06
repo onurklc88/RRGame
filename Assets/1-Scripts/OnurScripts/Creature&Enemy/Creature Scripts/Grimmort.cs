@@ -51,8 +51,5 @@ public class Grimmort : Creature
         Gizmos.DrawLine(new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z), new Vector3(transform.position.x, transform.position.y + 0.7f, transform.position.z) + -transform.forward * 5f);
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        
-    }
+   
 }
