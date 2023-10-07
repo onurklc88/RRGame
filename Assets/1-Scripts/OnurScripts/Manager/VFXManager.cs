@@ -10,14 +10,21 @@ public class VFXManager : MonoBehaviour
     [SerializeField] private TrailRenderer[] _dashVfx;
 
     [SerializeField] private Volume _postFxVolume;
+    [SerializeField] private GameObject _postFxPlane;
 
-    private Vignette _vignette;
-    private ChromaticAberration _chromaticAberration;
+    [SerializeField]private Vignette _vignette;
+    [SerializeField]private ChromaticAberration _chromaticAberration;
+    [SerializeField]private DepthOfField _dof;
 
     private void Awake()
     {
         _postFxVolume.profile.TryGet(out _vignette);
         _postFxVolume.profile.TryGet(out _chromaticAberration);
+        _postFxVolume.profile.TryGet(out _dof);
+
+        _postFxPlane.SetActive(true);
+        GetComponent<EyeBlink>().Init(_postFxPlane, _dof);
+        _postFxPlane.SetActive(false);
     }
 
 
@@ -31,7 +38,13 @@ public class VFXManager : MonoBehaviour
         EventLibrary.OnCharacterDash.RemoveListener(ShowDashTrail);
     }
 
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            GetComponent<EyeBlink>().Blink(3);
+        }
+    }
     private void ShowDashTrail()
     {
         StartCoroutine(DefaultDashVFXRoutine(0.75f));
