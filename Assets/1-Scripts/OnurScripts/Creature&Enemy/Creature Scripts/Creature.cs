@@ -15,7 +15,7 @@ public abstract class Creature : MonoBehaviour
     [HideInInspector] public int CurrentWaypointIndex = 0;
     [HideInInspector] public GameObject PlayerCharacter;
     [SerializeField] private NavMeshAgent _navMeshAgent;
-    [SerializeField] private EnemyProperties _enemyProperties;
+    [SerializeField] private CreatureProperties _enemyProperties;
     [SerializeField] private float _idleDelayTime;
     [SerializeField] private CreatureAnimationController _creatureAnimationController;
     [SerializeField] protected SplineComputer _splineComputer;
@@ -32,7 +32,7 @@ public abstract class Creature : MonoBehaviour
     #region Getters & Setters
     public NavMeshAgent NavMeshAgent => _navMeshAgent;
     public List<Vector3> Waypoints => _waypoints;
-    public EnemyProperties EnemyProperties => _enemyProperties;
+    public CreatureProperties EnemyProperties => _enemyProperties;
     public float AnimationDelayTime => _idleDelayTime;
     public LayerMask PlayerMask => _playerLayer;
     public CreatureAnimationController CreatureAnimationController => _creatureAnimationController;

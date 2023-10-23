@@ -11,6 +11,16 @@ public class EyeBlink : MonoBehaviour
     [SerializeField] private Material _eyeBlinkMat;
     [SerializeField] private bool _isAnimating = false;
 
+    private void OnEnable()
+    {
+        EventLibrary.OnPlayerDead.AddListener(Blink);
+    }
+    private void OnDisable()
+    {
+        EventLibrary.OnPlayerDead.RemoveListener(Blink);
+    }
+
+
     public void Init(GameObject postFxPlane, DepthOfField dof)
     {
         _postFxPlane = postFxPlane;
@@ -18,14 +28,14 @@ public class EyeBlink : MonoBehaviour
         _eyeBlinkMat = _postFxPlane.GetComponent<MeshRenderer>().material;
     }
 
-    public void Blink(float speed = 1)
+    public void Blink()
     {
         if (_isAnimating)
         {
             return;
         }
 
-        StartCoroutine(BlinkAnimation(Mathf.Clamp(speed, 1, 4)));
+        StartCoroutine(BlinkAnimation(Mathf.Clamp(3, 1, 4)));
     }
 
     private IEnumerator BlinkAnimation(float speed)

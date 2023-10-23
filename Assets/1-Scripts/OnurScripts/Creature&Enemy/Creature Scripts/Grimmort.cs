@@ -15,7 +15,7 @@ public class Grimmort : Creature
         CurrentCreatureState = EnemyStateFactory.Walk();
     }
 
-  
+   
     private void Update()
     {
         ExecuteState();

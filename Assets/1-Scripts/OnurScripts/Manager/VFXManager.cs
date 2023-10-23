@@ -18,13 +18,15 @@ public class VFXManager : MonoBehaviour
 
     private void Awake()
     {
+        
         _postFxVolume.profile.TryGet(out _vignette);
         _postFxVolume.profile.TryGet(out _chromaticAberration);
         _postFxVolume.profile.TryGet(out _dof);
 
-        _postFxPlane.SetActive(true);
-        GetComponent<EyeBlink>().Init(_postFxPlane, _dof);
-        _postFxPlane.SetActive(false);
+        //_postFxPlane.SetActive(true);
+        //GetComponent<EyeBlink>().Init(_postFxPlane, _dof);
+        //_postFxPlane.SetActive(false);
+        
     }
 
 
@@ -42,7 +44,7 @@ public class VFXManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Y))
         {
-            GetComponent<EyeBlink>().Blink(3);
+            GetComponent<EyeBlink>().Blink();
         }
     }
     private void ShowDashTrail()

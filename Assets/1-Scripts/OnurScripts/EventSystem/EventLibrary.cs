@@ -4,6 +4,7 @@ public static class EventLibrary
 {
     //CharacterEvents
     public static readonly GameEvent<CharacterBaseState> OnPlayerTakeDamage = new GameEvent<CharacterBaseState>();
+    public static readonly GameEvent OnPlayerDead = new GameEvent();
 
 
     //Weapon events

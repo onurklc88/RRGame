@@ -42,7 +42,7 @@ public class CharacterAttackState : CharacterBaseState
     }
     protected void AttackDash(CharacterStateManager character)
     {
-        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 15f;
+        Vector3 dashPoisiton = character.transform.position + character.transform.forward * 5f;
         character.StartCoroutine(MovePlayerToDashPoisiton(character, dashPoisiton));
     }
 

@@ -6,7 +6,7 @@ using Zenject;
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
    // public static event Action OnEnemyDie;
-    [SerializeField] private EnemyProperties _enemyProperties;
+    [SerializeField] private CreatureProperties _enemyProperties;
     //[SerializeField] private GameObject _character;
     private float _currentHealth;
    
@@ -38,6 +38,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         {
             _creature.DissolveHandler.Pulse(5.0f);
             _currentHealth -= damageValue;
+            /*
             if (_creature.CurrentCreatureState != _creature.EnemyStateFactory.Chase || _creature.CurrentCreatureState != _creature.EnemyStateFactory.MeleeAttack())
             {
                 _creature.PlayerCharacter = _character.transform.gameObject;
@@ -45,7 +46,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
             }
            
             _creature.SwitchState(_enemyStateFactory.Damage);
-           
+           */
            
         }
      

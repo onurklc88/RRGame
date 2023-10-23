@@ -79,8 +79,6 @@ public class CharacterStateManager : MonoBehaviour
         HandleGravity();
         _currentState.UpdateState(this);
         OnLongRangeAttackDisrupt();
-
-
     }
 
     #region Inputs and movements
@@ -185,9 +183,7 @@ public class CharacterStateManager : MonoBehaviour
        
     }
 
-   
-   
-    private Vector3 IsoVectorToConvert(Vector3 vector)
+   private Vector3 IsoVectorToConvert(Vector3 vector)
     {
         Quaternion rotation = Quaternion.Euler(0, 45.0f, 0f);
         Matrix4x4 isoMatrix = Matrix4x4.Rotate(rotation);
@@ -233,7 +229,7 @@ public class CharacterStateManager : MonoBehaviour
    private void OnDrawGizmos()
    {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + transform.forward * 2f, 2f);
+        Gizmos.DrawWireSphere(transform.position + transform.forward * 4f, 2f);
    }
 }
 

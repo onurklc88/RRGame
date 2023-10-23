@@ -16,6 +16,7 @@ public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
     private void Awake()
     {
         _damageFlash = GetComponentInChildren<DamageFlash>();
+        _currentHealth = _totalHealth;
     }
     public void TakeHeal(int healValue)
     {
@@ -27,8 +28,19 @@ public class CharacterHealth : MonoBehaviour, IHealable, IDamageable
 
     public void TakeDamage(float damageValue, DamageType.Damage currentDamageType)
     {
-        _damageFlash.Flash();
-        _characterStateFactory.CurrentDamageType = currentDamageType;
-        EventLibrary.OnPlayerTakeDamage.Invoke(_characterStateFactory.CharacterKnockbackState);
+        _currentHealth -= damageValue;
+        Debug.Log("Vava: " + _currentHealth);
+        if(_currentHealth <= 0)
+        {
+            Debug.Log("Character Dead");
+            //EventLibrary.OnPlayerDead.Invoke();
+        }
+        else
+        {
+            _damageFlash.Flash();
+            _characterStateFactory.CurrentDamageType = currentDamageType;
+            EventLibrary.OnPlayerTakeDamage.Invoke(_characterStateFactory.CharacterKnockbackState);
+        }
+       
     }
 }

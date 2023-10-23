@@ -62,7 +62,7 @@ public class LightAttack : CharacterAttackState
     public override void DoAttackBehaviour(CharacterStateManager character)
     {
         TrackCursorPosition(character);
-         AttackDash(character);
+        AttackDash(character);
         if (_collidedObject != null)
         {
            
